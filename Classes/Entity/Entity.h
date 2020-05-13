@@ -8,9 +8,9 @@ class Entity :public Node
 public:
 	Entity();
 	~Entity();
-	Sprite* getSprite();
-	void bindSprite(Sprite* sprite);
+	Sprite* GetSprite();
+	void BindSprite(Sprite* sprite, float x_scale = 1, float y_scale = 1);
 private:
-	Sprite* m_sprite;
+	Sprite* m_sprite_;
 };
 #endif
