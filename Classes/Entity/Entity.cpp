@@ -21,7 +21,7 @@ void Entity::BindSprite(Sprite* sprite, float x_scale, float y_scale)
 	this->addChild(m_sprite_);
 	m_sprite_->setScale(x_scale, y_scale);
 	Size size = m_sprite_->getBoundingBox().size;
-	m_sprite_->setPosition(Point(size.width*0.5f, size.height*0.5f));
+	m_sprite_->setPosition(Point(0, 0));
 	this->setContentSize(size);
 }
 

@@ -20,7 +20,7 @@ void LongRange::Attack(Point pos)
 	{
 		return;
 	}
-
+	bullet_num_--;
 	Point now = convertToWorldSpace(GetSprite()->getPosition());
 	float degree;
 	float dx = pos.x - now.x;
@@ -39,24 +39,22 @@ void LongRange::Attack(Point pos)
 	else
 	{
 		degree = atan(dy / dx) / PI * 180;
-		if (degree < 0 && dy>0 && dx < 0)
-		{
-			degree += 180;
-		}
-		else if (degree < 0 && dy < 0 && dx>0)
-		{
-			degree += 360;
-		}
-		else if (degree > 0 && dy < 0 && dx < 0)
-		{
-			degree += 180;
-		}
 	}
 	GetSprite()->setRotation(-degree);
 	Bullet* new_bullet = Bullet::create();
-	new_bullet->BindSprite(Sprite::create(bullet_picture_.getCString()),0.2f,0.2f);
+	new_bullet->BindSprite(Sprite::create(bullet_picture_.getCString()), 0.7f, 0.7f);
+	if ((degree > 0 && dy < 0 && dx < 0) || (degree < 0 && dy>0 && dx < 0))
+	{
+		degree += 180;
+		GetSprite()->setFlippedX(true);
+	}
+	else
+	{
+		GetSprite()->setFlippedX(false);
+	}
+	log("%f,%f", now.x, now.y);
 	new_bullet->setPosition(GetSprite()->getPositionX() + GetSprite()->getBoundingBox().size.width*cos(degree / 180 * PI) / 2
-		, GetSprite()->getPositionY() + GetSprite()->getBoundingBox().size.height*sin(degree / 180 * PI) / 2);
+		, GetSprite()->getPositionY() + GetSprite()->getBoundingBox().size.width*sin(degree / 180 * PI) / 2);
 	new_bullet->setRotation(-degree);
 	new_bullet->setVisible(true);
 	this->addChild(new_bullet);
