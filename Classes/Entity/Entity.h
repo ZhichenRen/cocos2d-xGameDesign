@@ -9,8 +9,8 @@ public:
 	Entity();
 	~Entity();
 	Sprite* getSprite();
-	void bindSprite(Sprite* sprite);
-private:
-	Sprite* m_sprite;
+	void bindSprite(Sprite* sprite, float x_scale = 1, float y_scale = 1);
+protected:
+	Sprite* m_sprite_;
 };
 #endif
