@@ -8,8 +8,8 @@ class Entity :public Node
 public:
 	Entity();
 	~Entity();
-	Sprite* GetSprite();
-	void BindSprite(Sprite* sprite, float x_scale = 1, float y_scale = 1);
+	Sprite* getSprite();
+	void bindSprite(Sprite* sprite, float x_scale = 1, float y_scale = 1);
 protected:
 	Sprite* m_sprite_;
 };

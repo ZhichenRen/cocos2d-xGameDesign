@@ -1,8 +1,9 @@
-#ifndef __LongRange_H__
-#define __LongRange_H__
+#ifndef __Long_rangeH__
+#define __Long_rangeH__
 
 #include "Entity\Weapons\Weapon.h"
-#include "Entity\Weapons\Bullets\Bullet.h"
+
+class Bullet;
 
 class LongRange :public Weapon
 {
@@ -11,14 +12,20 @@ public:
 	~LongRange();
 	CREATE_FUNC(LongRange);
 	virtual bool init();
-	virtual void Attack(Point pos);
-	void Rotate(float time, float degree);
+public:
+	virtual void attack(Point pos);
+	void rotate(float time, float degree);
+	Vector<Bullet*> getBullet()const;
+	int getRange()const;
+	int getDamage()const;
 protected:
-	int bullet_speed_;//speed of the bullet
-	int bullet_per_sec_;
-	int bullet_num_;
-	Vector<Bullet*> bullet_;
-	String bullet_picture_;
+	int m_bullet_speed;//speed of the bullet
+	int m_bullet_per_sec;
+	int m_bullet_num;
+	int m_bullet_damage;
+	Vector<Bullet*> m_bullet;
+	String m_bullet_picture;
 };
+
 
 #endif

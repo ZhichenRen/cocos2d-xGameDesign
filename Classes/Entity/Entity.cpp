@@ -10,12 +10,12 @@ Entity::~Entity()
 
 };
 
-Sprite* Entity::GetSprite()
+Sprite* Entity::getSprite()
 {
 	return this->m_sprite_;
 }
 
-void Entity::BindSprite(Sprite* sprite, float x_scale, float y_scale)
+void Entity::bindSprite(Sprite* sprite, float x_scale, float y_scale)
 {
 	this->m_sprite_ = sprite;
 	this->addChild(m_sprite_);

@@ -1,12 +1,14 @@
 #include "Entity\Weapons\LongRange.h"
+#include "Entity\Weapons\Bullets\Bullet.h"
 #include <cmath>
 #define PI 3.1415926
 
 LongRange::LongRange()
 {
-	bullet_speed_ = 1;
-	bullet_per_sec_ = 1;
-	bullet_num_ = 1;
+	m_bullet_speed = 1;
+	m_bullet_per_sec = 1;
+	m_bullet_num = 1;
+	m_range = 1;
 }
 
 bool LongRange::init()
@@ -14,14 +16,14 @@ bool LongRange::init()
 	return true;
 }
 
-void LongRange::Attack(Point pos)
+void LongRange::attack(Point pos)
 {
-	if (bullet_num_ == 0)
+	if (m_bullet_num == 0)
 	{
 		return;
 	}
-	bullet_num_--;
-	Point now = convertToWorldSpace(GetSprite()->getPosition());
+	m_bullet_num--;
+	Point now = convertToWorldSpace(getSprite()->getPosition());
 	float degree;
 	float dx = pos.x - now.x;
 	float dy = pos.y - now.y;
@@ -40,34 +42,48 @@ void LongRange::Attack(Point pos)
 	{
 		degree = atan(dy / dx) / PI * 180;
 	}
-	GetSprite()->setRotation(-degree);
+	getSprite()->setRotation(-degree);
 	Bullet* new_bullet = Bullet::create();
-	new_bullet->BindSprite(Sprite::create(bullet_picture_.getCString()), 0.7f, 0.7f);
+	new_bullet->bindSprite(Sprite::create(m_bullet_picture.getCString()), 0.7f, 0.7f);
 	if ((degree > 0 && dy < 0 && dx < 0) || (degree < 0 && dy>0 && dx < 0))
 	{
 		degree += 180;
-		GetSprite()->setFlippedX(true);
+		getSprite()->setFlippedX(true);
 	}
 	else
 	{
-		GetSprite()->setFlippedX(false);
+		getSprite()->setFlippedX(false);
 	}
-	log("%f,%f", now.x, now.y);
-	new_bullet->setPosition(GetSprite()->getPositionX() + GetSprite()->getBoundingBox().size.width*cos(degree / 180 * PI) / 2
-		, GetSprite()->getPositionY() + GetSprite()->getBoundingBox().size.width*sin(degree / 180 * PI) / 2);
+	new_bullet->setPosition(getSprite()->getPositionX() + getSprite()->getBoundingBox().size.width*cos(degree / 180 * PI) / 2
+		, getSprite()->getPositionY() + getSprite()->getBoundingBox().size.width*sin(degree / 180 * PI) / 2);
 	new_bullet->setRotation(-degree);
 	new_bullet->setVisible(true);
 	this->addChild(new_bullet);
-	auto move_action = MoveBy::create(1.0f, Vec2(bullet_speed_*cos(degree/180*PI), bullet_speed_*sin(degree/180*PI)));
+	auto move_action = MoveBy::create(1.0f, Vec2(m_bullet_speed*cos(degree/180*PI), m_bullet_speed*sin(degree/180*PI)));
 	auto attack_action = RepeatForever::create(move_action);
 	new_bullet->runAction(attack_action);
-	bullet_.pushBack(new_bullet);
+	m_bullet.pushBack(new_bullet);
 }
 
-void LongRange::Rotate(float time, float degree)
+void LongRange::rotate(float time, float degree)
 {
 	auto rotate_action = RotateTo::create(time, degree);
-	GetSprite()->runAction(rotate_action);
+	getSprite()->runAction(rotate_action);
+}
+
+Vector<Bullet*> LongRange::getBullet()const
+{
+	return m_bullet;
+}
+
+int LongRange::getRange()const
+{
+	return m_range;
+}
+
+int LongRange::getDamage()const
+{
+	return m_bullet_damage;
 }
 
 LongRange::~LongRange()

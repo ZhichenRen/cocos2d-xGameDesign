@@ -7,13 +7,13 @@ CandyGun::CandyGun()
 
 bool CandyGun::init()
 {	
-	power_cost_ = 5;
-	bullet_num_ = 100;
-	range_ = 100;
-	bullet_speed_ = 500;
-	bullet_per_sec_ = 2;
-	bullet_picture_ = String("CandyBullet.png");
-	BindSprite(Sprite::create("CandyGun!.png"), 0.6f, 0.6f);
+	m_power_cost = 5;
+	m_bullet_num = 100;
+	m_range = 100;
+	m_bullet_speed = 500;
+	m_bullet_per_sec = 2;
+	m_bullet_picture = String("CandyBullet.png");
+	bindSprite(Sprite::create("CandyGun!.png"), 0.6f, 0.6f);
 	return true;
 }
 

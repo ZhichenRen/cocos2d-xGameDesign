@@ -12,9 +12,9 @@ public:
 	~Weapon();
 	CREATE_FUNC(Weapon);
 	virtual bool init();
-	virtual void Attack();
+	virtual void attack();
 protected:
-	int power_cost_;
-	int range_;
+	int m_power_cost;
+	int m_range;
 };
 #endif

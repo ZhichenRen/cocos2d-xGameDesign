@@ -8,8 +8,8 @@
 
 Weapon::Weapon()
 {
-	power_cost_ = 0;
-	range_ = 0;
+	m_power_cost = 0;
+	m_range = 0;
 }
 
 bool Weapon::init()
@@ -17,7 +17,7 @@ bool Weapon::init()
 	return true;
 }
 
-void Weapon::Attack()
+void Weapon::attack()
 {
 
 }
