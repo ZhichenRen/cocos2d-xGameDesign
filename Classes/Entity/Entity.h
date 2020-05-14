@@ -10,7 +10,7 @@ public:
 	~Entity();
 	Sprite* GetSprite();
 	void BindSprite(Sprite* sprite, float x_scale = 1, float y_scale = 1);
-private:
+protected:
 	Sprite* m_sprite_;
 };
 #endif
