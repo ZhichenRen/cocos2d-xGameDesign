@@ -8,6 +8,7 @@ public:
 	Monster();
 	~Monster();
 	virtual bool init();
+	CREATE_FUNC(Monster);
 public:
 	void show();
 	void hide();
@@ -16,7 +17,8 @@ public:
 	void moveTo(const Vec2& targetPosition);
 	const int getHp();
 	bool getAttacked(const int damage);
-	CREATE_FUNC(Monster);
+	//void moveByPosList(Vector<PosBase> posList);
+
 private:
 	int m_Hp;
 	int m_isAlive;
