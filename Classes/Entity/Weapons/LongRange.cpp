@@ -13,6 +13,7 @@ LongRange::LongRange()
 
 bool LongRange::init()
 {
+	this->scheduleUpdate();
 	return true;
 }
 
@@ -62,7 +63,7 @@ void LongRange::attack(Point pos)
 	auto move_action = MoveBy::create(1.0f, Vec2(m_bullet_speed*cos(degree/180*PI), m_bullet_speed*sin(degree/180*PI)));
 	auto attack_action = RepeatForever::create(move_action);
 	new_bullet->runAction(attack_action);
-	m_bullet.pushBack(new_bullet);
+	m_bullet.push_back(new_bullet);
 }
 
 void LongRange::rotate(float time, float degree)
@@ -71,7 +72,7 @@ void LongRange::rotate(float time, float degree)
 	getSprite()->runAction(rotate_action);
 }
 
-Vector<Bullet*> LongRange::getBullet()const
+std::vector<Bullet*> LongRange::getBullet()const
 {
 	return m_bullet;
 }
@@ -84,6 +85,24 @@ int LongRange::getRange()const
 int LongRange::getDamage()const
 {
 	return m_bullet_damage;
+}
+
+void LongRange::update(float dt)
+{
+	for (auto i = m_bullet.begin(); i != m_bullet.end();)
+	{
+		if ((*i)->isUsed() == true)
+		{
+			(*i)->setVisible(false);
+			delete *i;
+			i = m_bullet.erase(i);
+			log("Delete");
+		}
+		else
+		{
+			i++;
+		}
+	}
 }
 
 LongRange::~LongRange()

@@ -15,15 +15,16 @@ public:
 public:
 	virtual void attack(Point pos);
 	void rotate(float time, float degree);
-	Vector<Bullet*> getBullet()const;
+	std::vector<Bullet*> getBullet()const;
 	int getRange()const;
 	int getDamage()const;
+	virtual void update(float dt);
 protected:
 	int m_bullet_speed;//speed of the bullet
 	int m_bullet_per_sec;
 	int m_bullet_num;
 	int m_bullet_damage;
-	Vector<Bullet*> m_bullet;
+	std::vector<Bullet*> m_bullet;
 	String m_bullet_picture;
 };
 
