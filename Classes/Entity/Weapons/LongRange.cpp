@@ -89,18 +89,17 @@ int LongRange::getDamage()const
 
 void LongRange::update(float dt)
 {
-	for (auto i = m_bullet.begin(); i != m_bullet.end();)
+	auto it = m_bullet.begin();
+	while (it != m_bullet.end())
 	{
-		if ((*i)->isUsed() == true)
+		if ((*it)->isUsed() == true)
 		{
-			(*i)->setVisible(false);
-			delete *i;
-			i = m_bullet.erase(i);
+			it = m_bullet.erase(it);
 			log("Delete");
 		}
 		else
 		{
-			i++;
+			it++;
 		}
 	}
 }
