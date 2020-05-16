@@ -16,8 +16,11 @@ public:
 	int getRange()const;
 	int getDamage()const;
 	void bindWeapon(LongRange* long_range);
+	bool isUsed()const;
+	void setIsUsed(bool status);
 protected:
 	int m_bullet_range;
 	int m_bullet_damage;
+	bool m_is_used;
 };
 #endif

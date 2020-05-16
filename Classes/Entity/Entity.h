@@ -10,7 +10,8 @@ public:
 	~Entity();
 	Sprite* getSprite();
 	void bindSprite(Sprite* sprite, float x_scale = 1, float y_scale = 1);
+	virtual Rect getBoundingBox();
 protected:
-	Sprite* m_sprite_;
+	Sprite* m_sprite;
 };
 #endif
