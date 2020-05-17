@@ -1,0 +1,48 @@
+# Prerequisites
+*.d
+*.db
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Other platforms
+proj.linux
+proj.ios_mac
+proj.android
+
+# Build files
+win32-build
+cocos2d
+<<<<<<< HEAD
+SoulKnight
+.vs
+/SoulKnight/
+=======
+>>>>>>> 7de7f83824c66a0cff016b34b4f2bb026ba6a557

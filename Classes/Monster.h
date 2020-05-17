@@ -15,6 +15,7 @@ public:
 	//void reset();
 	bool isAlive();
 	void moveTo(const Vec2& targetPosition);
+	void moveBy(const Vec2& distance);
 	const int getHp();
 	bool getAttacked(const int damage);
 	//void moveByPosList(Vector<PosBase> posList);

@@ -41,8 +41,15 @@ bool Monster::isAlive()
 
 void Monster::moveTo(const Vec2& targetPosition)
 {
-	auto move = MoveBy::create(1.0f,
-		Vec2( targetPosition.x, targetPosition.y));
+	auto move = MoveTo::create(1.0f,
+		Vec2(targetPosition.x, targetPosition.y));
+	this->runAction(move);
+}
+
+void Monster::moveBy(const Vec2& distance)
+{
+	auto move = MoveTo::create(1.0f,
+		Vec2(distance.x, distance.y));
 	this->runAction(move);
 }
 
