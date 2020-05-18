@@ -5,26 +5,33 @@
 
 LongRange::LongRange()
 {
-	m_bullet_speed = 1;
-	m_bullet_per_sec = 1;
-	m_bullet_num = 1;
-	m_range = 1;
 }
 
 bool LongRange::init()
 {
+	m_bullet_speed = 1;
+	m_attack_speed = 1.0f;
+	m_bullet_num = 1;
+	m_range = 1;
+	m_is_attack = false;
 	this->scheduleUpdate();
 	return true;
 }
 
 void LongRange::attack(Point pos)
 {
+	if (m_is_attack == true)
+	{
+		return;
+	}
 	if (m_bullet_num == 0)
 	{
 		return;
 	}
+	m_is_attack = true;
 	m_bullet_num--;
-	Point now = convertToWorldSpace(getSprite()->getPosition());
+	Point weapon_pos = m_sprite->getPosition();
+	Point now = this->convertToWorldSpace(weapon_pos);
 	float degree;
 	float dx = pos.x - now.x;
 	float dy = pos.y - now.y;
@@ -45,15 +52,26 @@ void LongRange::attack(Point pos)
 	}
 	getSprite()->setRotation(-degree);
 	Bullet* new_bullet = Bullet::create();
-	new_bullet->bindSprite(Sprite::create(m_bullet_picture.getCString()), 0.7f, 0.7f);
+	new_bullet->bindSprite(Sprite::create(m_bullet_picture.c_str()), 0.7f, 0.7f);
+	auto weapon_rotate_up = RotateBy::create(m_attack_speed / 2, -5);
+	auto weapon_rotate_down = RotateBy::create(m_attack_speed / 2, 5);
+	auto call_back = CallFunc::create(
+		[&](){
+		m_is_attack = false;
+	}
+	);
 	if ((degree > 0 && dy < 0 && dx < 0) || (degree < 0 && dy>0 && dx < 0))
 	{
 		degree += 180;
 		getSprite()->setFlippedX(true);
+		auto gun_action = Sequence::create(weapon_rotate_down, weapon_rotate_up, call_back, NULL);
+		m_sprite->runAction(gun_action);
 	}
 	else
 	{
 		getSprite()->setFlippedX(false);
+		auto gun_action = Sequence::create(weapon_rotate_up, weapon_rotate_down, call_back, NULL);
+		m_sprite->runAction(gun_action);
 	}
 	new_bullet->setPosition(getSprite()->getPositionX() + getSprite()->getBoundingBox().size.width*cos(degree / 180 * PI) / 2
 		, getSprite()->getPositionY() + getSprite()->getBoundingBox().size.width*sin(degree / 180 * PI) / 2);
@@ -66,20 +84,9 @@ void LongRange::attack(Point pos)
 	m_bullet.push_back(new_bullet);
 }
 
-void LongRange::rotate(float time, float degree)
-{
-	auto rotate_action = RotateTo::create(time, degree);
-	getSprite()->runAction(rotate_action);
-}
-
 std::vector<Bullet*> LongRange::getBullet()const
 {
 	return m_bullet;
-}
-
-int LongRange::getRange()const
-{
-	return m_range;
 }
 
 int LongRange::getDamage()const

@@ -12,7 +12,10 @@ public:
 	~Weapon();
 	CREATE_FUNC(Weapon);
 	virtual bool init();
-	virtual void attack();
+public:
+	virtual void attack(Point pos);
+	int getPowerCost()const;
+	int getRange()const;
 protected:
 	int m_power_cost;
 	int m_range;
