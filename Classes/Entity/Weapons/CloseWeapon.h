@@ -13,6 +13,7 @@ public:
 public:
 	virtual void attack(Point pos);
 	bool isCollideWith(Entity* entity);
+	bool isAttack()const;
 protected:
 	float m_attack_speed;
 	int m_damage;
