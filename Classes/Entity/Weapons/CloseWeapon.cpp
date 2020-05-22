@@ -58,3 +58,8 @@ bool CloseWeapon::isCollideWith(Entity* entity)
 	}
 	return weapon_rect.intersectsRect(entity_rect);
 }
+
+bool CloseWeapon::isAttack()const
+{
+	return m_is_attack;
+}
