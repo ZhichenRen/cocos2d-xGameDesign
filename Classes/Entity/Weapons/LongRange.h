@@ -14,18 +14,17 @@ public:
 	virtual bool init();
 public:
 	virtual void attack(Point pos);
-	void rotate(float time, float degree);
 	std::vector<Bullet*> getBullet()const;
-	int getRange()const;
 	int getDamage()const;
 	virtual void update(float dt);
 protected:
 	int m_bullet_speed;//speed of the bullet
-	int m_bullet_per_sec;
+	float m_attack_speed;
 	int m_bullet_num;
 	int m_bullet_damage;
 	std::vector<Bullet*> m_bullet;
-	String m_bullet_picture;
+	std::string m_bullet_picture;
+	bool m_is_attack;
 };
 
 
