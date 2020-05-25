@@ -7,12 +7,13 @@ bool Shotgun::init()
 	m_power_cost = 5;
 	m_bullet_num = 100;
 	m_range = 100;
+	m_bullet_damage = 5;
 	m_bullet_speed = 500;
 	m_attack_speed = 0.25f;
 	m_degree = 15.0f;
 	m_bullet_num_at_once = 4;
 	m_bullet_picture = std::string("BasicBullet.png");
-	bindSprite(Sprite::create("Rifle&Shotgun.png"), 0.3f, 0.3f);
+	bindSprite(Sprite::create("Rifle&Shotgun.png"), 0.2f, 0.2f);
 	return true;
 }
 
@@ -72,9 +73,11 @@ void Shotgun::attack(Point pos)
 	for (int i = 1; i <= m_bullet_num_at_once; i++)
 	{
 		Bullet* new_bullet = Bullet::create();
-		new_bullet->bindSprite(Sprite::create(m_bullet_picture.c_str()), 1.0f, 1.0f);
+		new_bullet->bindSprite(Sprite::create(m_bullet_picture.c_str()), 0.5f, 0.5f);
+		new_bullet->setInfo(m_range, m_bullet_damage);
 		new_bullet->setPosition(getSprite()->getPositionX() + getSprite()->getBoundingBox().size.width*cos(degree / 180 * PI) / 2
 			, getSprite()->getPositionY() + getSprite()->getBoundingBox().size.width*sin(degree / 180 * PI) / 2);
+		new_bullet->setOriginPos(new_bullet->getPosition());
 		float fire_degree;
 		if (m_bullet_num_at_once % 2)
 		{
