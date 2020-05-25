@@ -12,6 +12,7 @@ public:
 public:
 	void show();
 	void hide();
+	void bindPlayer();
 	//void reset();
 	bool isAlive();
 	void moveTo(const Vec2& targetPosition);
@@ -26,6 +27,7 @@ private:
 	int m_isAlive;
 	int m_runningSpeed;
 	Vec2 m_curPosition;
+	//Player player;
 	//Weapon m_Weapon;
 };
 #endif // !__Monster_H__

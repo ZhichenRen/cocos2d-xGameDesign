@@ -20,6 +20,7 @@ void MonsterManager::update(float dt)
 	auto size = Director::getInstance()->getVisibleSize();
 	int SizeX = size.width / 2;
 	int SizeY = size.height / 2;
+	
 	for (auto monster : m_monsterList)
 	{
 		if (monster->isAlive())

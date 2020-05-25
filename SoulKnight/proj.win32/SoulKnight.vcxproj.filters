@@ -27,15 +27,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\AppDelegate.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\HelloWorldScene.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Classes\Entity\Weapons\LongRange.cpp">
       <Filter>武器类</Filter>
     </ClCompile>
@@ -60,17 +51,10 @@
     <ClCompile Include="..\..\Classes\TollgateScene.cpp">
       <Filter>场景类</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Classes\AppDelegate.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="main.h">
-      <Filter>win32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\AppDelegate.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\HelloWorldScene.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Classes\Entity\Weapons\LongRange.h">
       <Filter>武器类</Filter>
     </ClInclude>
@@ -95,6 +79,8 @@
     <ClInclude Include="..\..\Classes\TollgateScene.h">
       <Filter>场景类</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Classes\AppDelegate.h" />
+    <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">
