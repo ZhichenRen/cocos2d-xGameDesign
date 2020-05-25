@@ -25,9 +25,10 @@ void MonsterManager::update(float dt)
 		if (monster->isAlive())
 		{
 			Vec2 curPos = monster->getPosition();
-			int xFlag = curPos.x > SizeX ? -1 : 1;
-			int yFlag = curPos.y > SizeY ? -1 : 1;
-			
+			float xFlag = curPos.x > SizeX ? -monster->getSpeed() : monster->getSpeed();
+			float yFlag = curPos.y > SizeY ? -monster->getSpeed() : monster->getSpeed();
+			if (curPos.x == SizeX)	xFlag = 0;
+			if (curPos.y == SizeY)	yFlag = 0;
 			monster->moveTo(Vec2(curPos.x + xFlag,
 				curPos.y + yFlag));
 		}

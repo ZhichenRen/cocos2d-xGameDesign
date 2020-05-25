@@ -1,6 +1,3 @@
-#include "PosLoadUtil.h"
-#include "EnumPosType.h"
-#include "TowerPos.h"
 #include "MonsterPos.h"
 
 PosLoadUtil* PosLoadUtil::m_posLoadUtil = NULL;

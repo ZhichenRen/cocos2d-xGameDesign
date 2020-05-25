@@ -12,6 +12,7 @@ Monster::~Monster()
 
 bool Monster::init()
 {
+	setSpeed(0.5);
 	return true;
 }
 

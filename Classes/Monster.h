@@ -18,6 +18,7 @@ public:
 	void moveBy(const Vec2& distance);
 	const int getHp();
 	bool getAttacked(const int damage);
+	CC_SYNTHESIZE(float, m_fSpeed, Speed);
 	//void moveByPosList(Vector<PosBase> posList);
 
 private:
