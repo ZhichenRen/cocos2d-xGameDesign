@@ -1,5 +1,5 @@
 #include "Entity\Weapons\LongRange.h"
-#include "Entity\Weapons\Bullets\Bullet.h"
+#include "Entity\Weapons\Bullets\ExplosiveBullet.h"
 #include <cmath>
 #define PI 3.1415926
 
@@ -14,7 +14,7 @@ bool LongRange::init()
 	m_bullet_num = 1;
 	m_range = 1;
 	m_is_attack = false;
-	this->scheduleUpdate();
+	scheduleUpdate();
 	return true;
 }
 
@@ -52,7 +52,8 @@ void LongRange::attack(Point pos)
 	}
 	getSprite()->setRotation(-degree);
 	Bullet* new_bullet = Bullet::create();
-	new_bullet->bindSprite(Sprite::create(m_bullet_picture.c_str()), 0.7f, 0.7f);
+	new_bullet->bindSprite(Sprite::create(m_bullet_picture.c_str()), 0.4f, 0.4f);
+	new_bullet->setInfo(m_range,m_bullet_damage);
 	auto weapon_rotate_up = RotateBy::create(m_attack_speed / 2, -5);
 	auto weapon_rotate_down = RotateBy::create(m_attack_speed / 2, 5);
 	auto call_back = CallFunc::create(
@@ -75,6 +76,7 @@ void LongRange::attack(Point pos)
 	}
 	new_bullet->setPosition(getSprite()->getPositionX() + getSprite()->getBoundingBox().size.width*cos(degree / 180 * PI) / 2
 		, getSprite()->getPositionY() + getSprite()->getBoundingBox().size.width*sin(degree / 180 * PI) / 2);
+	new_bullet->setOriginPos(new_bullet->getPosition());
 	new_bullet->setRotation(-degree);
 	new_bullet->setVisible(true);
 	this->addChild(new_bullet);
@@ -96,6 +98,17 @@ int LongRange::getDamage()const
 
 void LongRange::update(float dt)
 {
+	for (auto bullet : m_bullet)
+	{
+		if (bullet->getDistance() > m_range)
+		{
+			if (typeid(*bullet) == typeid(ExplosiveBullet))
+			{
+				dynamic_cast<ExplosiveBullet*>(bullet)->explode();
+			}
+			bullet->setIsUsed(true);
+		}
+	}
 	auto it = m_bullet.begin();
 	while (it != m_bullet.end())
 	{
