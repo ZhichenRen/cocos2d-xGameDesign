@@ -152,25 +152,29 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Classes\AppDelegate.cpp" />
+    <ClCompile Include="..\..\Classes\Entity\Coin\Coin.cpp" />
     <ClCompile Include="..\..\Classes\Entity\Entity.cpp" />
     <ClCompile Include="..\..\Classes\Entity\Weapons\Bullets\Bullet.cpp" />
     <ClCompile Include="..\..\Classes\Entity\Weapons\CandyGun.cpp" />
     <ClCompile Include="..\..\Classes\Entity\Weapons\LongRange.cpp" />
     <ClCompile Include="..\..\Classes\Entity\Weapons\Weapon.cpp" />
-    <ClCompile Include="..\..\Classes\Monster.cpp" />
-    <ClCompile Include="..\..\Classes\MonsterManager.cpp" />
+    <ClCompile Include="..\..\Classes\Monster\Monster.cpp" />
+    <ClCompile Include="..\..\Classes\Monster\MonsterManager.cpp" />
+    <ClCompile Include="..\..\Classes\Monster\Slime.cpp" />
     <ClCompile Include="..\..\Classes\TollgateScene.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Classes\AppDelegate.h" />
+    <ClInclude Include="..\..\Classes\Entity\Coin\Coin.h" />
     <ClInclude Include="..\..\Classes\Entity\Entity.h" />
     <ClInclude Include="..\..\Classes\Entity\Weapons\Bullets\Bullet.h" />
     <ClInclude Include="..\..\Classes\Entity\Weapons\CandyGun.h" />
     <ClInclude Include="..\..\Classes\Entity\Weapons\LongRange.h" />
     <ClInclude Include="..\..\Classes\Entity\Weapons\Weapon.h" />
-    <ClInclude Include="..\..\Classes\Monster.h" />
-    <ClInclude Include="..\..\Classes\MonsterManager.h" />
+    <ClInclude Include="..\..\Classes\Monster\Monster.h" />
+    <ClInclude Include="..\..\Classes\Monster\MonsterManager.h" />
+    <ClInclude Include="..\..\Classes\Monster\Slime.h" />
     <ClInclude Include="..\..\Classes\TollgateScene.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>

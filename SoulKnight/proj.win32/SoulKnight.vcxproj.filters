@@ -25,6 +25,15 @@
     <Filter Include="武器类\子弹">
       <UniqueIdentifier>{8cf4b0a0-1de9-478c-8ac7-820988149205}</UniqueIdentifier>
     </Filter>
+    <Filter Include="怪物类\史莱姆">
+      <UniqueIdentifier>{8cdc0d7a-af77-4178-806a-d2ae76a7bc78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="怪物类\怪物管理器">
+      <UniqueIdentifier>{662c25eb-5e82-43b7-80a8-e4ca98bf1ef3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="武器类\硬币">
+      <UniqueIdentifier>{bda14d6a-cc31-4b02-982d-9c1a90595aa7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Classes\Entity\Weapons\LongRange.cpp">
@@ -42,17 +51,23 @@
     <ClCompile Include="..\..\Classes\Entity\Entity.cpp">
       <Filter>实体类</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Classes\MonsterManager.cpp">
-      <Filter>怪物类</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Classes\Monster.cpp">
-      <Filter>怪物类</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Classes\TollgateScene.cpp">
       <Filter>场景类</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Classes\AppDelegate.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\..\Classes\Monster\Monster.cpp">
+      <Filter>怪物类</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Classes\Monster\MonsterManager.cpp">
+      <Filter>怪物类\怪物管理器</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Classes\Monster\Slime.cpp">
+      <Filter>怪物类\史莱姆</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Classes\Entity\Coin\Coin.cpp">
+      <Filter>武器类\硬币</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Classes\Entity\Weapons\LongRange.h">
@@ -70,17 +85,23 @@
     <ClInclude Include="..\..\Classes\Entity\Entity.h">
       <Filter>实体类</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Classes\MonsterManager.h">
-      <Filter>怪物类</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Classes\Monster.h">
-      <Filter>怪物类</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Classes\TollgateScene.h">
       <Filter>场景类</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Classes\AppDelegate.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="..\..\Classes\Monster\Monster.h">
+      <Filter>怪物类</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Classes\Monster\MonsterManager.h">
+      <Filter>怪物类\怪物管理器</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Classes\Monster\Slime.h">
+      <Filter>怪物类\史莱姆</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Classes\Entity\Coin\Coin.h">
+      <Filter>武器类\硬币</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">
