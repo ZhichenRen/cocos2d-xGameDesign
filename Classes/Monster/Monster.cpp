@@ -1,4 +1,4 @@
-#include "Monster.h"
+#include "Monster\Monster.h"
 
 Monster::Monster() 
 {
@@ -12,7 +12,7 @@ Monster::~Monster()
 
 bool Monster::init()
 {
-	setSpeed(0.5);
+	
 	return true;
 }
 
@@ -29,7 +29,7 @@ void Monster::hide()
 {
 	if (getSprite() != NULL)
 	{
-		setVisible(false);
+		removeAllChildren();
 		m_isAlive = false;
 	}
 }
@@ -63,4 +63,10 @@ bool Monster::getAttacked(const int damage)
 {
 	m_Hp -= damage;
 	return true;
+}
+
+void Monster::die()
+{
+	hide();
+	this->bindSprite((Sprite*)Coin::create());
 }
