@@ -1,24 +1,30 @@
-#include "Entity\Weapons\LongRange.h"
+#include "Entity\Weapons\RPG.h"
 #include "Entity\Weapons\Bullets\ExplosiveBullet.h"
-#include <cmath>
+
 #define PI 3.1415926
 
-LongRange::LongRange()
+bool RPG::init()
 {
-}
-
-bool LongRange::init()
-{
-	m_bullet_speed = 1;
-	m_attack_speed = 1.0f;
-	m_bullet_num = 1;
-	m_range = 1;
-	m_is_attack = false;
+	if (!LongRange::init())
+	{
+		return false;
+	}
+	scheduleUpdate();
+	m_power_cost = 5;
+	m_bullet_num = 30;
+	m_range = 250;
+	m_bullet_damage = 10;
+	m_bullet_speed = 300;
+	m_attack_speed = 0.3f;
+	m_explosion_damage = 90;
+	m_explosion_range = 20;
+	m_bullet_picture = std::string("RPG.png");
+	bindSprite(Sprite::create("Fist_of_Heaven.png"), 0.2f, 0.2f);
 	scheduleUpdate();
 	return true;
 }
 
-void LongRange::attack(Point pos)
+void RPG::attack(Point pos)
 {
 	if (m_is_attack == true)
 	{
@@ -51,13 +57,13 @@ void LongRange::attack(Point pos)
 		degree = atan(dy / dx) / PI * 180;
 	}
 	getSprite()->setRotation(-degree);
-	Bullet* new_bullet = Bullet::create();
-	new_bullet->bindSprite(Sprite::create(m_bullet_picture.c_str()), 0.4f, 0.4f);
-	new_bullet->setInfo(m_range,m_bullet_damage);
+	ExplosiveBullet* new_bullet = ExplosiveBullet::create();
+	new_bullet->bindSprite(Sprite::create(m_bullet_picture.c_str()), 0.3f, 0.3f);
+	new_bullet->setInfo(m_range, m_bullet_damage, m_explosion_range, m_explosion_damage);
 	auto weapon_rotate_up = RotateBy::create(m_attack_speed / 2, -5);
 	auto weapon_rotate_down = RotateBy::create(m_attack_speed / 2, 5);
 	auto call_back = CallFunc::create(
-		[&](){
+		[&]() {
 		m_is_attack = false;
 	}
 	);
@@ -80,51 +86,8 @@ void LongRange::attack(Point pos)
 	new_bullet->setRotation(-degree);
 	new_bullet->setVisible(true);
 	this->addChild(new_bullet);
-	auto move_action = MoveBy::create(1.0f, Vec2(m_bullet_speed*cos(degree/180*PI), m_bullet_speed*sin(degree/180*PI)));
+	auto move_action = MoveBy::create(1.0f, Vec2(m_bullet_speed*cos(degree / 180 * PI), m_bullet_speed*sin(degree / 180 * PI)));
 	auto attack_action = RepeatForever::create(move_action);
 	new_bullet->runAction(attack_action);
 	m_bullet.push_back(new_bullet);
-}
-
-std::vector<Bullet*> LongRange::getBullet()const
-{
-	return m_bullet;
-}
-
-int LongRange::getDamage()const
-{
-	return m_bullet_damage;
-}
-
-void LongRange::update(float dt)
-{
-	for (auto bullet : m_bullet)
-	{
-		if (bullet->getDistance() > m_range)
-		{
-			if (typeid(*bullet) == typeid(ExplosiveBullet))
-			{
-				dynamic_cast<ExplosiveBullet*>(bullet)->explode();
-			}
-			bullet->setIsUsed(true);
-		}
-	}
-	auto it = m_bullet.begin();
-	while (it != m_bullet.end())
-	{
-		if ((*it)->isUsed() == true)
-		{
-			it = m_bullet.erase(it);
-			log("Delete");
-		}
-		else
-		{
-			it++;
-		}
-	}
-}
-
-LongRange::~LongRange()
-{
-
 }

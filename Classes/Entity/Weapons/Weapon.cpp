@@ -1,10 +1,4 @@
-#define LOCAL
-
-#ifdef LOCAL
-#include "Weapon.h"
-#else
-#include "Entity\Weapon\Weapon.h"
-#endif
+#include "Entity\Weapons\Weapon.h"
 
 Weapon::Weapon()
 {
