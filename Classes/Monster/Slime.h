@@ -1,7 +1,8 @@
 #ifndef __Slime_H__
 #define __Slime_H__
 #include "cocos2d.h"
-#include "Monster.h"
+#include "Monster\Monster.h"
+
 class Slime : public Monster {
 public:
 	virtual bool init();

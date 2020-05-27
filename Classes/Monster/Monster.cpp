@@ -54,10 +54,6 @@ void Monster::moveBy(const Vec2& distance)
 	this->runAction(move);
 }
 
-const int Monster::getHp()
-{
-	return m_Hp;
-}
 
 bool Monster::getAttacked(const int damage)
 {
@@ -68,5 +64,6 @@ bool Monster::getAttacked(const int damage)
 void Monster::die()
 {
 	hide();
-	this->bindSprite((Sprite*)Coin::create());
+	auto coin = Coin::create();
+	this->bindSprite((Sprite*)coin);
 }

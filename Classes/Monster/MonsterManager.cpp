@@ -3,7 +3,6 @@
 
 
 bool MonsterManager::init() {
-	
 	createMonsters();
 	createMonsterPos();
 	this->scheduleUpdate();
@@ -47,12 +46,17 @@ void MonsterManager::update(float dt)
 	
 	for (auto monster : m_monsterList)
 	{
+		
 		if (monster->isAlive())
 		{
 			if (monster->getHp() < 0)
 			{
 				monster->die();
+				continue;
 			}
+			//monster->setHp(monster->getHp() - 1);
+			Weapon* monsWeapon = monster->getMonsterWeapon(); 
+			monsWeapon->attack(Point(SizeX, SizeY));
 			Vec2 curPos = monster->getPosition();
 			float xFlag = curPos.x > SizeX ? -monster->getMonsterSpeed() : monster->getMonsterSpeed();
 			float yFlag = curPos.y > SizeY ? -monster->getMonsterSpeed() : monster->getMonsterSpeed();
@@ -73,16 +77,9 @@ void MonsterManager::update(float dt)
 
 MonsterManager::MonsterManager()
 {
-	m_fShowTimeCount = 0;
+	
 }
 
 MonsterManager::~MonsterManager()
 {
-}
-
-
-
-void MonsterManager::showMonster(float dt) 
-{
-	
 }
