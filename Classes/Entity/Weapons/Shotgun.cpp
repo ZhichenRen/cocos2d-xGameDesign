@@ -75,9 +75,11 @@ void Shotgun::attack(Point pos)
 		Bullet* new_bullet = Bullet::create();
 		new_bullet->bindSprite(Sprite::create(m_bullet_picture.c_str()), 0.5f, 0.5f);
 		new_bullet->setInfo(m_range, m_bullet_damage);
-		new_bullet->setPosition(getSprite()->getPositionX() + getSprite()->getBoundingBox().size.width*cos(degree / 180 * PI) / 2
+		Point origin_pos = Point(getSprite()->getPositionX() + getSprite()->getBoundingBox().size.width*cos(degree / 180 * PI) / 2
 			, getSprite()->getPositionY() + getSprite()->getBoundingBox().size.width*sin(degree / 180 * PI) / 2);
-		new_bullet->setOriginPos(new_bullet->getPosition());
+		origin_pos = m_map->convertToMapSpace(convertToWorldSpace(origin_pos));
+		new_bullet->setPosition(origin_pos);
+		new_bullet->setOriginPos(origin_pos);
 		float fire_degree;
 		if (m_bullet_num_at_once % 2)
 		{
@@ -98,7 +100,7 @@ void Shotgun::attack(Point pos)
 		}
 		new_bullet->setRotation(-fire_degree);
 		new_bullet->setVisible(true);
-		this->addChild(new_bullet);
+		m_map->addChild(new_bullet, 2);
 		auto move_action = MoveBy::create(1.0f, Vec2(m_bullet_speed*cos(fire_degree / 180 * PI), m_bullet_speed*sin(fire_degree / 180 * PI)));
 		auto attack_action = RepeatForever::create(move_action);
 		new_bullet->runAction(attack_action);

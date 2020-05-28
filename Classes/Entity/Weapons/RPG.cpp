@@ -80,12 +80,14 @@ void RPG::attack(Point pos)
 		auto gun_action = Sequence::create(weapon_rotate_up, weapon_rotate_down, call_back, NULL);
 		m_sprite->runAction(gun_action);
 	}
-	new_bullet->setPosition(getSprite()->getPositionX() + getSprite()->getBoundingBox().size.width*cos(degree / 180 * PI) / 2
+	Point origin_pos = Point(getSprite()->getPositionX() + getSprite()->getBoundingBox().size.width*cos(degree / 180 * PI) / 2
 		, getSprite()->getPositionY() + getSprite()->getBoundingBox().size.width*sin(degree / 180 * PI) / 2);
-	new_bullet->setOriginPos(new_bullet->getPosition());
+	origin_pos = m_map->convertToMapSpace(convertToWorldSpace(origin_pos));
+	new_bullet->setPosition(origin_pos);
+	new_bullet->setOriginPos(origin_pos);
 	new_bullet->setRotation(-degree);
 	new_bullet->setVisible(true);
-	this->addChild(new_bullet);
+	m_map->addChild(new_bullet, 2);
 	auto move_action = MoveBy::create(1.0f, Vec2(m_bullet_speed*cos(degree / 180 * PI), m_bullet_speed*sin(degree / 180 * PI)));
 	auto attack_action = RepeatForever::create(move_action);
 	new_bullet->runAction(attack_action);
