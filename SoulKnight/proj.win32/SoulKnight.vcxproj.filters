@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="win32">
+      <UniqueIdentifier>{84a8ebd7-7cf0-47f6-b75e-d441df67da40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource">
+      <UniqueIdentifier>{715254bc-d70b-4ec5-bf29-467dd3ace079}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="场景类">
+      <UniqueIdentifier>{2deb1e2d-f693-4e0d-bf4c-ca72e25b04c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="怪物类">
+      <UniqueIdentifier>{c5b162da-6e58-4b52-965d-4dc09d1b8d2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="实体类">
+      <UniqueIdentifier>{1ae2e74a-bbab-4945-8132-f6a0693f1f09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="武器类">
+      <UniqueIdentifier>{3c15e6d8-f7d8-4bd9-93f3-031fdb925045}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="武器类\子弹">
+      <UniqueIdentifier>{8cf4b0a0-1de9-478c-8ac7-820988149205}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="怪物类\史莱姆">
+      <UniqueIdentifier>{8cdc0d7a-af77-4178-806a-d2ae76a7bc78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="怪物类\怪物管理器">
+      <UniqueIdentifier>{662c25eb-5e82-43b7-80a8-e4ca98bf1ef3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="武器类\硬币">
+      <UniqueIdentifier>{bda14d6a-cc31-4b02-982d-9c1a90595aa7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Classes\Entity\Weapons\LongRange.cpp">
+      <Filter>武器类</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Classes\Entity\Weapons\CandyGun.cpp">
+      <Filter>武器类</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Classes\Entity\Weapons\Weapon.cpp">
+      <Filter>武器类</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Classes\Entity\Weapons\Bullets\Bullet.cpp">
+      <Filter>武器类\子弹</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Classes\Entity\Entity.cpp">
+      <Filter>实体类</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Classes\TollgateScene.cpp">
+      <Filter>场景类</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Classes\AppDelegate.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\..\Classes\Monster\Monster.cpp">
+      <Filter>怪物类</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Classes\Monster\MonsterManager.cpp">
+      <Filter>怪物类\怪物管理器</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Classes\Monster\Slime.cpp">
+      <Filter>怪物类\史莱姆</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Classes\Entity\Coin\Coin.cpp">
+      <Filter>武器类\硬币</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Classes\Entity\Weapons\LongRange.h">
+      <Filter>武器类</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Classes\Entity\Weapons\Weapon.h">
+      <Filter>武器类</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Classes\Entity\Weapons\CandyGun.h">
+      <Filter>武器类</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Classes\Entity\Weapons\Bullets\Bullet.h">
+      <Filter>武器类\子弹</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Classes\Entity\Entity.h">
+      <Filter>实体类</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Classes\TollgateScene.h">
+      <Filter>场景类</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Classes\AppDelegate.h" />
+    <ClInclude Include="main.h" />
+    <ClInclude Include="..\..\Classes\Monster\Monster.h">
+      <Filter>怪物类</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Classes\Monster\MonsterManager.h">
+      <Filter>怪物类\怪物管理器</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Classes\Monster\Slime.h">
+      <Filter>怪物类\史莱姆</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Classes\Entity\Coin\Coin.h">
+      <Filter>武器类\硬币</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="game.rc">
+      <Filter>resource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
