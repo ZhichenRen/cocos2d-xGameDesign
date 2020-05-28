@@ -16,6 +16,7 @@ void ExplosiveBullet::explode()
 	m_is_used = true;
 	auto explosion = ParticleMeteor::create();
 	explosion->setEmitterMode(ParticleSystem::Mode::RADIUS);
+	explosion->setPositionType(ParticleSystem::PositionType::RELATIVE);
 	explosion->setTotalParticles(3000);
 	explosion->setPosition(0, 0);
 	explosion->setDuration(0.2f);
