@@ -156,6 +156,44 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
+			<key>Ability.PNG</key>
+			<dict>
+				<key>width</key>
+				<integer>125</integer>
+				<key>height</key>
+				<integer>125</integer>
+				<key>originalWidth</key>
+				<integer>135</integer>
+				<key>originalHeight</key>
+				<integer>135</integer>
+				<key>x</key>
+				<integer>149</integer>
+				<key>y</key>
+				<integer>542</integer>
+				<key>offsetX</key>
+				<real>0</real>
+				<key>offsetY</key>
+				<real>-1</real>
+			</dict>
+			<key>AbilityLoadingBar.png</key>
+			<dict>
+				<key>width</key>
+				<integer>73</integer>
+				<key>height</key>
+				<integer>42</integer>
+				<key>originalWidth</key>
+				<integer>73</integer>
+				<key>originalHeight</key>
+				<integer>73</integer>
+				<key>x</key>
+				<integer>276</integer>
+				<key>y</key>
+				<integer>542</integer>
+				<key>offsetX</key>
+				<real>0</real>
+				<key>offsetY</key>
+				<real>-2.5</real>
+			</dict>
 		</dict>
 		<key>metadata</key>
 		<dict>
