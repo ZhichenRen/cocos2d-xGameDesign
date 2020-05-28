@@ -5,6 +5,7 @@
 #include "Monster\Monster.h"
 #include "Entity\Entity.h"
 #include "Monster\Slime.h"
+#include "Monster\Pig.h"
 USING_NS_CC;
 class MonsterManager : public Node {
 public:

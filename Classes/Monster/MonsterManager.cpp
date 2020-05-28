@@ -19,7 +19,7 @@ void MonsterManager::createMonsters()
 		for (int j = 0; j < 5; j++)
 		{
 			monster = Slime::create();
-			monster->bindSprite(Sprite::create(monster->getResTrack()));
+			//monster->bindSprite(Sprite::create(monster->getResTrack()));
 			this->addChild(monster);
 			m_monsterList.pushBack(monster);
 		}
@@ -55,16 +55,17 @@ void MonsterManager::update(float dt)
 				continue;
 			}
 			//monster->setHp(monster->getHp() - 1);
-			Weapon* monsWeapon = monster->getMonsterWeapon(); 
+			auto monsWeapon = monster->getMonsterWeapon(); 
 			monsWeapon->attack(Point(SizeX, SizeY));
-			Vec2 curPos = monster->getPosition();
+			//auto monsPos = monster->getPosition();
+			auto curPos = convertToNodeSpace ( convertToWorldSpace(monster->getPosition()));
 			float xFlag = curPos.x > SizeX ? -monster->getMonsterSpeed() : monster->getMonsterSpeed();
 			float yFlag = curPos.y > SizeY ? -monster->getMonsterSpeed() : monster->getMonsterSpeed();
 			if (abs(curPos.x - SizeX) < 20)	xFlag = 0;
 			if (abs(curPos.y - SizeY) < 20)	yFlag = 0;
-			monster->moveTo(Vec2(curPos.x + xFlag,
+			monster->moveTo(ccp(curPos.x + xFlag,
 				curPos.y + yFlag));
-			monster->setPosition(Vec2(curPos.x + xFlag,
+			monster->setPosition(ccp(curPos.x + xFlag,
 				curPos.y + yFlag));
 		}
 	}

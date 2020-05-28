@@ -65,5 +65,6 @@ void Monster::die()
 {
 	hide();
 	auto coin = Coin::create();
+	this->getSprite()->setVisible(false);//¹ÖÎïÏûÊ§
 	this->bindSprite((Sprite*)coin);
 }
