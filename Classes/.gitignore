@@ -1,5 +1,6 @@
 # Prerequisites
 *.d
+*.db
 
 # Compiled Object files
 *.slo
@@ -39,4 +40,9 @@ proj.android
 # Build files
 win32-build
 cocos2d
+<<<<<<< HEAD
 SoulKnight
+.vs
+/SoulKnight/
+=======
+>>>>>>> 7de7f83824c66a0cff016b34b4f2bb026ba6a557

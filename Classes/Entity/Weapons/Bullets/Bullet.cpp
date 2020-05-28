@@ -27,10 +27,10 @@ int Bullet::getDamage()const
 	return m_bullet_damage;
 }
 
-void Bullet::bindWeapon(LongRange* long_range)
+void Bullet::setInfo(int range, int damage)
 {
-	m_bullet_damage = long_range->getDamage();
-	m_bullet_range = long_range->getRange();
+	m_bullet_damage = damage;
+	m_bullet_range = range;
 }
 
 bool Bullet::isUsed()const
@@ -41,6 +41,18 @@ bool Bullet::isUsed()const
 void Bullet::setIsUsed(bool status)
 {
 	m_is_used = status;
+}
+
+void Bullet::setOriginPos(const Point& pos)
+{
+	m_origin_pos = pos;
+}
+
+float Bullet::getDistance()const
+{
+	Point pos = getPosition();
+	float distance = sqrtf((pos.x - m_origin_pos.x)*(pos.x - m_origin_pos.x) + (pos.y - m_origin_pos.y)*(pos.y - m_origin_pos.y));
+	return distance;
 }
 
 Bullet::~Bullet()

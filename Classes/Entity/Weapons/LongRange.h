@@ -24,7 +24,6 @@ protected:
 	int m_bullet_damage;
 	std::vector<Bullet*> m_bullet;
 	std::string m_bullet_picture;
-private:
 	bool m_is_attack;
 };
 
