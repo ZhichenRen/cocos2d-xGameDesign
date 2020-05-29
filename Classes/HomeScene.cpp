@@ -1,5 +1,6 @@
 #include "HomeScene.h"
-#include "HelloWorldScene.h"
+#include "SafeMapScene.h"
+#include "AdventureMapScene.h"
 #include "SettingScene.h"
 
 
@@ -31,13 +32,16 @@ bool HomeMenuLayer::init()
 	bg->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2));
 	this->addChild(bg);
 
-	MenuItemImage* startItem = MenuItemImage::create("menu/StartNormal.png", "menu/StartSelected.png", CC_CALLBACK_1(HomeMenuLayer::menuItemStartCallback, this));
-	startItem->setPosition(Vec2(origin.x + visibleSize.width / 2 - 250, origin.y + visibleSize.height / 2));
-
 	MenuItemImage* settingItem = MenuItemImage::create("menu/SettingNormal.png", "menu/SettingSelected.png", CC_CALLBACK_1(HomeMenuLayer::menuItemSettingCallback, this));
-	settingItem->setPosition(Vec2(origin.x + visibleSize.width / 2 + 250, origin.y + visibleSize.height / 2));
+	settingItem->setPosition(Vec2(origin.x + visibleSize.width / 2 - 450, origin.y + visibleSize.height / 2 - 200));
 
-	Menu* menu = Menu::create(startItem,settingItem,nullptr);
+	MenuItemImage* startItem = MenuItemImage::create("menu/StartNormal.png", "menu/StartSelected.png", CC_CALLBACK_1(HomeMenuLayer::menuItemStartCallback, this));
+	startItem->setPosition(Vec2(origin.x + visibleSize.width / 2 - 200, origin.y + visibleSize.height / 2 - 200));
+
+	MenuItemImage* closeItem = MenuItemImage::create("menu/CloseNormal.png", "menu/CloseSelected.png", CC_CALLBACK_1(HomeMenuLayer::menuItemCloseCallback, this));
+	closeItem->setPosition(Vec2(origin.x + visibleSize.width / 2 + 200, origin.y + visibleSize.height / 2 - 200));
+
+	Menu* menu = Menu::create(settingItem,startItem,closeItem,nullptr);
 
 	menu->setPosition(Vec2::ZERO);
 	this->addChild(menu);
@@ -47,7 +51,7 @@ bool HomeMenuLayer::init()
 
 void HomeMenuLayer::menuItemStartCallback(cocos2d::Ref* pSender)
 {
-	auto scene = HelloWorld::createScene();
+	auto scene = SafeMapLayer::createScene();
 	Director::getInstance()->replaceScene(scene);
 }
 
@@ -55,4 +59,9 @@ void HomeMenuLayer::menuItemSettingCallback(cocos2d::Ref* pSender)
 {
 	auto scene = SettingLayer::createScene();
 	Director::getInstance()->replaceScene(scene);
+}
+
+void HomeMenuLayer::menuItemCloseCallback(cocos2d::Ref* pSender)
+{
+	Director::getInstance()->end();
 }
