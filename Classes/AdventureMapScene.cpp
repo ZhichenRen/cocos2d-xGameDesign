@@ -3,11 +3,11 @@
 
 USING_NS_CC;
 
-Scene* HelloWorld::createScene()
+Scene* AdventureMapLayer::createScene()
 {
     auto scene = Scene::create();
 
-    auto layer = HelloWorld::create();
+    auto layer = AdventureMapLayer::create();
 
     scene->addChild(layer);
 
@@ -15,7 +15,7 @@ Scene* HelloWorld::createScene()
 }
 
 // on "init" you need to initialize your instance
-bool HelloWorld::init()
+bool AdventureMapLayer::init()
 {
     //1. super init first
     if ( !Layer::init() )
@@ -25,32 +25,26 @@ bool HelloWorld::init()
     
     this->scheduleUpdate();
 
-    auto visibleSize = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+    createRandomMap();
+    this->addChild(m_tileMap, 0, 100);//游戏地图 tag为100
 
-    _tileMap = TMXTiledMap::create("AdventureMapLevel1.tmx");//创建地图
-    addChild(_tileMap, 0, 100);//游戏地图 tag为100
-
-    TMXObjectGroup* group = _tileMap->getObjectGroup("objects");//获取对象层
+    TMXObjectGroup* group = m_tileMap->getObjectGroup("objects");//获取对象层
     ValueMap spawnPoint = group->getObject("hero");//根据hero对象的位置放置精灵
     
     float x = spawnPoint["x"].asFloat();
     float y = spawnPoint["y"].asFloat();
 
-    _player = Sprite::create("hero.png");
-    _player->setPosition(Vec2(x,y));
-    log("starting position:(%d,%d)", x, y);
-    addChild(_player, 2, 200);//游戏人物 tag为200
+    m_player = Sprite::create("map/hero.png");
+    m_player->setPosition(Vec2(x,y));
 
-    setViewpointCenter(_player->getPosition());
+    this->addChild(m_player, 2, 200);//游戏人物 tag为200
 
-    _collidable = _tileMap->getLayer("barrier");//获取判断碰撞的障碍层
-    //_collidable->setVisible(false);
-
+    setViewpointCenter(m_player->getPosition());
+    
     return true;
 }
 
-void HelloWorld::onEnter()
+void AdventureMapLayer::onEnter()
 {
     Layer::onEnter();
 
@@ -58,25 +52,25 @@ void HelloWorld::onEnter()
 
     listener->onKeyPressed = [=](EventKeyboard::KeyCode keycode, Event* event)
     {
-        _keyMap[keycode] = true;
+        m_keyMap[keycode] = true;
     };
     
     listener->onKeyReleased = [=](EventKeyboard::KeyCode keycode, Event* event)
     {
-        _keyMap[keycode] = false;
+        m_keyMap[keycode] = false;
     };
 
     EventDispatcher* eventDispatcher = Director::getInstance()->getEventDispatcher();
     eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 }
 
-void HelloWorld::onExit()
+void AdventureMapLayer::onExit()
 {
     Layer::onExit();
     Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
 }
 
-void HelloWorld::update(float dt)
+void AdventureMapLayer::update(float dt)
 {
     auto moveUp = EventKeyboard::KeyCode::KEY_W;
     auto moveDown = EventKeyboard::KeyCode::KEY_S;
@@ -84,65 +78,68 @@ void HelloWorld::update(float dt)
     auto moveRight = EventKeyboard::KeyCode::KEY_D;
 
     Vec2 offset(0, 0);//偏移量
+    
+    float dx = 0, dy = 0;
+
     //每帧移动两个像素
-    if (_keyMap[moveUp])
+    if (m_keyMap[moveUp])
     {
-        offset.y = 2;
+        offset.y = 4;
     }
-    if (_keyMap[moveDown])
+    if (m_keyMap[moveDown])
     {
-        offset.y = -2;
+        offset.y = -4;
     }
-    if (_keyMap[moveLeft])
+    if (m_keyMap[moveLeft])
     {
-        offset.x = -2;
+        offset.x = -4;
     }
-    if (_keyMap[moveRight])
+    if (m_keyMap[moveRight])
     {
-        offset.x = 2;
+        offset.x = 4;
     }
 
-    auto playerPos = _player->getPosition();
+    auto playerPos = m_player->getPosition();
     this->setPlayerPosition(playerPos + offset,offset.x,offset.y);
 
-    auto moveBy = MoveBy::create(0.01f, _player->getPosition()-playerPos);
-    _player->runAction(moveBy);
+    //auto moveBy = MoveBy::create(0.001f, m_player->getPosition()-playerPos);
+    //m_player->runAction(moveBy);
 }
 
-void HelloWorld::setPlayerPosition(Vec2 position,int dx,int dy)
+void AdventureMapLayer::setPlayerPosition(Vec2 position,int dx,int dy)
 {
     Vec2 tileCoord = this->tileCoordFromPosition(position);//像素坐标转换为瓦片坐标
 
-    int tileGid = _collidable->getTileGIDAt(tileCoord);//获得瓦片的GID
- 
+    int tileGid = m_collidable->getTileGIDAt(tileCoord);//获得瓦片的GID
+
     if (tileGid != 0)//瓦片是否存在（不存在时tileGid==0）
     {
         
-        auto prop = _tileMap->getPropertiesForGID(tileGid);
+        auto prop = m_tileMap->getPropertiesForGID(tileGid);
         auto valueMap = prop.asValueMap();
         bool collision = valueMap["Collidable"].asBool();
-        if (collision == true)//碰撞检测
+        if (collision)//碰撞检测
         {
-            _player->setPosition(position-Vec2(dx,dy));//回弹，否则会卡墙里
+            m_player->setPosition(position-Vec2(dx,dy));//回弹，否则会卡墙里
             return;
         }
     }
-    _player->setPosition(position);//移动精灵
+    m_player->setPosition(position);//移动精灵
 
-    this->setViewpointCenter(_player->getPosition());//滚动地图
+    this->setViewpointCenter(m_player->getPosition());//滚动地图
 }
 
 //像素坐标转换为瓦片坐标
-cocos2d::Vec2 HelloWorld::tileCoordFromPosition(cocos2d::Vec2 pos)
+cocos2d::Vec2 AdventureMapLayer::tileCoordFromPosition(cocos2d::Vec2 pos)
 {
-    int x = pos.x / _tileMap->getTileSize().width;
-    int y = ((_tileMap->getMapSize().height * _tileMap->getTileSize().height) - pos.y) / _tileMap->getTileSize().height;
+    int x = pos.x / m_tileMap->getTileSize().width;
+    int y = ((m_tileMap->getMapSize().height * m_tileMap->getTileSize().height) - pos.y) / m_tileMap->getTileSize().height;
 
     return Vec2(x, y);
 }
 
 //将人物保持在屏幕中间
-void HelloWorld::setViewpointCenter(cocos2d::Vec2 position)
+void AdventureMapLayer::setViewpointCenter(cocos2d::Vec2 position)
 {
     Size visibleSize = Director::getInstance()->getVisibleSize();
 
@@ -150,8 +147,8 @@ void HelloWorld::setViewpointCenter(cocos2d::Vec2 position)
     float x = MAX(position.x, visibleSize.width / 2);
     float y = MAX(position.y, visibleSize.height / 2);
     //防止屏幕右边超出地图
-    x = MIN(x, (_tileMap->getMapSize().width * _tileMap->getMapSize().width) - visibleSize.width / 2);
-    y = MIN(y, (_tileMap->getMapSize().height * _tileMap->getMapSize().height) - visibleSize.height / 2);
+    x = MIN(x, (m_tileMap->getMapSize().width * m_tileMap->getMapSize().width) - visibleSize.width / 2);
+    y = MIN(y, (m_tileMap->getMapSize().height * m_tileMap->getMapSize().height) - visibleSize.height / 2);
 
     Vec2 pointA = Vec2(visibleSize.width / 2, visibleSize.height / 2);//屏幕的中点
     Vec2 pointB = Vec2(x, y);//目标点
@@ -160,3 +157,5 @@ void HelloWorld::setViewpointCenter(cocos2d::Vec2 position)
 
     this->setPosition(offset);
 }
+
+

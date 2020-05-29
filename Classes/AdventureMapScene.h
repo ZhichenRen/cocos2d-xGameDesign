@@ -3,13 +3,16 @@
 
 #include "cocos2d.h"
 
-class HelloWorld : public cocos2d::Layer
+class AdventureMapLayer : public cocos2d::Layer
 {
-    cocos2d::TMXTiledMap* _tileMap;
-    cocos2d::TMXLayer* _collidable;
-    cocos2d::Sprite* _player;
+    cocos2d::TMXTiledMap* m_tileMap;
+    cocos2d::TMXLayer* m_collidable;
+    cocos2d::TMXLayer* m_ground;
+    cocos2d::TMXLayer* m_wall;
+    cocos2d::TMXLayer* m_road;
+    cocos2d::Sprite* m_player;
 
-    std::map<cocos2d::EventKeyboard::KeyCode, bool> _keyMap;
+    std::map<cocos2d::EventKeyboard::KeyCode, bool> m_keyMap;
 
 public:
     static cocos2d::Scene* createScene();
@@ -18,17 +21,23 @@ public:
 
     virtual void onEnter();
     virtual void onExit();
-
+    
     virtual void update(float dt);
 
-    //cocos2d::TMXTiledMap createRandomMap();
+    virtual void createRandomMap();
+
+    //virtual void createMiniMap();
+
+    virtual void buildRoom(cocos2d::Vec2 roomCoord);
+    virtual void buildRoad(std::pair<cocos2d::Vec2,cocos2d::Vec2> roadPair);
+
 
     void setPlayerPosition(cocos2d::Vec2 position,int dx,int dy);
     cocos2d::Vec2 tileCoordFromPosition(cocos2d::Vec2 position);
     void setViewpointCenter(cocos2d::Vec2 position);
 
     // implement the "static create()" method manually
-    CREATE_FUNC(HelloWorld);
+    CREATE_FUNC(AdventureMapLayer);
 };
 
 #endif // __ADVENTURE_MAP_SCENE_H__
