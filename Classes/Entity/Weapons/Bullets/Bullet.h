@@ -15,12 +15,15 @@ public:
 	bool isCollideWith(Entity* entity);
 	int getRange()const;
 	int getDamage()const;
-	void bindWeapon(LongRange* long_range);
+	void setInfo(int range, int damage);
 	bool isUsed()const;
 	void setIsUsed(bool status);
+	void setOriginPos(const Point& pos);
+	float getDistance()const;
 protected:
 	int m_bullet_range;
 	int m_bullet_damage;
 	bool m_is_used;
+	Point m_origin_pos;//in map coordinate
 };
 #endif

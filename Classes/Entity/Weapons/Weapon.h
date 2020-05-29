@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 #include "Entity\Entity.h"
+#include "AdventureMapScene.h"
 USING_NS_CC;
 
 class Weapon :public Entity
@@ -16,8 +17,10 @@ public:
 	virtual void attack(Point pos);
 	int getPowerCost()const;
 	int getRange()const;
+	void bindMap(AdventureMapLayer* map);
 protected:
 	int m_power_cost;
 	int m_range;
+	AdventureMapLayer* m_map;
 };
 #endif
