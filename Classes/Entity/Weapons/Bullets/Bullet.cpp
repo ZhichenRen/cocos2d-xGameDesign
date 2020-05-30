@@ -1,5 +1,6 @@
 #include "Entity\Weapons\Bullets\Bullet.h"
 #include "Entity\Weapons\LongRange.h"
+#define PI 3.1415926
 
 Bullet::Bullet()
 {
@@ -53,6 +54,13 @@ float Bullet::getDistance()const
 	Point pos = getPosition();
 	float distance = sqrtf((pos.x - m_origin_pos.x)*(pos.x - m_origin_pos.x) + (pos.y - m_origin_pos.y)*(pos.y - m_origin_pos.y));
 	return distance;
+}
+
+void Bullet::setBulletAction(float degree, int speed)
+{
+	auto move_action = MoveBy::create(1.0f, Vec2(speed*cos(degree / 180 * PI), speed*sin(degree / 180 * PI)));
+	auto attack_action = RepeatForever::create(move_action);
+	this->runAction(attack_action);
 }
 
 Bullet::~Bullet()
