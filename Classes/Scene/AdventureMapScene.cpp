@@ -3,6 +3,7 @@
 #include "Entity\Coin\Coin.h"
 #include "Entity\Weapons\RPG.h"
 #include "Entity\Weapons\Shotgun.h"
+#include "Entity\Weapons\CandyGun.h"
 
 USING_NS_CC;
 
@@ -42,7 +43,7 @@ bool AdventureMapLayer::init()
 
 	auto gun = RPG::create();
 	gun->bindMap(this);
-	gun->setPosition(0, 0);
+	gun->setPosition(16, 13);
 	m_player->addChild(gun);
 
 	auto listener = EventListenerTouchOneByOne::create();

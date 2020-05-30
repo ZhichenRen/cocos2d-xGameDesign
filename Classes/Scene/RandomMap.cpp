@@ -42,7 +42,7 @@ bool onMap(int x, int y)
 //创建一个随机生成的游戏地图
 void AdventureMapLayer::createRandomMap()
 {
-	m_tileMap = TMXTiledMap::create("map/AdventureMap_random.tmx");
+	m_tileMap = TMXTiledMap::create("AdventureMap_random.tmx");
 
 	m_collidable = m_tileMap->getLayer("barrier");//获取判断碰撞的障碍层
 
