@@ -34,8 +34,8 @@ bool SettingLayer::init()
 	this->addChild(bg);
 	//加入滑动条
 	auto slider = Slider::create();
-	slider->loadBarTexture("menu/EmptyVolumeBar.png");//滑块
-	slider->loadSlidBallTextures("menu/Slider.png", "menu/Slider.png", "menu/Slider.png");
+	slider->loadBarTexture("menu/EmptyVolumeBar.png");
+	slider->loadSlidBallTextures("menu/Slider.png", "menu/Slider.png", "menu/Slider.png");//滑块
 	slider->loadProgressBarTexture("menu/FullVolumeBar.png");//进度条
 	slider->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2 + 100));
 	slider->setPercent(50);

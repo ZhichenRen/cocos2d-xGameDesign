@@ -26,15 +26,15 @@ public:
 
     virtual void createRandomMap();
 
-    //virtual void createMiniMap();
-
     virtual void buildRoom(cocos2d::Vec2 roomCoord);
     virtual void buildRoad(std::pair<cocos2d::Vec2,cocos2d::Vec2> roadPair);
+    //virtual void buildWall(std::pair<cocos2d::Vec2, cocos2d::Vec2> roadPair);
 
 
     void setPlayerPosition(cocos2d::Vec2 position,int dx,int dy);
     cocos2d::Vec2 tileCoordFromPosition(cocos2d::Vec2 position);
     void setViewpointCenter(cocos2d::Vec2 position);
+	cocos2d::Point convertToMapSpace(const cocos2d::Point& point);
 
     // implement the "static create()" method manually
     CREATE_FUNC(AdventureMapLayer);

@@ -1,4 +1,4 @@
-#include "AdventureMapScene.h"
+#include "Scene/AdventureMapScene.h"
 
 
 #define EMPTY 0
@@ -42,7 +42,7 @@ bool onMap(int x, int y)
 //创建一个随机生成的游戏地图
 void AdventureMapLayer::createRandomMap()
 {
-	m_tileMap = TMXTiledMap::create("map/AdventureMap_random.tmx");
+	m_tileMap = TMXTiledMap::create("AdventureMap_random.tmx");
 
 	m_collidable = m_tileMap->getLayer("barrier");//获取判断碰撞的障碍层
 
@@ -86,13 +86,21 @@ void AdventureMapLayer::createRandomMap()
 		std::vector<int>dirVec = {};//所有能走的方向
 		for (int i = 0; i < 4; i++)//遍历四个方向
 		{
-			if (onMap(nextRoom.x + dir[i].x, nextRoom.y + dir[i].y) && 
+			if (onMap(nextRoom.x + dir[i].x, nextRoom.y + dir[i].y) &&
 				rooms[static_cast<int>(nextRoom.x + dir[i].x)][static_cast<int>(nextRoom.y + dir[i].y)] == EMPTY)
 			{
 				dirVec.push_back(i);//将能走的方向放入dirVec
 			}
 		}
-		int randRoomNum = rand() % (dirVec.size() - 1) + 1;
+		int randRoomNum = 0;
+		if (dirVec.size() == 1)
+		{
+			randRoomNum = 1;
+		}
+		else
+		{
+			randRoomNum = rand() % (dirVec.size() - 1) + 1;
+		}
 		while (nearRoomCnt != randRoomNum)//延伸出1~3个房间
 		{
 			randDir = rand()% dirVec.size();//选取随机方向
