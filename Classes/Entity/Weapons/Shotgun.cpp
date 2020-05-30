@@ -77,7 +77,8 @@ void Shotgun::attack(Point pos)
 		new_bullet->setInfo(m_range, m_bullet_damage);
 		Point origin_pos = Point(getSprite()->getPositionX() + getSprite()->getBoundingBox().size.width*cos(degree / 180 * PI) / 2
 			, getSprite()->getPositionY() + getSprite()->getBoundingBox().size.width*sin(degree / 180 * PI) / 2);
-		origin_pos = m_map->convertToMapSpace(convertToWorldSpace(origin_pos));
+		origin_pos = m_map->convertToNodeSpace(convertToWorldSpace(origin_pos));
+		
 		new_bullet->setPosition(origin_pos);
 		new_bullet->setOriginPos(origin_pos);
 		float fire_degree;

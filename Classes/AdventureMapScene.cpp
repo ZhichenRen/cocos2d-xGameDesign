@@ -106,6 +106,8 @@ void AdventureMapLayer::update(float dt)
     //m_player->runAction(moveBy);
 }
 
+
+
 void AdventureMapLayer::setPlayerPosition(Vec2 position,int dx,int dy)
 {
     Vec2 tileCoord = this->tileCoordFromPosition(position);//像素坐标转换为瓦片坐标
