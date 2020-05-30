@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="32" height="24" tilewidth="32" tileheight="32" nextobjectid="4">
+ <tileset firstgid="1" source="material.tsx"/>
+ <layer name="lobby" width="32" height="24">
+  <data encoding="base64" compression="zlib">
+   eJzjZmBg4CYTewKxFwX6YVhxgDDMfvMBwqP2j9o/av+o/aP2j9o/av+o/aP2D4z9A4kHqu0LwwCHm43y
+  </data>
+ </layer>
+ <layer name="barrier" width="32" height="24" opacity="0">
+  <data encoding="base64" compression="zlib">
+   eJyLYGBgiCATwwC5+tHNoTcYtX/U/lH7R+0ftX/U/lH7R+0ftX9k2j+QeKABAAhkI8E=
+  </data>
+ </layer>
+ <objectgroup name="objects">
+  <object id="1" name="hero" x="496" y="352" width="32" height="32"/>
+ </objectgroup>
+</map>
