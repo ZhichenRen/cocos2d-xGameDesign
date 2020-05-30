@@ -1,4 +1,4 @@
-#include "AdventureMapScene.h"
+#include "Scene/AdventureMapScene.h"
 
 
 #define EMPTY 0
@@ -12,22 +12,15 @@
 #define ROOM_NUM 7
 
 #define EMPTY_TILE 0
-#define BLACK_TILE 55
 
 #define WALL_TILE_UP 12
-#define WALL_TILE_DOWN 12
+#define WALL_TILE_DOWN 34
 #define WALL_TILE_LEFT 12
 #define WALL_TILE_RIGHT 12
-
-#define DOOR_TILE_UP
-#define DOOR_TILE_DOWN
-#define DOOR_TILE_LEFT
-#define DOOR_TILE_RIGHT
 
 #define ROOM_TILE 56
 
 #define ROAD_TILE 56
-
 
 USING_NS_CC;
 
@@ -49,7 +42,7 @@ bool onMap(int x, int y)
 //创建一个随机生成的游戏地图
 void AdventureMapLayer::createRandomMap()
 {
-	m_tileMap = TMXTiledMap::create("AdventureMap_random.tmx");
+	m_tileMap = TMXTiledMap::create("map/AdventureMap_random.tmx");
 
 	m_collidable = m_tileMap->getLayer("barrier");//获取判断碰撞的障碍层
 
@@ -93,16 +86,22 @@ void AdventureMapLayer::createRandomMap()
 		std::vector<int>dirVec = {};//所有能走的方向
 		for (int i = 0; i < 4; i++)//遍历四个方向
 		{
-			if (onMap(nextRoom.x + dir[i].x, nextRoom.y + dir[i].y) && 
+			if (onMap(nextRoom.x + dir[i].x, nextRoom.y + dir[i].y) &&
 				rooms[static_cast<int>(nextRoom.x + dir[i].x)][static_cast<int>(nextRoom.y + dir[i].y)] == EMPTY)
 			{
-				//if ()
-				{
-					dirVec.push_back(i);//将能走的方向放入dirVec
-				}
+				dirVec.push_back(i);//将能走的方向放入dirVec
 			}
 		}
-		while (nearRoomCnt != dirVec.size())//延伸出1~3个房间
+		int randRoomNum = 0;
+		if (dirVec.size() == 1)
+		{
+			randRoomNum = 1;
+		}
+		else
+		{
+			randRoomNum = rand() % (dirVec.size() - 1) + 1;
+		}
+		while (nearRoomCnt != randRoomNum)//延伸出1~3个房间
 		{
 			randDir = rand()% dirVec.size();//选取随机方向
 			roomX = static_cast<int>(nextRoom.x + dir[dirVec[randDir]].x);
@@ -150,15 +149,32 @@ void AdventureMapLayer::createRandomMap()
 
 void AdventureMapLayer::buildRoom(Vec2 roomCoord)
 {
+	std::map<Vec2, bool> barrierMap;
+	srand(time(nullptr));
+	for (int i = 0; i < 10; i++)
+	{
+		int barrierCoord = rand() % 441;
+		barrierMap[Vec2(barrierCoord / 21, barrierCoord % 21)] = true;
+	}
+
 	int roomX = roomCoord.x;
 	int roomY = roomCoord.y;
 	for (int i = roomX - 10; i <= roomX + 10; i++)
 	{
 		for (int j = roomY - 10; j <= roomY + 10; j++)
 		{
-			//m_ground->getTileAt(Vec2(i, j))->setVisible(true);
-			m_ground->setTileGID(ROOM_TILE, Vec2(i, j));
-			m_collidable->setTileGID(EMPTY_TILE, Vec2(i, j));
+			int relativeCoordX = roomX + 10 - i;
+			int relativeCoordY = roomY + 10 - j;
+
+			if (barrierMap.find(Vec2(relativeCoordX,relativeCoordY)) != barrierMap.end())
+			{
+				m_ground->setTileGID(89, Vec2(i, j));
+			}
+			else
+			{
+				m_ground->setTileGID(ROOM_TILE, Vec2(i, j));
+				m_collidable->setTileGID(EMPTY_TILE, Vec2(i, j));
+			}
 		}
 	}
 }
@@ -173,10 +189,16 @@ void AdventureMapLayer::buildRoad(std::pair<cocos2d::Vec2, cocos2d::Vec2> roadPa
 	{
 		int midTileCoordX = (coord[roomCoord1][0] + coord[roomCoord2][0]) / 2;//房间坐标转换为瓦片坐标
 		int tileCoordY = coord[roomCoord1][1];
-		for (int i = midTileCoordX - 9; i <= midTileCoordX + 10; i++)//修路
+		for (int i = midTileCoordX - 9; i <= midTileCoordX + 10; i++)//修路 修墙
 		{
-			m_wall->setTileGID(WALL_TILE_DOWN, Vec2(i, tileCoordY + 3));
-			m_wall->setTileGID(WALL_TILE_UP, Vec2(i, tileCoordY - 3));
+			m_wall->setTileGID(WALL_TILE_UP, Vec2(i, tileCoordY + 3));//修上墙
+			if (i != midTileCoordX - 9 && i != midTileCoordX + 10)
+			{
+				m_wall->setTileGID(WALL_TILE_DOWN, Vec2(i, tileCoordY + 4));
+			}
+			
+			m_wall->setTileGID(WALL_TILE_UP, Vec2(i, tileCoordY - 3));//修下墙
+			m_wall->setTileGID(WALL_TILE_DOWN, Vec2(i, tileCoordY - 2));
 			for (int j = tileCoordY - 2; j <= tileCoordY + 2; j++)
 			{
 				m_road->setTileGID(ROAD_TILE, Vec2(i, j));
@@ -185,11 +207,12 @@ void AdventureMapLayer::buildRoad(std::pair<cocos2d::Vec2, cocos2d::Vec2> roadPa
 		}
 		int leftDoorX = midTileCoordX - 9;
 		int rightDoorX = midTileCoordX + 10;
-		for (int i = tileCoordY - 3; i <= tileCoordY + 3; i++)//拆墙
+		for (int i = tileCoordY - 1; i <= tileCoordY + 2; i++)//拆墙
 		{
 			m_wall->setTileGID(ROAD_TILE, Vec2(leftDoorX, i));
 			m_wall->setTileGID(ROAD_TILE, Vec2(rightDoorX, i));
 		}
+		m_wall->setTileGID(WALL_TILE_DOWN, Vec2(rightDoorX, tileCoordY - 2));
 	}
 	else//房间上下相连
 	{
@@ -205,12 +228,14 @@ void AdventureMapLayer::buildRoad(std::pair<cocos2d::Vec2, cocos2d::Vec2> roadPa
 				m_collidable->setTileGID(EMPTY_TILE, Vec2(j, i));
 			}
 		}
-		int upDoorX = midTileCoordY + 10;
-		int downDoorX = midTileCoordY - 9;
-		for (int i = tileCoordX - 3; i <= tileCoordX + 3; i++)//拆墙
+		int upDoorY = midTileCoordY + 10;
+		int downDoorY = midTileCoordY - 9;
+		for (int i = tileCoordX - 2; i <= tileCoordX + 2; i++)//拆墙
 		{
-			m_wall->setTileGID(ROAD_TILE, Vec2(i, upDoorX));
-			m_wall->setTileGID(ROAD_TILE, Vec2(i, downDoorX));
+			m_wall->setTileGID(ROAD_TILE, Vec2(i, upDoorY));
+			m_wall->setTileGID(ROAD_TILE, Vec2(i, upDoorY + 1));
+			m_wall->setTileGID(ROAD_TILE, Vec2(i, downDoorY));
+			m_wall->setTileGID(ROAD_TILE, Vec2(i, downDoorY + 1));
 		}
 	}
 }
