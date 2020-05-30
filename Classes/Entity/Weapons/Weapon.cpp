@@ -26,6 +26,11 @@ int Weapon::getRange()const
 	return m_range;
 }
 
+void Weapon::bindMap(AdventureMapLayer* map)
+{
+	m_map = map;
+}
+
 Weapon::~Weapon()
 {
 
