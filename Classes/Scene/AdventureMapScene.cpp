@@ -1,5 +1,9 @@
 #include "AdventureMapScene.h"
 #include "SimpleAudioEngine.h"
+#include "Entity\Coin\Coin.h"
+#include "Entity\Weapons\RPG.h"
+#include "Entity\Weapons\Shotgun.h"
+#include "Entity\Weapons\CandyGun.h"
 
 USING_NS_CC;
 
@@ -34,12 +38,34 @@ bool AdventureMapLayer::init()
     float x = spawnPoint["x"].asFloat();
     float y = spawnPoint["y"].asFloat();
 
-    m_player = Sprite::create("map/hero.png");
+    m_player = Sprite::create("hero.png");
     m_player->setPosition(Vec2(x,y));
+
+	auto gun = RPG::create();
+	gun->bindMap(this);
+	gun->setPosition(16, 13);
+	m_player->addChild(gun);
+
+	auto listener = EventListenerTouchOneByOne::create();
+	listener->onTouchBegan = [](Touch* touch, Event* event)
+	{
+		return true;
+	};
+	listener->onTouchEnded = [gun](Touch* touch, Event* event)
+	{
+		Point pos = Director::getInstance()->convertToGL(touch->getLocationInView());
+		gun->attack(pos);
+	};
+
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
     this->addChild(m_player, 2, 200);//游戏人物 tag为200
 
     setViewpointCenter(m_player->getPosition());
+
+	auto coin = Coin::create();
+	coin->setPosition(convertToNodeSpace(convertToWorldSpace(m_player->getPosition())));
+	this->addChild(coin, 2);
     
     return true;
 }
@@ -120,7 +146,7 @@ void AdventureMapLayer::setPlayerPosition(Vec2 position,int dx,int dy)
         auto prop = m_tileMap->getPropertiesForGID(tileGid);
         auto valueMap = prop.asValueMap();
         bool collision = valueMap["Collidable"].asBool();
-        if (collision)//碰撞检测
+        if (collision == true)//碰撞检测
         {
             m_player->setPosition(position-Vec2(dx,dy));//回弹，否则会卡墙里
             return;
@@ -156,8 +182,11 @@ void AdventureMapLayer::setViewpointCenter(cocos2d::Vec2 position)
     Vec2 pointB = Vec2(x, y);//目标点
 
     Vec2 offset = pointA - pointB;//偏移量
-
     this->setPosition(offset);
 }
 
+cocos2d::Point AdventureMapLayer::convertToMapSpace(const cocos2d::Point& point)
+{
+	return convertToNodeSpace(point);
+}
 

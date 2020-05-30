@@ -13,7 +13,8 @@ bool Shotgun::init()
 	m_degree = 15.0f;
 	m_bullet_num_at_once = 4;
 	m_bullet_picture = std::string("BasicBullet.png");
-	bindSprite(Sprite::create("Rifle&Shotgun.png"), 0.2f, 0.2f);
+	bindSprite(Sprite::create("Rifle&Shotgun.png"), 0.15f, 0.15f);
+	m_sprite->setAnchorPoint(Vec2(0.0f, 0.5f));
 	return true;
 }
 
@@ -23,12 +24,7 @@ void Shotgun::attack(Point pos)
 	{
 		return;
 	}
-	if (m_bullet_num == 0)
-	{
-		return;
-	}
 	m_is_attack = true;
-	m_bullet_num -= m_bullet_num_at_once;
 	Point weapon_pos = m_sprite->getPosition();
 	Point now = this->convertToWorldSpace(weapon_pos);
 	float degree;
@@ -49,63 +45,37 @@ void Shotgun::attack(Point pos)
 	{
 		degree = atan(dy / dx) / PI * 180;
 	}
-	getSprite()->setRotation(-degree);
-	auto weapon_rotate_up = RotateBy::create(m_attack_speed / 2, -5);
-	auto weapon_rotate_down = RotateBy::create(m_attack_speed / 2, 5);
-	auto call_back = CallFunc::create(
-		[&]() {
-		m_is_attack = false;
-	}
-	);
 	if ((degree > 0 && dy < 0 && dx < 0) || (degree < 0 && dy>0 && dx < 0))
 	{
+		adjustWeaponPosition(degree, true);
 		degree += 180;
-		getSprite()->setFlippedX(true);
-		auto gun_action = Sequence::create(weapon_rotate_down, weapon_rotate_up, call_back, NULL);
-		m_sprite->runAction(gun_action);
 	}
 	else
 	{
-		getSprite()->setFlippedX(false);
-		auto gun_action = Sequence::create(weapon_rotate_up, weapon_rotate_down, call_back, NULL);
-		m_sprite->runAction(gun_action);
+		adjustWeaponPosition(degree, false);
 	}
 	for (int i = 1; i <= m_bullet_num_at_once; i++)
 	{
-		Bullet* new_bullet = Bullet::create();
-		new_bullet->bindSprite(Sprite::create(m_bullet_picture.c_str()), 0.5f, 0.5f);
-		new_bullet->setInfo(m_range, m_bullet_damage);
-		Point origin_pos = Point(getSprite()->getPositionX() + getSprite()->getBoundingBox().size.width*cos(degree / 180 * PI) / 2
-			, getSprite()->getPositionY() + getSprite()->getBoundingBox().size.width*sin(degree / 180 * PI) / 2);
-		origin_pos = m_map->convertToNodeSpace(convertToWorldSpace(origin_pos));
-		
-		new_bullet->setPosition(origin_pos);
-		new_bullet->setOriginPos(origin_pos);
 		float fire_degree;
 		if (m_bullet_num_at_once % 2)
 		{
 			int mid = m_bullet_num_at_once / 2 + 1;
-			fire_degree = degree - (i - mid)*m_degree;
+			fire_degree = degree - (i - mid) * m_degree;
 		}
 		else
 		{
 			int mid = m_bullet_num_at_once / 2;
 			if (i <= mid)
 			{
-				fire_degree = degree - (i - mid)*m_degree + m_degree / 2;
+				fire_degree = degree - (i - mid) * m_degree + m_degree / 2;
 			}
 			else
 			{
-				fire_degree = degree - (i - mid - 1)*m_degree - m_degree / 2;
+				fire_degree = degree - (i - mid - 1) * m_degree - m_degree / 2;
 			}
 		}
-		new_bullet->setRotation(-fire_degree);
-		new_bullet->setVisible(true);
-		m_map->addChild(new_bullet, 2);
-		auto move_action = MoveBy::create(1.0f, Vec2(m_bullet_speed*cos(fire_degree / 180 * PI), m_bullet_speed*sin(fire_degree / 180 * PI)));
-		auto attack_action = RepeatForever::create(move_action);
-		new_bullet->runAction(attack_action);
-		m_bullet.push_back(new_bullet);
+		auto new_bullet = generateBullet(degree, 0.3f, 0.3f);
+		new_bullet->setBulletAction(fire_degree, m_bullet_speed);
 	}
 }
 

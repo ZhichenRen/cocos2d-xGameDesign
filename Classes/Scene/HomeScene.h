@@ -13,6 +13,7 @@ public:
 
 	void menuItemStartCallback(cocos2d::Ref* pSender);
 	void menuItemSettingCallback(cocos2d::Ref* pSender);
+	void menuItemCloseCallback(cocos2d::Ref* pSender);
 
 	CREATE_FUNC(HomeMenuLayer);
 };
