@@ -1,19 +1,36 @@
-/*
-    文件名：    TollgateScene.h
-    描　述：    关卡场景
-    创建人：    笨木头_钟迪龙 (博客：http://www.benmutou.com)
-*/
-#ifndef _TollgateScene_H_
-#define _TollgateScene_H_
-
+#pragma once
 #include "cocos2d.h"
-using namespace cocos2d;
+#include "typeinfo"
+#include "AdventureMapScene.h"
+#include "AuxiliaryClass/AnimationUtil/AnimationUtil.h"
+#include "Entity/Item/Player/Ranger/Ranger.h"
+#include "Controller/Move/PlayerController.h"
+#include "Entity/Weapons/CandyGun.h"
+#include "Scene/PauseScene.h"
+#include "Scene/AdventureMapScene.h"
 
-class TollgateScene : public Layer {
+#include "editor-support/cocostudio/CCSGUIReader.h"
+#include "ui/CocosGUI.h"
+using namespace cocos2d::ui;
+using namespace cocostudio;
+using namespace cocos2d;
+class TollgateScene :public Layer
+{
 public:
-    static Scene* createScene();
-    CREATE_FUNC(TollgateScene);
-    virtual bool init();
+	static Scene* createScene();
+	virtual bool init();
+	void addPlayer();
+	void loadUI();
+	void loadMap();
+	void addLongRangeWeapon();
+	void loadController();
+	CREATE_FUNC(TollgateScene);
+
+	
+private:
+	LoadingBar* m_cdBar = NULL;
+	Player* m_player;
+	AdventureMapLayer* m_map;
 
 };
-#endif
+
