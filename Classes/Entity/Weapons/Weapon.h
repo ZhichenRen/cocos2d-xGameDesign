@@ -3,7 +3,7 @@
 
 #include "cocos2d.h"
 #include "Entity\Entity.h"
-#include "AdventureMapScene.h"
+#include "Scene\AdventureMapScene.h"
 USING_NS_CC;
 
 class Weapon :public Entity

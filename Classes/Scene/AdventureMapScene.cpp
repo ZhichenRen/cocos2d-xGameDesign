@@ -4,6 +4,7 @@
 #include "Entity\Weapons\RPG.h"
 #include "Entity\Weapons\Shotgun.h"
 #include "Entity\Weapons\CandyGun.h"
+#include "Monster\MonsterManager.h"
 
 USING_NS_CC;
 
@@ -12,6 +13,8 @@ Scene* AdventureMapLayer::createScene()
     auto scene = Scene::create();
 
     auto layer = AdventureMapLayer::create();
+    
+    
 
     scene->addChild(layer);
 
@@ -43,8 +46,13 @@ bool AdventureMapLayer::init()
 
 	auto gun = RPG::create();
 	gun->bindMap(this);
-	gun->setPosition(16, 13);
+	gun->setPosition(1, 1);
 	m_player->addChild(gun);
+
+    auto monsterMgr = MonsterManager::create();
+    monsterMgr->bindMap(this);
+    monsterMgr->setPosition(ccp(x,y));
+    this->addChild(monsterMgr,2);
 
 	auto listener = EventListenerTouchOneByOne::create();
 	listener->onTouchBegan = [](Touch* touch, Event* event)
@@ -66,7 +74,6 @@ bool AdventureMapLayer::init()
 	auto coin = Coin::create();
 	coin->setPosition(convertToNodeSpace(convertToWorldSpace(m_player->getPosition())));
 	this->addChild(coin, 2);
-    
     return true;
 }
 

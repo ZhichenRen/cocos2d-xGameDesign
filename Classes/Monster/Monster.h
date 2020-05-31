@@ -14,8 +14,6 @@ public:
 public:
 	void show();
 	void hide();
-	void bindPlayer();
-	//void reset();
 	bool isAlive();
 	void moveTo(const Vec2& targetPosition);
 	void moveBy(const Vec2& distance);

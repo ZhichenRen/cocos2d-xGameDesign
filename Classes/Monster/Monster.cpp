@@ -34,6 +34,7 @@ void Monster::hide()
 	}
 }
 
+
 bool Monster::isAlive()
 {
 	return m_isAlive;

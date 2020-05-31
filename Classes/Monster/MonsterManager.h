@@ -13,11 +13,16 @@ public:
 	~MonsterManager();
 	void createMonsters();
 	CREATE_FUNC(MonsterManager);
+	void bindMap(AdventureMapLayer* m_map);
 	virtual bool init();
 	virtual void update(float dt);
 	void createMonsterPos();
+	CC_SYNTHESIZE(AdventureMapLayer*, m_map, ManagerMap);
 private:
-	Vector<Monster*> m_monsterList;
+	std::vector<Monster*> m_monsterList;
+	std::vector<Bullet*> m_monsterBullet;
+	//设置怪物数量，生成怪物，死了之后消失，生成一个金币
+	//提供子弹的向量
 	//Player* m_player;
 };
 #endif
