@@ -93,9 +93,13 @@ void AdventureMapLayer::createRandomMap()
 			}
 		}
 		int randRoomNum = 0;
-		if (dirVec.size() == 1)
+		if (roomCnt == 2)
 		{
-			randRoomNum = 1;
+			randRoomNum = 2;
+		}
+		else if (dirVec.size() == 1)
+		{
+			randRoomNUm = 1;
 		}
 		else
 		{
