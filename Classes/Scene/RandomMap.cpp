@@ -93,7 +93,11 @@ void AdventureMapLayer::createRandomMap()
 			}
 		}
 		int randRoomNum = 0;
-		if (dirVec.size() == 1)
+		if (roomCnt == 2)
+		{
+			randRoomNum = 2;
+		}
+		else if (dirVec.size() == 1)
 		{
 			randRoomNum = 1;
 		}
@@ -177,6 +181,7 @@ void AdventureMapLayer::buildRoom(Vec2 roomCoord)
 			}
 		}
 	}
+	this->m_barrierMap = barrierMap;
 }
 
 void AdventureMapLayer::buildRoad(std::pair<cocos2d::Vec2, cocos2d::Vec2> roadPair)

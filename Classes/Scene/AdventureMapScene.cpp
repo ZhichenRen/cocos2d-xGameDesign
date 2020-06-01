@@ -40,10 +40,10 @@ bool AdventureMapLayer::init()
     
     float x = spawnPoint["x"].asFloat();
     float y = spawnPoint["y"].asFloat();
-
+    
     m_player = Sprite::create("hero.png");
     m_player->setPosition(Vec2(x,y));
-
+    
 	auto gun = RPG::create();
 	gun->bindMap(this);
 	gun->setPosition(1, 1);
@@ -51,8 +51,9 @@ bool AdventureMapLayer::init()
 
     auto monsterMgr = MonsterManager::create();
     monsterMgr->bindMap(this);
-    monsterMgr->setPosition(ccp(x,y));
-    this->addChild(monsterMgr,2);
+    monsterMgr->bindPlayer(m_player);
+    monsterMgr->setPosition(x - 9*32, y - 9*32);
+    this->addChild(monsterMgr,1);
 
 	auto listener = EventListenerTouchOneByOne::create();
 	listener->onTouchBegan = [](Touch* touch, Event* event)
@@ -197,3 +198,22 @@ cocos2d::Point AdventureMapLayer::convertToMapSpace(const cocos2d::Point& point)
 	return convertToNodeSpace(point);
 }
 
+std::map<Vec2, bool> AdventureMapLayer::getBarrierMap()
+{
+    return this->m_barrierMap;
+}
+
+bool AdventureMapLayer::isBarrier(Vec2 position)
+{
+    Vec2 tileCoord = this->tileCoordFromPosition(position);//像素坐标转换为瓦片坐标
+
+    int tileGid = m_collidable->getTileGIDAt(tileCoord);//获得瓦片的GID
+
+    if (tileGid != 0)//瓦片是否存在（不存在时tileGid==0）
+    {
+        auto prop = m_tileMap->getPropertiesForGID(tileGid);
+        auto valueMap = prop.asValueMap();
+        return valueMap["Collidable"].asBool();
+    }
+    return false;
+}

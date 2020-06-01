@@ -7,11 +7,18 @@ void MonsterManager::bindMap(AdventureMapLayer* map)
 	setManagerMap(map);
 	createMonsters();
 	createMonsterPos();
+
 	return;
 }
 
-bool MonsterManager::init() {
+void MonsterManager::bindPlayer(Sprite* player)
+{
+	setPlayer(player);
 	this->scheduleUpdate();
+}
+
+bool MonsterManager::init() {
+	
 	return true;
 }
 
@@ -20,64 +27,66 @@ void MonsterManager::createMonsters()
 	Monster* monster = NULL;
 	Sprite* sprite = NULL;
 	int k = 0;
-	for (int i = 0; i < 5; i++)
+	
+	for (int i = 0; i < 50; i++)
 	{
-		for (int j = 0; j < 5; j++)
-		{
-			monster = Slime::create();
-			//monster->bindSprite(Sprite::create(monster->getResTrack()));
-			this->addChild(monster);
-			m_monsterList.push_back(monster);
-		}
+		monster = Slime::create();
+		this->addChild(monster);
+		m_monsterList.push_back(monster);
 	}
 }
 
 void MonsterManager::createMonsterPos() 
 {
-	auto size = this->m_map->getContentSize();
+	auto size = Size(19 * 32, 19 * 32);
 	int k = 0;
-	for (int i = 0; i < 5; i++)
+	//生成随机野怪
+	auto curMap = m_map->getBarrierMap();
+	for (int i = 0; i < m_monsterList.size(); i++)
 	{
-		for (int j = 0; j < 5; j++)
+		auto ranF = CCRANDOM_0_1();
+		//srand(unsigned int(time));
+		int randInt = ranF * 441;		
+		auto monsterPos = Vec2(randInt % 21 , randInt / 21);
+		log("The block is %f, %f", monsterPos.x, monsterPos.y);
+		if (curMap.count(monsterPos))//若是障碍物则直接continue
 		{
-			
-			auto curPos = ccp(size.width * i / 4, size.height * j / 4);
-			curPos = m_map->convertToMapSpace(convertToWorldSpace(curPos));
-			m_monsterList[k]->setPosition(curPos);
-			log("%f,%f",m_monsterList[k]->getPosition().x, m_monsterList[k]->getPosition().y);
-			k++;
-			//log("WorldPos: %f,%f", m_monsterList.at(k)->getPosition().x, m_monsterList.at(k++)->getPosition().y);
+			i--;
+			continue;
 		}
+		monsterPos.x *= 32;
+		monsterPos.y *= 32;
+		monsterPos = m_map->convertToMapSpace(convertToWorldSpace(monsterPos));
+		m_monsterList[k]->setPosition(monsterPos);
+		log("%f,%f", m_monsterList[k]->getPosition().x, m_monsterList[k]->getPosition().y);
+		k++;
 	}
 }
 void MonsterManager::update(float dt)
 {
-	auto size = this->m_map->getContentSize();
-	int SizeX = size.width / 2;
-	int SizeY = size.height / 2;
+	Point playerPosition = m_player->getPosition();
+	playerPosition.x -= this->getPosition().x;
+	playerPosition.y -= this->getPosition().y;
 	for (auto monster : m_monsterList)
 	{
-		
 		if (monster->isAlive())
 		{
-			log("WorldPos: %f,%f", monster->getPosition().x, monster->getPosition().y);
 			if (monster->getHp() < 0)
 			{
 				monster->die();
 				continue;
 			}
-			//auto monsWeapon = monster->getMonsterWeapon(); 
-			////monsWeapon->attack(Point(SizeX, SizeY));
-			//auto curPos = monster->getPosition();
-			//curPos = m_map->convertToMapSpace(convertToWorldSpace(curPos));
-			//log("NodePos: %f,%f", curPos.x, curPos.y);
-			//float xFlag = curPos.x > SizeX ? -monster->getMonsterSpeed() : monster->getMonsterSpeed();
-			//float yFlag = curPos.y > SizeY ? -monster->getMonsterSpeed() : monster->getMonsterSpeed();
-			//if (abs(curPos.x - SizeX) < 20)	xFlag = 0;
-			//if (abs(curPos.y - SizeY) < 20)	yFlag = 0;
-			////monster->moveTo(ccp(curPos.x + xFlag,curPos.y + yFlag));
-			//monster->setPosition(ccp(curPos.x + xFlag,
-			//	curPos.y + yFlag));
+			auto monsWeapon = monster->getMonsterWeapon(); 
+			//monsWeapon->attack(m_map->convertToMapSpace(convertToWorldSpace(playerPosition)));
+			auto curPos = monster->getPosition();
+			float xFlag = curPos.x > playerPosition.x ? -monster->getMonsterSpeed() : monster->getMonsterSpeed();
+			float yFlag = curPos.y > playerPosition.y ? -monster->getMonsterSpeed() : monster->getMonsterSpeed();
+			if (abs(curPos.x - playerPosition.x) < 20)	xFlag = 0;
+			if (abs(curPos.y - playerPosition.y) < 20)	yFlag = 0;
+			//monster->moveTo(ccp(curPos.x + xFlag,curPos.y + yFlag));
+			if (!m_map->isBarrier(m_map->convertToMapSpace(convertToWorldSpace(ccp(curPos.x + xFlag,	curPos.y + yFlag)))))
+				monster->setPosition(ccp(curPos.x + xFlag,
+					curPos.y + yFlag));
 		}
 	}
 }
