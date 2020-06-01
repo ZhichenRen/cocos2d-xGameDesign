@@ -14,7 +14,8 @@ bool CandyGun::init()
 	m_bullet_speed = 500;
 	m_attack_speed = 0.2f;
 	m_bullet_picture = std::string("CandyBullet.png");
-	bindSprite(Sprite::create("CandyGun!.png"), 0.3f, 0.3f);
+	bindSprite(Sprite::create("CandyGun!.png"), 0.25f, 0.25f);
+	m_sprite->setAnchorPoint(Vec2(0.0f, 0.5f));
 	return true;
 }
 
