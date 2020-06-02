@@ -17,7 +17,7 @@ public:
 	bool isAlive();
 	void moveTo(const Vec2& targetPosition);
 	void moveBy(const Vec2& distance);
-	bool getAttacked(const int damage);
+	void hit(int damage);
 	void die();
 	CC_SYNTHESIZE(float, m_fSpeed, MonsterSpeed);
 	CC_SYNTHESIZE(int, m_Hp, Hp);
