@@ -25,6 +25,8 @@ protected:
 	std::vector<Bullet*> m_bullet;
 	std::string m_bullet_picture;
 	bool m_is_attack;
+	void adjustWeaponPosition(float degree, bool is_flipped);
+	virtual Bullet* generateBullet(float degree, float scale_x, float scale_y);
 };
 
 

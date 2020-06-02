@@ -16,6 +16,11 @@ void Weapon::attack(Point pos)
 
 }
 
+std::vector<Bullet*> Weapon::getBullet() const
+{
+	return std::vector<Bullet*>();
+}
+
 int Weapon::getPowerCost()const
 {
 	return m_power_cost;
@@ -24,6 +29,11 @@ int Weapon::getPowerCost()const
 int Weapon::getRange()const
 {
 	return m_range;
+}
+
+void Weapon::bindMap(AdventureMapLayer* map)
+{
+	m_map = map;
 }
 
 Weapon::~Weapon()

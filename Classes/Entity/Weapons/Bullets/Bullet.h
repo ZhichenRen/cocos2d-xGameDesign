@@ -4,6 +4,7 @@
 #include "Entity\Entity.h"
 
 class LongRange;
+
 class Bullet :public Entity
 {
 public:
@@ -20,10 +21,11 @@ public:
 	void setIsUsed(bool status);
 	void setOriginPos(const Point& pos);
 	float getDistance()const;
+	void setBulletAction(float degree, int speed);
 protected:
 	int m_bullet_range;
 	int m_bullet_damage;
 	bool m_is_used;
-	Point m_origin_pos;
+	Point m_origin_pos;//in map coordinate
 };
 #endif
