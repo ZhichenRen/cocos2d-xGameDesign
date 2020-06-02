@@ -1,8 +1,8 @@
 #include "Scene\AdventureMapScene.h"
 #include "SimpleAudioEngine.h"
 #include "Entity\Coin\Coin.h"
-//#include "Entity\Weapons\RPG.h"
-//#include "Entity\Weapons\Shotgun.h"
+#include "Entity\Weapons\RPG.h"
+#include "Entity\Weapons\Shotgun.h"
 #include "Entity\Weapons\CandyGun.h"
 #include "Monster\MonsterManager.h"
 
