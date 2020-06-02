@@ -1,8 +1,8 @@
-#include "AdventureMapScene.h"
+#include "Scene\AdventureMapScene.h"
 #include "SimpleAudioEngine.h"
 #include "Entity\Coin\Coin.h"
-#include "Entity\Weapons\RPG.h"
-#include "Entity\Weapons\Shotgun.h"
+//#include "Entity\Weapons\RPG.h"
+//#include "Entity\Weapons\Shotgun.h"
 #include "Entity\Weapons\CandyGun.h"
 #include "Monster\MonsterManager.h"
 
@@ -25,18 +25,16 @@ Scene* AdventureMapLayer::createScene()
 bool AdventureMapLayer::init()
 {
     //1. super init first
-    if ( !Layer::init() )
+    if (!Layer::init())
     {
         return false;
     }
-    
-    this->scheduleUpdate();
 
     createRandomMap();
-    this->addChild(m_tileMap, 0, 100);//ÓÎÏ·µØÍ¼ tagÎª100
+    this->addChild(m_tileMap, 0, 100);//æ¸¸æˆåœ°å›¾ tagä¸º100
 
-    TMXObjectGroup* group = m_tileMap->getObjectGroup("objects");//»ñÈ¡¶ÔÏó²ã
-    ValueMap spawnPoint = group->getObject("hero");//¸ù¾Ýhero¶ÔÏóµÄÎ»ÖÃ·ÅÖÃ¾«Áé
+    TMXObjectGroup* group = m_tileMap->getObjectGroup("objects");//èŽ·å–å¯¹è±¡å±‚
+    ValueMap spawnPoint = group->getObject("hero");//æ ¹æ®heroå¯¹è±¡çš„ä½ç½®æ”¾ç½®ç²¾çµ
     
     float x = spawnPoint["x"].asFloat();
     float y = spawnPoint["y"].asFloat();
@@ -68,7 +66,7 @@ bool AdventureMapLayer::init()
 
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
-    this->addChild(m_player, 2, 200);//ÓÎÏ·ÈËÎï tagÎª200
+    this->addChild(m_player, 2, 200);//æ¸¸æˆäººç‰© tagä¸º200
 
     setViewpointCenter(m_player->getPosition());
 
@@ -82,7 +80,7 @@ void AdventureMapLayer::onEnter()
 {
     Layer::onEnter();
 
-    auto listener = EventListenerKeyboard::create();//´´½¨¼àÌýÊÂ¼þ
+    auto listener = EventListenerKeyboard::create();//åˆ›å»ºç›‘å¬äº‹ä»¶
 
     listener->onKeyPressed = [=](EventKeyboard::KeyCode keycode, Event* event)
     {
@@ -111,11 +109,11 @@ void AdventureMapLayer::update(float dt)
     auto moveLeft = EventKeyboard::KeyCode::KEY_A;
     auto moveRight = EventKeyboard::KeyCode::KEY_D;
 
-    Vec2 offset(0, 0);//Æ«ÒÆÁ¿
+    Vec2 offset(0, 0);//åç§»é‡
     
     float dx = 0, dy = 0;
 
-    //Ã¿Ö¡ÒÆ¶¯Á½¸öÏñËØ
+    //æ¯å¸§ç§»åŠ¨ä¸¤ä¸ªåƒç´ 
     if (m_keyMap[moveUp])
     {
         offset.y = 4;
@@ -144,28 +142,30 @@ void AdventureMapLayer::update(float dt)
 
 void AdventureMapLayer::setPlayerPosition(Vec2 position,int dx,int dy)
 {
-    Vec2 tileCoord = this->tileCoordFromPosition(position);//ÏñËØ×ø±ê×ª»»ÎªÍßÆ¬×ø±ê
+    Vec2 tileCoord = this->tileCoordFromPosition(position);//åƒç´ åæ ‡è½¬æ¢ä¸ºç“¦ç‰‡åæ ‡
 
-    int tileGid = m_collidable->getTileGIDAt(tileCoord);//»ñµÃÍßÆ¬µÄGID
+    int tileGid = m_collidable->getTileGIDAt(tileCoord);//èŽ·å¾—ç“¦ç‰‡çš„GID
 
-    if (tileGid != 0)//ÍßÆ¬ÊÇ·ñ´æÔÚ£¨²»´æÔÚÊ±tileGid==0£©
+    if (tileGid != 0)//ç“¦ç‰‡æ˜¯å¦å­˜åœ¨ï¼ˆä¸å­˜åœ¨æ—¶tileGid==0ï¼‰
     {
         
         auto prop = m_tileMap->getPropertiesForGID(tileGid);
         auto valueMap = prop.asValueMap();
         bool collision = valueMap["Collidable"].asBool();
-        if (collision == true)//Åö×²¼ì²â
+        if (collision == true)//ç¢°æ’žæ£€æµ‹
         {
-            m_player->setPosition(position-Vec2(dx,dy));//»Øµ¯£¬·ñÔò»á¿¨Ç½Àï
+            m_player->setPosition(position-Vec2(dx,dy));//å›žå¼¹ï¼Œå¦åˆ™ä¼šå¡å¢™é‡Œ
             return;
         }
     }
-    m_player->setPosition(position);//ÒÆ¶¯¾«Áé
+    m_player->setPosition(position);//ç§»åŠ¨ç²¾çµ
 
-    this->setViewpointCenter(m_player->getPosition());//¹ö¶¯µØÍ¼
+    this->setViewpointCenter(m_player->getPosition());//æ»šåŠ¨åœ°å›¾
+}
+    return true;
 }
 
-//ÏñËØ×ø±ê×ª»»ÎªÍßÆ¬×ø±ê
+//åƒç´ åæ ‡è½¬æ¢ä¸ºç“¦ç‰‡åæ ‡
 cocos2d::Vec2 AdventureMapLayer::tileCoordFromPosition(cocos2d::Vec2 pos)
 {
     int x = pos.x / m_tileMap->getTileSize().width;
@@ -174,28 +174,10 @@ cocos2d::Vec2 AdventureMapLayer::tileCoordFromPosition(cocos2d::Vec2 pos)
     return Vec2(x, y);
 }
 
-//½«ÈËÎï±£³ÖÔÚÆÁÄ»ÖÐ¼ä
-void AdventureMapLayer::setViewpointCenter(cocos2d::Vec2 position)
-{
-    Size visibleSize = Director::getInstance()->getVisibleSize();
-
-    //·ÀÖ¹ÆÁÄ»×ó±ß³¬³öµØÍ¼
-    float x = MAX(position.x, visibleSize.width / 2);
-    float y = MAX(position.y, visibleSize.height / 2);
-    //·ÀÖ¹ÆÁÄ»ÓÒ±ß³¬³öµØÍ¼
-    x = MIN(x, (m_tileMap->getMapSize().width * m_tileMap->getMapSize().width) - visibleSize.width / 2);
-    y = MIN(y, (m_tileMap->getMapSize().height * m_tileMap->getMapSize().height) - visibleSize.height / 2);
-
-    Vec2 pointA = Vec2(visibleSize.width / 2, visibleSize.height / 2);//ÆÁÄ»µÄÖÐµã
-    Vec2 pointB = Vec2(x, y);//Ä¿±êµã
-
-    Vec2 offset = pointA - pointB;//Æ«ÒÆÁ¿
-    this->setPosition(offset);
-}
 
 cocos2d::Point AdventureMapLayer::convertToMapSpace(const cocos2d::Point& point)
 {
-	return convertToNodeSpace(point);
+    return convertToNodeSpace(point);
 }
 
 std::map<Vec2, bool> AdventureMapLayer::getBarrierMap()
@@ -205,11 +187,11 @@ std::map<Vec2, bool> AdventureMapLayer::getBarrierMap()
 
 bool AdventureMapLayer::isBarrier(Vec2 position)
 {
-    Vec2 tileCoord = this->tileCoordFromPosition(position);//ÏñËØ×ø±ê×ª»»ÎªÍßÆ¬×ø±ê
+    Vec2 tileCoord = this->tileCoordFromPosition(position);//åƒç´ åæ ‡è½¬æ¢ä¸ºç“¦ç‰‡åæ ‡
 
-    int tileGid = m_collidable->getTileGIDAt(tileCoord);//»ñµÃÍßÆ¬µÄGID
+    int tileGid = m_collidable->getTileGIDAt(tileCoord);//èŽ·å¾—ç“¦ç‰‡çš„GID
 
-    if (tileGid != 0)//ÍßÆ¬ÊÇ·ñ´æÔÚ£¨²»´æÔÚÊ±tileGid==0£©
+    if (tileGid != 0)//ç“¦ç‰‡æ˜¯å¦å­˜åœ¨ï¼ˆä¸å­˜åœ¨æ—¶tileGid==0ï¼‰
     {
         auto prop = m_tileMap->getPropertiesForGID(tileGid);
         auto valueMap = prop.asValueMap();
