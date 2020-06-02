@@ -2,7 +2,7 @@
 
 bool Pig::init()
 {
-	setMonsterSpeed(0.2);
+	setMonsterSpeed(0.5);
 	setHp(150);
 	setResTrack("Pig.png");
 	this->bindSprite(Sprite::create(this->getResTrack()),0.6f,0.6f);

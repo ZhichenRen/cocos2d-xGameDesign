@@ -24,7 +24,11 @@ public:
 private:
 	std::vector<Monster*> m_monsterList;
 	std::vector<Bullet*> m_monsterBullet;
-	
+	std::vector<Monster*> m_shortMonsterList;
+	std::vector<Monster*> m_longMonsterList;
+	const int pigNum = 3;
+	const int slimeNum = 5;
+	std::map<Vec2, bool> m_monsPosMap;
 	//设置怪物数量，生成怪物，死了之后消失，生成一个金币
 	//提供子弹的向量
 	//Player* m_player;
