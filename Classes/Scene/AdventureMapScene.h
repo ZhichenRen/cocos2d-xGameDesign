@@ -1,7 +1,6 @@
 #pragma once
 
 #include "cocos2d.h"
-
 class AdventureMapLayer : public cocos2d::Layer
 {
 private:
@@ -13,7 +12,8 @@ private:
     cocos2d::Sprite* m_player;
 
     std::map<cocos2d::EventKeyboard::KeyCode, bool> m_keyMap;
-
+    
+    std::map<cocos2d::Vec2, bool> m_barrierMap;
 public:
     inline cocos2d::TMXTiledMap* getMap() { return m_tileMap; }
     inline cocos2d::TMXLayer* getCollidable() { return m_collidable; }
@@ -32,11 +32,15 @@ public:
 
 
     cocos2d::Vec2 tileCoordFromPosition(cocos2d::Vec2 position);
-
-    cocos2d::Point convertToMapSpace(const cocos2d::Point& point);
+    
+    void setViewpointCenter(cocos2d::Vec2 position);
+	cocos2d::Point convertToMapSpace(const cocos2d::Point& point);
+    std::map<cocos2d::Vec2, bool> getBarrierMap();
 
     // implement the "static create()" method manually
     CREATE_FUNC(AdventureMapLayer);
+    bool AdventureMapLayer::isBarrier(cocos2d::Vec2 position);
+
 };
 
 

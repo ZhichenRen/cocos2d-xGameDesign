@@ -34,6 +34,7 @@ void Monster::hide()
 	}
 }
 
+
 bool Monster::isAlive()
 {
 	return m_isAlive;
@@ -54,16 +55,16 @@ void Monster::moveBy(const Vec2& distance)
 	this->runAction(move);
 }
 
-
-bool Monster::getAttacked(const int damage)
+void Monster::hit(int damage)
 {
-	m_Hp -= damage;
-	return true;
+	this->m_Hp -= damage;
 }
+
 
 void Monster::die()
 {
 	hide();
 	auto coin = Coin::create();
-	this->bindSprite((Sprite*)coin);
+	this->getSprite()->setVisible(false);//¹ÖÎïÏûÊ§
+	this->addChild(coin);
 }
