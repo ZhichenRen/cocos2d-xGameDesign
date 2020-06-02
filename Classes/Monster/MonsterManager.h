@@ -18,6 +18,7 @@ public:
 	virtual bool init();
 	virtual void update(float dt);
 	void createMonsterPos();
+	std::vector<Bullet*> getMonsterBullets();
 	CC_SYNTHESIZE(AdventureMapLayer*, m_map, ManagerMap);
 	CC_SYNTHESIZE(Sprite*, m_player, Player);
 private:

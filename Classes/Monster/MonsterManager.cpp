@@ -7,7 +7,8 @@ void MonsterManager::bindMap(AdventureMapLayer* map)
 	setManagerMap(map);
 	createMonsters();
 	createMonsterPos();
-
+	for (auto monster : m_monsterList)
+		monster->getMonsterWeapon()->bindMap(map);
 	return;
 }
 
@@ -30,7 +31,7 @@ void MonsterManager::createMonsters()
 	
 	for (int i = 0; i < 50; i++)
 	{
-		monster = Slime::create();
+		monster = Pig::create();
 		this->addChild(monster);
 		m_monsterList.push_back(monster);
 	}
@@ -62,6 +63,18 @@ void MonsterManager::createMonsterPos()
 		k++;
 	}
 }
+std::vector<Bullet*> MonsterManager::getMonsterBullets()
+{
+	std::vector<Bullet*> monsterBullets;
+	for (auto monster : m_monsterList)
+	{
+		auto tmpBlt = monster->getMonsterWeapon()->getBullet();//获取每个怪物的武器发射出的子弹
+		for (auto blt : tmpBlt)
+			monsterBullets.push_back(blt);//将子弹塞进向量
+	}
+	return monsterBullets;
+}
+
 void MonsterManager::update(float dt)
 {
 	Point playerPosition = m_player->getPosition();
@@ -76,8 +89,10 @@ void MonsterManager::update(float dt)
 				monster->die();
 				continue;
 			}
+
 			auto monsWeapon = monster->getMonsterWeapon(); 
-			//monsWeapon->attack(m_map->convertToMapSpace(convertToWorldSpace(playerPosition)));
+			monsWeapon->attack(playerPosition);
+			
 			auto curPos = monster->getPosition();
 			float xFlag = curPos.x > playerPosition.x ? -monster->getMonsterSpeed() : monster->getMonsterSpeed();
 			float yFlag = curPos.y > playerPosition.y ? -monster->getMonsterSpeed() : monster->getMonsterSpeed();
@@ -89,6 +104,8 @@ void MonsterManager::update(float dt)
 					curPos.y + yFlag));
 		}
 	}
+	//auto testVec = this->getMonsterBullets();
+
 }
 
 
@@ -103,4 +120,5 @@ MonsterManager::MonsterManager()
 
 MonsterManager::~MonsterManager()
 {
+
 }

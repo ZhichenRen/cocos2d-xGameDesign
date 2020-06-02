@@ -16,6 +16,11 @@ void Weapon::attack(Point pos)
 
 }
 
+std::vector<Bullet*> Weapon::getBullet() const
+{
+	return std::vector<Bullet*>();
+}
+
 int Weapon::getPowerCost()const
 {
 	return m_power_cost;

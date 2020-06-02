@@ -5,7 +5,7 @@ bool Pig::init()
 	setMonsterSpeed(0.2);
 	setHp(150);
 	setResTrack("Pig.png");
-	this->bindSprite(Sprite::create(this->getResTrack()),0.8f,0.8f);
+	this->bindSprite(Sprite::create(this->getResTrack()),0.6f,0.6f);
 	auto sword = MonsterSword::create();
 	sword->setPosition(this->getPosition());
 	//gun->setContentSize(Size(0.1, 0.1));
