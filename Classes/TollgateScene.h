@@ -1,7 +1,10 @@
 #pragma once
 #include "cocos2d.h"
 #include "typeinfo"
-#include "Scene\AdventureMapScene.h"
+<<<<<<< HEAD
+#include "Scene/AdventureMapScene.h"
+=======
+>>>>>>> e598c124a97632d03e2e6f62014b1723af5ef212
 #include "AuxiliaryClass/AnimationUtil/AnimationUtil.h"
 #include "Entity/Item/Player/Ranger/Ranger.h"
 #include "Controller/Move/PlayerController.h"
