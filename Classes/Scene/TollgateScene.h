@@ -8,6 +8,7 @@
 #include "Entity/Weapons/CandyGun.h"
 #include "Scene/PauseScene.h"
 #include "Scene/AdventureMapScene.h"
+#include "Monster/MonsterManager.h"
 
 #include "editor-support/cocostudio/CCSGUIReader.h"
 #include "ui/CocosGUI.h"
@@ -24,6 +25,7 @@ public:
 	void loadMap();
 	void addLongRangeWeapon();
 	void loadController();
+	void loadMonsters();
 	CREATE_FUNC(TollgateScene);
 
 

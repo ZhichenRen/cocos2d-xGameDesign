@@ -23,11 +23,9 @@ public:
 	inline cocos2d::TMXLayer* getRoad() { return m_road; }
 	inline cocos2d::Sprite* getPlayer() { return m_player; }
 	static cocos2d::Scene* createScene();
-
 	virtual bool init();
 
 	virtual void createRandomMap();
-
 	virtual void buildRoom(cocos2d::Vec2 roomCoord);
 	virtual void buildRoad(std::pair<cocos2d::Vec2, cocos2d::Vec2> roadPair);
 
@@ -41,6 +39,4 @@ public:
 	// implement the "static create()" method manually
 	CREATE_FUNC(AdventureMapLayer);
 };
-
-
 

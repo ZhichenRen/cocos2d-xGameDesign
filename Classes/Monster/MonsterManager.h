@@ -6,6 +6,7 @@
 #include "Entity\Entity.h"
 #include "Monster\Slime.h"
 #include "Monster\Pig.h"
+
 USING_NS_CC;
 class MonsterManager : public Node {
 public:
@@ -20,7 +21,7 @@ public:
 	void createMonsterPos();
 	std::vector<Bullet*> getMonsterBullets();
 	CC_SYNTHESIZE(AdventureMapLayer*, m_map, ManagerMap);
-	CC_SYNTHESIZE(Sprite*, m_player, Player);
+	CC_SYNTHESIZE(Sprite*, m_player);
 private:
 	std::vector<Monster*> m_monsterList;
 	std::vector<Bullet*> m_monsterBullet;

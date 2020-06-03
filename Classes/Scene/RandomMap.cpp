@@ -151,6 +151,8 @@ void AdventureMapLayer::createRandomMap()
 	}
 }
 
+
+
 void AdventureMapLayer::buildRoom(Vec2 roomCoord)
 {
 	std::map<Vec2, bool> barrierMap;
