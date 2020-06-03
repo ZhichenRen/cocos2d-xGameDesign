@@ -1,4 +1,4 @@
-#include "TollgateScene.h"
+#include "Scene/TollgateScene.h"
 
 Scene* TollgateScene::createScene()
 {
@@ -11,7 +11,7 @@ Scene* TollgateScene::createScene()
 
 void TollgateScene::loadMap()
 {
-	m_map =AdventureMapLayer::create();
+	m_map = AdventureMapLayer::create();
 	this->addChild(m_map, 0, 100);//游戏地图 tag为100
 
 }
@@ -27,7 +27,7 @@ void TollgateScene::addPlayer()
 
 	m_player->setTiledMap(m_map);
 	m_player->setCdBar(m_cdBar);
-	m_map->addChild(m_player,2,200);
+	m_map->addChild(m_player, 2, 200);
 }
 
 void TollgateScene::addLongRangeWeapon()
@@ -44,7 +44,7 @@ void TollgateScene::loadController()
 	this->addChild(playerController);
 	m_player->setController(playerController);
 	playerController->setPlayer(m_player);
-	playerController->setIsRanger(typeid(*m_player)==typeid(Ranger));//以后与memberSelect结合
+	playerController->setIsRanger(typeid(*m_player) == typeid(Ranger));//以后与memberSelect结合
 	playerController->setStandAnimate(animate);
 
 }
