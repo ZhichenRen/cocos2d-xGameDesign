@@ -4,7 +4,7 @@
 //#include "Entity\Weapons\RPG.h"
 //#include "Entity\Weapons\Shotgun.h"
 #include "Entity\Weapons\CandyGun.h"
-
+#include "Monster/MonsterManager.h"
 USING_NS_CC;
 
 Scene* AdventureMapLayer::createScene()
@@ -28,13 +28,14 @@ bool AdventureMapLayer::init()
 	}
 
 	createRandomMap();
-	this->addChild(m_tileMap, 0, 100);//æ¸¸æˆåœ°å›¾ tagä¸º100
+	this->addChild(m_tileMap, 0, 100);//ÓÎÏ·µØÍ¼ tagÎª100
 
+	//loadMonsters();
 	return true;
 }
 
 
-//åƒç´ åæ ‡è½¬æ¢ä¸ºç“¦ç‰‡åæ ‡
+//ÏñËØ×ø±ê×ª»»ÎªÍßÆ¬×ø±ê
 cocos2d::Vec2 AdventureMapLayer::tileCoordFromPosition(cocos2d::Vec2 pos)
 {
 	int x = pos.x / m_tileMap->getTileSize().width;
@@ -56,11 +57,11 @@ std::map<Vec2, bool> AdventureMapLayer::getBarrierMap()
 
 bool AdventureMapLayer::isBarrier(cocos2d::Vec2 position)
 {
-	Vec2 tileCoord = this->tileCoordFromPosition(position);//åƒç´ åæ ‡è½¬æ¢ä¸ºç“¦ç‰‡åæ ‡
+	Vec2 tileCoord = this->tileCoordFromPosition(position);//ÏñËØ×ø±ê×ª»»ÎªÍßÆ¬×ø±ê
 
-	int tileGid = m_collidable->getTileGIDAt(tileCoord);//èŽ·å¾—ç“¦ç‰‡çš„GID
+	int tileGid = m_collidable->getTileGIDAt(tileCoord);//»ñµÃÍßÆ¬µÄGID
 
-	if (tileGid != 0)//ç“¦ç‰‡æ˜¯å¦å­˜åœ¨ï¼ˆä¸å­˜åœ¨æ—¶tileGid==0ï¼‰
+	if (tileGid != 0)//ÍßÆ¬ÊÇ·ñ´æÔÚ£¨²»´æÔÚÊ±tileGid==0£©
 	{
 		auto prop = m_tileMap->getPropertiesForGID(tileGid);
 		auto valueMap = prop.asValueMap();
