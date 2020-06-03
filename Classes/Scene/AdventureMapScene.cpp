@@ -4,7 +4,7 @@
 //#include "Entity\Weapons\RPG.h"
 //#include "Entity\Weapons\Shotgun.h"
 #include "Entity\Weapons\CandyGun.h"
-
+#include "Monster/MonsterManager.h"
 USING_NS_CC;
 
 Scene* AdventureMapLayer::createScene()
@@ -30,6 +30,7 @@ bool AdventureMapLayer::init()
 	createRandomMap();
 	this->addChild(m_tileMap, 0, 100);//ÓÎÏ·µØÍ¼ tagÎª100
 
+	//loadMonsters();
 	return true;
 }
 

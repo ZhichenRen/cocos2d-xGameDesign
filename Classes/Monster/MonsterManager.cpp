@@ -4,7 +4,7 @@
 
 void MonsterManager::bindMap(AdventureMapLayer* map)
 {
-	setManagerMap(map);
+	m_map = map;
 	createMonsters();
 	createMonsterPos();
 	for (auto monster : m_monsterList)
@@ -14,7 +14,7 @@ void MonsterManager::bindMap(AdventureMapLayer* map)
 
 void MonsterManager::bindPlayer(Sprite* player)
 {
-	setPlayer(player);
+	m_player = player;
 	this->scheduleUpdate();
 }
 

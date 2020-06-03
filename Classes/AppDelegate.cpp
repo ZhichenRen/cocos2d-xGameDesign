@@ -1,5 +1,5 @@
 #include "AppDelegate.h"
-#include "TollgateScene.h"
+#include "Scene/TollgateScene.h"
 #include "Scene/AdventureMapScene.h"
 
 
@@ -63,9 +63,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto glview = director->getOpenGLView();
     if (!glview) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-        glview = GLViewImpl::createWithRect("Little Ruaner", cocos2d::Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
+        glview = GLViewImpl::createWithRect("SoulKnight", cocos2d::Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
 #else
-        glview = GLViewImpl::create("Little Ruaner");
+        glview = GLViewImpl::create("SoulKnight");
 #endif
         director->setOpenGLView(glview);
     }
@@ -98,7 +98,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     register_all_packages();
 
     // create a scene. it's an autorelease object
-    auto scene = AdventureMapLayer::createScene();
+    auto scene = TollgateScene::createScene();
 
     // run
     director->runWithScene(scene);
