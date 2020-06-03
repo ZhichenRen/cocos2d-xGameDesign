@@ -1,7 +1,7 @@
 #pragma once
+#pragma once
 #include "cocos2d.h"
 #include "typeinfo"
-#include "Scene/AdventureMapScene.h"
 #include "AuxiliaryClass/AnimationUtil/AnimationUtil.h"
 #include "Entity/Item/Player/Ranger/Ranger.h"
 #include "Controller/Move/PlayerController.h"
@@ -26,11 +26,12 @@ public:
 	void loadController();
 	CREATE_FUNC(TollgateScene);
 
-	
+
 private:
 	LoadingBar* m_cdBar = NULL;
+	LoadingBar* m_hpBar = NULL;
+	LoadingBar* m_mpBar = NULL;
 	Player* m_player;
 	AdventureMapLayer* m_map;
 
 };
-

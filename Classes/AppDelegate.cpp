@@ -1,9 +1,6 @@
 #include "AppDelegate.h"
 #include "TollgateScene.h"
-<<<<<<< HEAD
 #include "Scene/AdventureMapScene.h"
-=======
->>>>>>> e598c124a97632d03e2e6f62014b1723af5ef212
 
 
 // #define USE_AUDIO_ENGINE 1
