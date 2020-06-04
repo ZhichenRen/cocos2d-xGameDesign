@@ -1,4 +1,5 @@
 #include "Scene/TollgateScene.h"
+#include "Scene/PauseScene.h"
 
 USING_NS_CC;
 
@@ -66,6 +67,8 @@ bool TollgateScene::init()
 	addLongRangeWeapon();
 	loadController();
 	loadMonsters();
+	loadListeners();
+
 	return true;
 }
 
@@ -92,6 +95,29 @@ void TollgateScene::loadMonsters()
 	m_map->addChild(monsterMgr, 2);
 }
 
+void TollgateScene::loadListeners()
+{
+	auto pause_listener = EventListenerKeyboard::create();
+	pause_listener->onKeyPressed = [](EventKeyboard::KeyCode key, Event* event)
+	{
+		return true;
+	};
+	pause_listener->onKeyReleased = [=](EventKeyboard::KeyCode key, Event* event)
+	{
+		switch (key)
+		{
+		case EventKeyboard::KeyCode::KEY_ESCAPE:
+			Size visible_size = Director::getInstance()->getVisibleSize();
+			CCRenderTexture* background = CCRenderTexture::create(visible_size.width, visible_size.height);
+			background->begin();
+			this->visit();
+			background->end();
+			Director::getInstance()->pushScene(PauseScene::createScene(background));
+			break;
+		}
+	};
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(pause_listener, this);
+}
 
 const int coord[25][2] = {
 		{11,11},{52,11},{93,11},{134,11},{175,11},
