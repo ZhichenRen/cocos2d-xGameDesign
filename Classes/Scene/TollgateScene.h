@@ -26,6 +26,12 @@ public:
 	void addLongRangeWeapon();
 	void loadController();
 	void loadMonsters();
+
+	void updateMiniMap(TMXTiledMap* miniMap);
+
+	virtual void update(float dt);
+
+
 	CREATE_FUNC(TollgateScene);
 
 

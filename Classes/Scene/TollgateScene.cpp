@@ -1,5 +1,7 @@
 #include "Scene/TollgateScene.h"
 
+USING_NS_CC;
+
 Scene* TollgateScene::createScene()
 {
 	auto scene = Scene::create();
@@ -55,6 +57,9 @@ bool TollgateScene::init()
 {
 	if (!Layer::init())
 		return false;
+
+	this->scheduleUpdate();
+
 	loadMap();
 	loadUI();
 	addPlayer();
@@ -85,4 +90,152 @@ void TollgateScene::loadMonsters()
 	playerPos.y -=  9 * 32;
 	monsterMgr->setPosition(playerPos);
 	m_map->addChild(monsterMgr, 2);
+}
+
+
+const int coord[25][2] = {
+		{11,11},{52,11},{93,11},{134,11},{175,11},
+		{11,52},{52,52},{93,52},{134,52},{175,52},
+		{11,93},{52,93},{93,93},{134,93},{175,93},
+		{11,134},{52,134},{93,134},{134,134},{175,134},
+		{11,175},{52,175},{93,175},{134,175},{175,175} };
+
+void switchGate(TMXLayer* wall, TMXLayer* barrier,int roomNum,int dir,bool isClosed)
+{
+	if (dir == 0)//向右
+	{
+		for (int i = coord[roomNum][1] - 2; i <= coord[roomNum][1] + 2; i++)
+		{
+			if (isClosed)
+			{
+				wall->setTileGID(89, Vec2(coord[roomNum][0] + 11,i));
+				barrier->setTileGID(89, Vec2(coord[roomNum][0] + 11, i));
+			}
+			else
+			{
+				wall->setTileGID(56, Vec2(coord[roomNum][0] + 11, i));
+				barrier->setTileGID(2, Vec2(coord[roomNum][0] + 11, i));
+			}
+		}
+	}
+	else if (dir == 1)//向左
+	{
+		for (int i = coord[roomNum][1] - 2; i <= coord[roomNum][1] + 2; i++)
+		{
+			if (isClosed)
+			{
+				wall->setTileGID(89, Vec2(coord[roomNum][0] - 11, i));
+				barrier->setTileGID(89, Vec2(coord[roomNum][0] - 11, i));
+			}
+			else
+			{
+				wall->setTileGID(56, Vec2(coord[roomNum][0] - 11, i));
+				barrier->setTileGID(2, Vec2(coord[roomNum][0] - 11, i));
+			}
+		}
+	}
+	else if (dir == 2)//向下
+	{
+		for (int i = coord[roomNum][0] - 2; i <= coord[roomNum][0] + 2; i++)
+		{
+			if (isClosed)
+			{
+				wall->setTileGID(89, Vec2(i,coord[roomNum][1] + 11));
+				barrier->setTileGID(89, Vec2(i,coord[roomNum][1] + 11));
+			}
+			else
+			{
+				wall->setTileGID(56, Vec2(i, coord[roomNum][1] + 11));
+				barrier->setTileGID(2, Vec2(i, coord[roomNum][1] + 11));
+			}
+		}
+	}
+	else//向上
+	{
+		for (int i = coord[roomNum][0] - 2; i <= coord[roomNum][0] + 2; i++)
+		{
+			if (isClosed)
+			{
+				wall->setTileGID(89, Vec2(i, coord[roomNum][1] - 11));
+				barrier->setTileGID(89, Vec2(i, coord[roomNum][1] - 11));
+			}
+			else
+			{
+				wall->setTileGID(56, Vec2(i, coord[roomNum][1] - 11));
+				barrier->setTileGID(2, Vec2(i, coord[roomNum][1] - 11));
+			}
+		}
+	}
+
+}
+Vec2 lastRoomCoord(2, 2);
+
+void TollgateScene::updateMiniMap(TMXTiledMap* miniMap)
+{
+	auto miniMapLayer = miniMap->getLayer("miniMapLayer");
+	auto playerPos = m_player->getPosition();
+	auto roomCoord = m_map->roomCoordFromPosition(playerPos);
+
+	miniMap->setPosition(playerPos + Vec2(200, 50));
+
+	miniMapLayer->setTileGID(2, 2 * lastRoomCoord);//原房间浅灰
+	miniMapLayer->setTileGID(1, 2 * Vec2(roomCoord.y, roomCoord.x));//现房间深灰
+
+	if (lastRoomCoord != Vec2(roomCoord.y, roomCoord.x))
+	{
+		if (lastRoomCoord.x == roomCoord.y)//上下相连
+		{
+			miniMapLayer->setTileGID(4, lastRoomCoord + Vec2(roomCoord.y, roomCoord.x));
+		}
+		else//左右相连
+		{
+			miniMapLayer->setTileGID(3, lastRoomCoord + Vec2(roomCoord.y, roomCoord.x));
+		}
+	}
+	lastRoomCoord = Vec2(roomCoord.y, roomCoord.x);
+}
+
+void TollgateScene::update(float dt)
+{
+	auto playerPos = m_player->getPosition();
+	auto barrier = m_map->getCollidable();
+	auto map = m_map->getMap();
+	auto miniMap = m_map->getMiniMap();
+	auto wall = m_map->getWall();
+	auto roadPairs = m_map->getRoadPairs();
+
+	updateMiniMap(miniMap);
+
+	auto roomCoord = m_map->roomCoordFromPosition(playerPos);//房间坐标
+	auto roomNum = roomCoord.x * 5 + roomCoord.y;//房间序号
+
+	Vec2 dir[4] = { {0,1},{0,-1},{1,0},{-1,0} };//四个方向
+
+	if (true)//进入有怪物的房间，开始战斗
+	{
+		std::vector<int>dirVec;
+		for (int i = 0; i < 4; i++)
+		{
+			for (auto elem : roadPairs)
+			{
+				if (elem.first == roomCoord && elem.second == dir[i] + roomCoord || 
+					elem.second == roomCoord && elem.first == dir[i] + roomCoord)
+				{
+					dirVec.push_back(i);
+				}
+			}
+		}
+		for (auto elem : dirVec)
+		{
+			switchGate(wall, barrier, roomNum, elem, true);
+		}
+		auto t = time(nullptr);
+		if (t%2)//结束战斗
+		{
+			for (auto elem : dirVec)
+			{
+				switchGate(wall, barrier, roomNum, elem, false);
+			}
+		}
+	}
 }

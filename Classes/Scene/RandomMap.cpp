@@ -25,6 +25,7 @@
 USING_NS_CC;
 
 
+
 int coord[25][2] = {
 		{11,11},{52,11},{93,11},{134,11},{175,11},
 		{11,52},{52,52},{93,52},{134,52},{175,52},
@@ -42,7 +43,7 @@ bool onMap(int x, int y)
 //创建一个随机生成的游戏地图
 void AdventureMapLayer::createRandomMap()
 {
-	m_tileMap = TMXTiledMap::create("AdventureMap_random.tmx");
+	m_tileMap = TMXTiledMap::create("map/AdventureMap_random.tmx");
 
 	m_collidable = m_tileMap->getLayer("barrier");//获取判断碰撞的障碍层
 
@@ -142,9 +143,9 @@ void AdventureMapLayer::createRandomMap()
 		int x = elem.x;
 		int y = elem.y;
 		int z = 5 * x + y;
-		buildRoom(Vec2(coord[z][0], coord[z][1]));
+		buildRoom(Vec2(coord[z][0],coord[z][1]));
 	}
-
+	m_roadPairs = roadPairs;
 	for (auto elem : roadPairs)
 	{
 		buildRoad(elem);
@@ -209,7 +210,15 @@ void AdventureMapLayer::buildRoad(std::pair<cocos2d::Vec2, cocos2d::Vec2> roadPa
 			for (int j = tileCoordY - 2; j <= tileCoordY + 2; j++)
 			{
 				m_road->setTileGID(ROAD_TILE, Vec2(i, j));
-				m_collidable->setTileGID(0, Vec2(i, j));
+				if (i != midTileCoordX - 9 && i != midTileCoordX + 10)
+				{
+					m_collidable->setTileGID(EMPTY_TILE, Vec2(i, j));
+				}
+				else
+				{
+					m_collidable->setTileGID(2, Vec2(i, j));
+				}
+				
 			}
 		}
 		int leftDoorX = midTileCoordX - 9;
@@ -232,6 +241,14 @@ void AdventureMapLayer::buildRoad(std::pair<cocos2d::Vec2, cocos2d::Vec2> roadPa
 			for (int j = tileCoordX - 2; j <= tileCoordX + 2; j++)
 			{
 				m_road->setTileGID(ROAD_TILE, Vec2(j, i));
+				if (i != midTileCoordY - 9 && i != midTileCoordY + 10)
+				{
+					m_collidable->setTileGID(EMPTY_TILE, Vec2(j, i));
+				}
+				else
+				{
+					m_collidable->setTileGID(2, Vec2(j, i));
+				}
 				m_collidable->setTileGID(EMPTY_TILE, Vec2(j, i));
 			}
 		}
@@ -245,4 +262,13 @@ void AdventureMapLayer::buildRoad(std::pair<cocos2d::Vec2, cocos2d::Vec2> roadPa
 			m_wall->setTileGID(ROAD_TILE, Vec2(i, downDoorY + 1));
 		}
 	}
+}
+
+Vec2 AdventureMapLayer::roomCoordFromPosition(Vec2 position)
+{
+	Vec2 tileCoord = tileCoordFromPosition(position);
+	int y = (tileCoord.x - 1) / 41;
+	int x = (tileCoord.y - 1) / 41;
+	//int pos = 5 * x + y;
+	return Vec2(x, y);
 }
