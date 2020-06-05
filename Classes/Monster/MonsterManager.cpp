@@ -20,8 +20,9 @@ void MonsterManager::bindPlayer(Sprite* player)
 
 bool MonsterManager::init() 
 {
-	m_checkPoint = 1;
+	m_curCheckPoint = 1;
 	m_deathMonsNum = 0;
+	m_fGameOver = 0;
 	return true;
 }
 
@@ -73,14 +74,21 @@ void MonsterManager::createMonsterPos()
 	}
 }
 
-void MonsterManager::resetAllMons()
+bool MonsterManager::resetAllMons()
 {
 	m_deathMonsNum = 0;//清零
+	m_curCheckPoint++;
+	if (m_curCheckPoint >= m_allCheckPoint)
+	{
+		m_fGameOver = 1;
+		return false;
+	}
 	for (auto monster : m_monsterList)
 	{
 		monster->resetPropoties();
 	}
 	createMonsterPos();
+	return true;
 }
 
 
@@ -93,13 +101,17 @@ void MonsterManager::update(float dt)
 	{
 		resetAllMons();
 	}
+	if (m_fGameOver)//游戏结束了
+	{
+		return;
+	}
 	for (auto monster : m_monsterList)
 	{
 		auto curPos = monster->getPosition();
 		Vec2 blockOccupied = ccp(static_cast<int>(curPos.x) / 21, static_cast<int>(curPos.y) / 21);
 		if (monster->isAlive())
 		{
-			if (monster->getHp() < 0)
+			if (monster->getHp() <= 0) //更新活着的状态
 			{
 				m_monsPosMap[blockOccupied] = 0;//清除位置信息
 				monster->die();
@@ -175,15 +187,7 @@ void MonsterManager::update(float dt)
 
 
 
-MonsterManager::MonsterManager()
-{
-	
-}
 
-MonsterManager::~MonsterManager()
-{
-
-}
 
 std::vector<Bullet*> MonsterManager::getMonsterBullets()
 {
@@ -195,4 +199,9 @@ std::vector<Bullet*> MonsterManager::getMonsterBullets()
 			monsterBullets.push_back(blt);//将子弹塞进向量
 	}
 	return monsterBullets;
+}
+
+std::vector<Monster*> MonsterManager::getMonster()const
+{
+	return m_monsterList;
 }

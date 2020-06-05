@@ -2,8 +2,9 @@
 
 bool Pig::init()
 {
+	m_fIsFacingLeft = false;
 	setMonsterSpeed(0.5);
-	setHp(100);
+	setHp(this->m_initHp);
 	setResTrack("Pig.png");
 	this->bindSprite(Sprite::create(this->getResTrack()),0.6f,0.6f);
 	auto sword = MonsterSword::create();
@@ -17,6 +18,6 @@ bool Pig::init()
 void Pig::resetPropoties() 
 {
 	show();
-	setHp(150);
+	setHp(this->m_initHp);
 	m_isAlive = true;
 }

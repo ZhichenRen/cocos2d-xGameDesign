@@ -1,5 +1,4 @@
 #include "Monster\Monster.h"
-#define BLUERATE 1
 Monster::Monster() 
 {
 	m_isAlive = false;
@@ -52,6 +51,8 @@ void Monster::moveBy(const Vec2& distance)
 		Vec2(distance.x, distance.y));
 	this->runAction(move);
 }
+
+
 
 void Monster::hit(int damage)
 {
