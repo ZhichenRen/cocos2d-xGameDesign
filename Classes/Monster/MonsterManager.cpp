@@ -62,17 +62,18 @@ void MonsterManager::createMonsterPos()
 	auto curMap = m_map->getBarrierMap();
 	for (int i = 0; i < m_monsterList.size(); i++)
 	{
-		auto ranF = CCRANDOM_0_1();
-		int randInt = ranF * 441;		
-		auto monsterPos = Vec2(randInt % 21 , randInt / 21);
-		if (curMap.count(monsterPos))//若是障碍物则直接continue
+		auto randInt1 = rand() % (21 * 32);
+		auto randInt2 = rand() % (21 * 32);
+		
+		auto monsterPos = ccp(randInt1, randInt2);
+		auto worldTar = monsterPos  + getPosition();
+		if (m_map->isBarrier(worldTar))//若是障碍物则直接continue
 		{
 			i--;
 			continue;
 		}
-		m_monsPosMap[monsterPos] = 1;
-		monsterPos.x *= 32;
-		monsterPos.y *= 32;
+		Vec2 tarBlock = ccp(static_cast<int>(monsterPos.x) / 21, static_cast<int>(monsterPos.y) / 21);
+		m_monsPosMap[tarBlock] = 1;
 		m_monsterList[k]->setPosition(monsterPos);
 		k++;
 	}
