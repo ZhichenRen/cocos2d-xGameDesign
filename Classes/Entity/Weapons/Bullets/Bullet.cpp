@@ -42,6 +42,10 @@ bool Bullet::isUsed()const
 void Bullet::setIsUsed(bool status)
 {
 	m_is_used = status;
+	if (status == true)
+	{
+		getSprite()->setVisible(false);
+	}
 }
 
 void Bullet::setOriginPos(const Point& pos)
