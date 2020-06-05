@@ -6,6 +6,7 @@
 class Pig : public Monster {
 public:
 	virtual bool init();
+	void resetPropoties();
 	CREATE_FUNC(Pig);
 private:
 
