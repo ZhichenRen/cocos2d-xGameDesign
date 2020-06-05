@@ -41,7 +41,7 @@ void Monster::mySetPosition(Vec2 target)
 {
 	auto curPos = this->getPosition();
 	auto dif = target - curPos;
-	if (dif.x > 0 && !m_fIsFacingRight)	//面朝左但是跑向右		
+	if (dif.x > 1 && !m_fIsFacingRight)	//面朝左但是跑向右		
 	{
 		m_sprite->setFlipX(true);
 		m_fIsFacingRight = 1;
@@ -67,11 +67,12 @@ void Monster::hit(int damage, float flyingDegree)
 {
 	this->m_Hp -= damage;
 	auto curPos = getPosition();
-	auto vecToMove = Vec2(10 * cos(flyingDegree / 180 * 3.14), 10 * sin(flyingDegree / 180 * 3.14));
+	auto vecToMove = Vec2(5 * cos(flyingDegree / 180 * 3.14), 5 * sin(flyingDegree / 180 * 3.14));
 	auto targetPos = curPos + vecToMove;
 	if (!m_map->isBarrier(m_map->convertToMapSpace(convertToWorldSpace(targetPos))))
 	{
 		auto move_action = MoveBy::create(0.1f, vecToMove);
+		
 		this->runAction(move_action);
 	}
 	

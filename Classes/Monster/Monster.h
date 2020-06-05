@@ -8,8 +8,8 @@
 #include "Entity\Coin\Coin.h"
 #include "Entity\Weapons\MonsterGun.h"
 #include "Entity/Blue/Blue.h"
-#include "Monster/MonsterManager.h"
 USING_NS_CC;
+class MonsterManager;
 class Monster :public Entity {
 public:
 	Monster();
