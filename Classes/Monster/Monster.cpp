@@ -38,30 +38,54 @@ bool Monster::isAlive()
 	return m_isAlive;
 }
 
+bool Monster::isTaunted()
+{
+	return m_fIsTaunted;
+}
+
+bool Monster::setTaunted(bool flag)
+{
+	return m_fIsTaunted = flag;
+}
+
 bool Monster::mySetPosition(Vec2 target)
 {//重构，所有的方位都要进这个函数
+	auto curPos = getPosition();
 	auto worldTar = target + m_monsMgr->getPosition();//是一种很好的写法哦
 	Vec2 tarBlock = ccp(static_cast<int>(target.x) / 21, static_cast<int>(target.y) / 21);
-
+	auto curBlock = ccp(static_cast<int>(curPos.x) / 21, static_cast<int>(curPos.y) / 21);
+	m_monsMgr->setPosMap(curBlock, 0);
 	if (m_map->isBarrier(worldTar))
+	{
+		if (!this->isTaunted())
+		{
+			m_fIsFacingRight = !m_fIsFacingRight;
+			m_sprite->setFlipX(m_fIsFacingRight);
+		}
 		return false;
+	}
 	if (m_monsMgr->isPosOccupied(tarBlock))
 		return false;
-	auto curPos = this->getPosition();
+	
 	auto dif = target - curPos;
 	if (dif.x > 1 && !m_fIsFacingRight)	//面朝左但是跑向右		
 	{
+		m_fIsFacingRight = true;
 		m_sprite->setFlipX(true);
-		m_fIsFacingRight = 1;
 	}
 	else if (dif.x < 0 && m_fIsFacingRight)//面朝右但是跑向左
 	{
+		m_fIsFacingRight = false;
 		m_sprite->setFlipX(false);
-		m_fIsFacingRight = 0;
 	}
 	setPosition(target);
 	m_monsMgr->setPosMap(tarBlock, 1);
 	return true;
+}
+
+void Monster::resetPropoties()
+{
+	m_isAlive = true;
 }
 
 
@@ -116,3 +140,14 @@ void Monster::die()
 	coin->setPosition(this->getPosition());
 	this->getParent()->addChild(coin);
 }
+
+void Monster::wander()
+{
+	auto curPos = getPosition();
+	auto tarPos = m_fIsFacingRight ? ccp(this->getMonsterSpeed(), 0) + curPos : -ccp(this->getMonsterSpeed(), 0) + curPos;
+	
+	mySetPosition(tarPos);
+}
+
+
+

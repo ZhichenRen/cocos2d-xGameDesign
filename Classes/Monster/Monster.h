@@ -19,14 +19,19 @@ public:
 public:
 	void show();
 	void hide();
-	bool isAlive();
-	bool mySetPosition(Vec2 target);
 	void hit(int damage);
 	void bindMap(AdventureMapLayer* map);
 	void bindMonsMgr(MonsterManager* monsMgr);
 	void hit(int damage, float flyingDegree);
 	void die();
-	virtual void resetPropoties() { m_isAlive = true; }
+	void wander();
+
+	bool isAlive();
+	bool isTaunted();
+	bool setTaunted(bool flag);
+	bool mySetPosition(Vec2 target);
+
+	virtual void resetPropoties();
 	
 	CC_SYNTHESIZE(float, m_fSpeed, MonsterSpeed);
 	CC_SYNTHESIZE(int, m_Hp, Hp);

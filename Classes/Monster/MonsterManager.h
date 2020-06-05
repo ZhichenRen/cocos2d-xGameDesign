@@ -49,7 +49,7 @@ private:
 	bool m_fGameOver = false;
 	
 	//提供子弹的向量 √
-	//Player* m_player;
+	//Player* m_player;√
 	//野怪被嘲讽？
 	//野怪翻转动画√
 	//设置怪物数量，生成怪物，死了之后消失，生成一个金币	√

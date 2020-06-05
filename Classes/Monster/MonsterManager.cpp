@@ -118,6 +118,7 @@ void MonsterManager::update(float dt)
 	{
 		auto curPos = monster->getPosition();
 		Vec2 blockOccupied = ccp(static_cast<int>(curPos.x) / 21, static_cast<int>(curPos.y) / 21);
+		auto dis = sqrtf(pow(playerPosition.x - curPos.x, 2) + pow(playerPosition.y - curPos.y, 2));
 		if (monster->isAlive())
 		{
 			if (monster->getHp() <= 0) //更新活着的状态
@@ -127,13 +128,21 @@ void MonsterManager::update(float dt)
 				m_deathMonsNum++;
 				continue;
 			}
-			auto monsWeapon = monster->getMonsterWeapon(); 
-			
-			//auto curAbsPos = convertToWorldSpace( monster->getPosition());
 			
 
 
-			auto dis = sqrtf(pow(playerPosition.x - curPos.x, 2) + pow(playerPosition.y - curPos.y, 2));
+			if (dis < 200)//200是嘲讽范围
+			{
+				//monster->setTaunted(1);
+			}
+
+			if (!monster->isTaunted())//若未被嘲讽
+			{
+				monster->wander();
+				continue;
+			}
+			
+			auto monsWeapon = monster->getMonsterWeapon();
 			if (dis < 2 * monsWeapon->getRange())//两倍距离以内再攻击
 				//攻击要用到地图中的坐标。
 				monsWeapon->attack(m_map->convertToWorldSpace(m_player->getPosition()));
