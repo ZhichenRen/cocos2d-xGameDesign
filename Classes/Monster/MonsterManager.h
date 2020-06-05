@@ -21,6 +21,7 @@ public:
 	void createMonsterPos();
 	void resetAllMons();
 	std::vector<Bullet*> getMonsterBullets();
+	std::vector<Monster*> getMonster()const;
 	CC_SYNTHESIZE(AdventureMapLayer*, m_map, ManagerMap);
 	CC_SYNTHESIZE(Sprite*, m_player);
 private:

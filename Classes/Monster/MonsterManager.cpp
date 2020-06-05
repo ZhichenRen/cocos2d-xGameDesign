@@ -196,3 +196,8 @@ std::vector<Bullet*> MonsterManager::getMonsterBullets()
 	}
 	return monsterBullets;
 }
+
+std::vector<Monster*> MonsterManager::getMonster()const
+{
+	return m_monsterList;
+}
