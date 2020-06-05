@@ -29,7 +29,7 @@ public:
 	CC_SYNTHESIZE(std::string, m_resTrack, ResTrack);
 	CC_SYNTHESIZE(bool, m_isAlive);
 	CC_SYNTHESIZE(Weapon*, m_weapon, MonsterWeapon);
-private:
-	
+protected:
+	bool m_fIsFacingLeft;
 };
 #endif // !__Monster_H__

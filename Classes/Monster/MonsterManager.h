@@ -6,7 +6,6 @@
 #include "Entity\Entity.h"
 #include "Monster\Slime.h"
 #include "Monster\Pig.h"
-
 USING_NS_CC;
 class MonsterManager : public Node {
 public:
@@ -21,12 +20,12 @@ public:
 	std::vector<Bullet*> getMonsterBullets();
 	bool isGameOver() { return m_fGameOver; }
 	CC_SYNTHESIZE(AdventureMapLayer*, m_map, ManagerMap);
-	CC_SYNTHESIZE(Sprite*, m_player);
 private:
 	std::vector<Monster*> m_monsterList;
 	std::vector<Bullet*> m_monsterBullet;
 	std::vector<Monster*> m_shortMonsterList;
 	std::vector<Monster*> m_longMonsterList;
+	Sprite* m_player;
 	const int pigNum = 3;
 	const int slimeNum = 5;
 	int m_curCheckPoint;
@@ -39,5 +38,6 @@ private:
 	//提供子弹的向量
 	//Player* m_player;
 	//野怪被嘲讽？
+	//野怪翻转动画
 };
 #endif

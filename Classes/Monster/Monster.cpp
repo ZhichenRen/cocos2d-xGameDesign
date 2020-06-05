@@ -52,6 +52,8 @@ void Monster::moveBy(const Vec2& distance)
 	this->runAction(move);
 }
 
+
+
 void Monster::hit(int damage)
 {
 	this->m_Hp -= damage;
