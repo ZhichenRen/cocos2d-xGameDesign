@@ -20,6 +20,7 @@ class TollgateScene :public Layer
 public:
 	static Scene* createScene();
 	virtual bool init();
+	virtual void onEnter();
 	void addPlayer();
 	void loadUI();
 	void loadMap();
@@ -31,6 +32,7 @@ public:
 	void updateMiniMap(TMXTiledMap* miniMap);
 
 	virtual void update(float dt);
+	void menuOkCallback(Ref* pSender);
 
 
 	CREATE_FUNC(TollgateScene);
