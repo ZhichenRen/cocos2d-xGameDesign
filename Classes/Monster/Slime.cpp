@@ -3,7 +3,7 @@
 bool Slime::init()
 {
 	setMonsterSpeed(0.2);
-	setHp(150);
+	setHp(50);
 	setResTrack("Slime.png"); 
 	auto gun = MonsterGun::create();
 	gun->setPosition(this->getPosition());
@@ -12,5 +12,12 @@ bool Slime::init()
 	this->addChild(gun, 1);
 	m_isAlive = true;
 	return true;
+}
+
+void Slime::resetPropoties()
+{
+	show();
+	setHp(150);
+	m_isAlive = true;
 }
 

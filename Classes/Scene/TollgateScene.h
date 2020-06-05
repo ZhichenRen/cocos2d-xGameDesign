@@ -27,6 +27,7 @@ public:
 	void addLongRangeWeapon();
 	void loadController();
 	void loadMonsters();
+	void loadListeners();
 
 	void updateMiniMap(TMXTiledMap* miniMap);
 
