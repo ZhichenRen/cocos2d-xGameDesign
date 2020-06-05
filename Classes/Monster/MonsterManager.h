@@ -23,13 +23,13 @@ public:
 
 
 	bool resetAllMons();
-	bool isGameOver() { return m_fGameOver; }
+	bool isGameOver();
 
 	std::vector<Bullet*> getMonsterBullets()const;
 	std::vector<Monster*> getMonster()const;
 	std::map<Vec2, bool> getMonsPosMap()const { return m_monsPosMap; }
-
-
+	void setPosMap(Vec2 pos, bool flag);
+	bool isPosOccupied(Vec2 pos);
 private:
 	std::vector<Monster*> m_monsterList;
 	std::vector<Bullet*> m_monsterBullet;

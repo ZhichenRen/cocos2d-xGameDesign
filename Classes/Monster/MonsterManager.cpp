@@ -95,6 +95,11 @@ bool MonsterManager::resetAllMons()
 	return true;
 }
 
+bool MonsterManager::isGameOver()
+{
+	return m_fGameOver;
+}
+
 
 void MonsterManager::update(float dt)
 {
@@ -142,8 +147,8 @@ void MonsterManager::update(float dt)
 			float yDirToMove = curPos.y > playerPosition.y ? -monster->getMonsterSpeed() : monster->getMonsterSpeed();
 
 			
-			if (abs(curPos.x - playerPosition.x) < 5)	xDirToMove = 0;
-			if (abs(curPos.y - playerPosition.y) < 5)	yDirToMove = 0;//若差距不大则不走位了
+			if (abs(curPos.x - playerPosition.x) < 3)	xDirToMove = 0;
+			if (abs(curPos.y - playerPosition.y) < 3)	yDirToMove = 0;//若差距不大则不走位了
 
 			auto posToMove = ccp(curPos.x + xDirToMove, curPos.y + yDirToMove);
 
@@ -152,12 +157,9 @@ void MonsterManager::update(float dt)
 			while (!monster->mySetPosition(posToMove)
 				&& i++ < 4)
 			{
-				posToMove = ccp(curPos.x + m_dirs[i][0] * xDirToMove, curPos.y + m_dirs[i][1] * yDirToMove);//以防怪物卡墙
+				posToMove = ccp(curPos.x + m_dirs[i][0] * xDirToMove, curPos.y + m_dirs[i][1] * yDirToMove);
+				//以防怪物卡墙
 			}
-		}
-		else
-		{
-
 		}
 	}
 }
@@ -184,4 +186,14 @@ std::vector<Bullet*> MonsterManager::getMonsterBullets() const
 std::vector<Monster*> MonsterManager::getMonster()const
 {
 	return m_monsterList;
+}
+
+void MonsterManager::setPosMap(Vec2 pos, bool flag)
+{
+	m_monsPosMap[pos] = flag;
+}
+
+bool MonsterManager::isPosOccupied(Vec2 pos)
+{
+	return m_monsPosMap[pos];
 }

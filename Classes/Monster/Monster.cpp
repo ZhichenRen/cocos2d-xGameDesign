@@ -41,9 +41,12 @@ bool Monster::isAlive()
 bool Monster::mySetPosition(Vec2 target)
 {//重构，所有的方位都要进这个函数
 	auto worldTar = target + m_monsMgr->getPosition();//是一种很好的写法哦
+	Vec2 tarBlock = ccp(static_cast<int>(target.x) / 21, static_cast<int>(target.y) / 21);
+
 	if (m_map->isBarrier(worldTar))
 		return false;
-	
+	if (m_monsMgr->isPosOccupied(tarBlock))
+		return false;
 	auto curPos = this->getPosition();
 	auto dif = target - curPos;
 	if (dif.x > 1 && !m_fIsFacingRight)	//面朝左但是跑向右		
@@ -57,6 +60,7 @@ bool Monster::mySetPosition(Vec2 target)
 		m_fIsFacingRight = 0;
 	}
 	setPosition(target);
+	m_monsMgr->setPosMap(tarBlock, 1);
 	return true;
 }
 

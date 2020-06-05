@@ -31,14 +31,29 @@
     <Filter Include="怪物类\怪物管理器">
       <UniqueIdentifier>{662c25eb-5e82-43b7-80a8-e4ca98bf1ef3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="武器类\硬币">
-      <UniqueIdentifier>{bda14d6a-cc31-4b02-982d-9c1a90595aa7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="怪物类\猪">
       <UniqueIdentifier>{8406c679-a45d-4a7a-a4a3-ea846ee0b2e6}</UniqueIdentifier>
     </Filter>
     <Filter Include="动画配置">
       <UniqueIdentifier>{432f570e-0b3a-4d84-837b-8a502306b8a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controller">
+      <UniqueIdentifier>{31f41ba7-e76d-438b-a6ef-cd3c51bfaaf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controller\玩家控制器">
+      <UniqueIdentifier>{03c02636-e58c-4356-8e81-8acf18fd7d12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="玩家类">
+      <UniqueIdentifier>{a00a22c9-8387-4f6e-a0af-52c749815b07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="玩家类\Ranger">
+      <UniqueIdentifier>{47856069-7390-422d-926e-65e1dfc8c022}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="实体类\掉蓝">
+      <UniqueIdentifier>{0651b2dd-f00a-4275-8701-e23edb1035b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="实体类\硬币">
+      <UniqueIdentifier>{bda14d6a-cc31-4b02-982d-9c1a90595aa7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -57,9 +72,6 @@
     <ClCompile Include="..\..\Classes\Entity\Entity.cpp">
       <Filter>实体类</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Classes\TollgateScene.cpp">
-      <Filter>场景类</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Classes\AppDelegate.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="..\..\Classes\Monster\Monster.cpp">
@@ -72,7 +84,7 @@
       <Filter>怪物类\史莱姆</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Classes\Entity\Coin\Coin.cpp">
-      <Filter>武器类\硬币</Filter>
+      <Filter>实体类\硬币</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Classes\Entity\Weapons\Shotgun.cpp">
       <Filter>武器类</Filter>
@@ -110,6 +122,36 @@
     <ClCompile Include="..\..\Classes\AuxiliaryClass\AnimationUtil\AnimationUtil.cpp">
       <Filter>动画配置</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Classes\Controller\MyController.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Classes\Controller\Move\PlayerController.cpp">
+      <Filter>Controller\玩家控制器</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Classes\Entity\Item\Item.cpp">
+      <Filter>玩家类</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Classes\Entity\Item\Player\Player.cpp">
+      <Filter>玩家类</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Classes\Entity\Item\Player\Ranger\Ranger.cpp">
+      <Filter>玩家类\Ranger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Classes\Scene\SafeMapScene.cpp">
+      <Filter>场景类</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Classes\Scene\SettingScene.cpp">
+      <Filter>场景类</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Classes\Scene\HomeScene.cpp">
+      <Filter>场景类</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Classes\Scene\TollgateScene.cpp">
+      <Filter>场景类</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Classes\Entity\Blue\Blue.cpp">
+      <Filter>实体类\掉蓝</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Classes\Entity\Weapons\LongRange.h">
@@ -127,9 +169,6 @@
     <ClInclude Include="..\..\Classes\Entity\Entity.h">
       <Filter>实体类</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Classes\TollgateScene.h">
-      <Filter>场景类</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Classes\AppDelegate.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="..\..\Classes\Monster\Monster.h">
@@ -142,7 +181,7 @@
       <Filter>怪物类\史莱姆</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Classes\Entity\Coin\Coin.h">
-      <Filter>武器类\硬币</Filter>
+      <Filter>实体类\硬币</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Classes\Entity\Weapons\Shotgun.h">
       <Filter>武器类</Filter>
@@ -176,6 +215,39 @@
     </ClInclude>
     <ClInclude Include="..\..\Classes\AuxiliaryClass\AnimationUtil\AnimationUtil.h">
       <Filter>动画配置</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Classes\Controller\MyController.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Classes\Controller\ControllerListener.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Classes\Controller\Move\PlayerController.h">
+      <Filter>Controller\玩家控制器</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Classes\Entity\Item\Item.h">
+      <Filter>玩家类</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Classes\Entity\Item\Player\Player.h">
+      <Filter>玩家类</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Classes\Entity\Item\Player\Ranger\Ranger.h">
+      <Filter>玩家类\Ranger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Classes\Scene\TollgateScene.h">
+      <Filter>场景类</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Classes\Scene\SafeMapScene.h">
+      <Filter>场景类</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Classes\Scene\SettingScene.h">
+      <Filter>场景类</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Classes\Scene\HomeScene.h">
+      <Filter>场景类</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Classes\Entity\Blue\Blue.h">
+      <Filter>实体类\掉蓝</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
