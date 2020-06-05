@@ -1,3 +1,4 @@
+#pragma once
 #ifndef __MonsterManager_H__
 #define __MonsterManager_H__
 
@@ -21,6 +22,7 @@ public:
 	bool isGameOver() { return m_fGameOver; }
 	std::vector<Monster*> getMonster()const;
 	CC_SYNTHESIZE(AdventureMapLayer*, m_map, ManagerMap);
+	std::map<Vec2, bool> getMonsPosMap() { return m_monsPosMap; }
 private:
 	std::vector<Monster*> m_monsterList;
 	std::vector<Bullet*> m_monsterBullet;

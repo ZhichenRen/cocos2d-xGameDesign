@@ -36,6 +36,8 @@ void MonsterManager::createMonsters()
 	for (int i = 0; i < this->pigNum; i++)
 	{
 		pig = Pig::create();
+		pig->bindMap(m_map);
+		pig->bindMonsMgr(this);
 		this->addChild(pig);
 		m_monsterList.push_back(pig);
 		m_shortMonsterList.push_back(pig);
@@ -45,6 +47,8 @@ void MonsterManager::createMonsters()
 	{
 		slime = Slime::create();
 		this->addChild(slime);
+		slime->bindMap(m_map);
+		slime->bindMonsMgr(this);
 		m_monsterList.push_back(slime);
 		m_longMonsterList.push_back(slime);
 	}
@@ -162,13 +166,13 @@ void MonsterManager::update(float dt)
 					//如果没有障碍就可以向这个位置奔跑
 			{
 				
-				monster->setPosition(posToMove);
+				monster->mySetPosition(posToMove);
 			}
 			else
 			{
 				auto differ = posToMove - curPos;
 				posToMove -= 2 * differ;
-				monster->setPosition(posToMove);
+				monster->mySetPosition(posToMove);
 			}//还是会卡墙
 
 			///////////////卡墙现象最后应该修复

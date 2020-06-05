@@ -18,14 +18,14 @@ Scene* TollgateScene::createScene()
 void TollgateScene::loadMap()
 {
 	m_map = AdventureMapLayer::create();
-	this->addChild(m_map, 0, 100);//游戏地图 tag为100
+	this->addChild(m_map, 0, 100);//游戏地图 tag�?00
 
 }
 
 void TollgateScene::addPlayer()
 {
-	TMXObjectGroup* group = m_map->getMap()->getObjectGroup("objects");//获取对象层
-	ValueMap spawnPoint = group->getObject("hero");//根据hero对象的位置放置精灵
+	TMXObjectGroup* group = m_map->getMap()->getObjectGroup("objects");//获取对象�?
+	ValueMap spawnPoint = group->getObject("hero");//根据hero对象的位置放置精�?
 	float x = spawnPoint["x"].asFloat();
 	float y = spawnPoint["y"].asFloat();
 	m_player = Ranger::create();
@@ -152,8 +152,8 @@ void TollgateScene::updateMiniMap(TMXTiledMap* miniMap)
 		return;
 	}
 
-	miniMapLayer->setTileGID(2, 2 * lastRoomCoord);//原房间浅灰
-	miniMapLayer->setTileGID(1, 2 * Vec2(roomCoord.y, roomCoord.x));//现房间深灰
+	miniMapLayer->setTileGID(2, 2 * lastRoomCoord);//原房间浅�?
+	miniMapLayer->setTileGID(1, 2 * Vec2(roomCoord.y, roomCoord.x));//现房间深�?
 
 	if (lastRoomCoord != Vec2(roomCoord.y, roomCoord.x))
 	{
@@ -185,7 +185,7 @@ void TollgateScene::update(float dt)
 
 	Vec2 dir[4] = { {0,1},{0,-1},{1,0},{-1,0} };//四个方向
 
-	if (true)//进入有怪物的房间，开始战斗
+	if (true)//进入有怪物的房间，开始战�?
 	{
 		std::vector<int>dirVec;
 		for (int i = 0; i < 4; i++)
@@ -260,7 +260,7 @@ void TollgateScene::update(float dt)
 								cocos2d::Point explosive_origin_point = m_map->convertToWorldSpace(explosive_bullet->getPosition());
 								if (unlucky_monster->getBoundingBox().intersectsCircle(explosive_origin_point, explosive_bullet->getExplosionRange()))
 								{
-									unlucky_monster->hit(explosive_bullet->getExplosionDamage());
+									unlucky_monster->hit(explosive_bullet->getExplosionDamage(), explosive_bullet->getDegree());
 								}
 							}
 						}

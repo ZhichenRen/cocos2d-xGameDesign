@@ -18,7 +18,7 @@ bool Monster::init()
 void Monster::show()
 {
 	if (getSprite())
-		getSprite()->setVisible(true);
+		setVisible(true);
 	m_isAlive = true;
 }
 
@@ -26,7 +26,7 @@ void Monster::hide()
 {
 	if (getSprite() != NULL)
 	{
-		getSprite()->setVisible(false);
+		setVisible(false);
 		m_isAlive = false;
 	}
 }
@@ -37,26 +37,44 @@ bool Monster::isAlive()
 	return m_isAlive;
 }
 
-
-void Monster::moveTo(const Vec2& targetPosition)
+void Monster::mySetPosition(Vec2 target)
 {
-	auto move = MoveTo::create(1.0f,
-		Vec2(targetPosition.x, targetPosition.y));
-	this->runAction(move);
+	auto curPos = this->getPosition();
+	auto dif = target - curPos;
+	if (dif.x > 0 && !m_fIsFacingRight)	//面朝左但是跑向右		
+	{
+		m_sprite->setFlipX(true);
+		m_fIsFacingRight = 1;
+	}
+	else if (dif.x < 0 && m_fIsFacingRight)//面朝右但是跑向右
+	{
+		m_sprite->setFlipX(false);
+		m_fIsFacingRight = 0;
+	}
+	setPosition(target);
 }
 
-void Monster::moveBy(const Vec2& distance)
-{
-	auto move = MoveTo::create(1.0f,
-		Vec2(distance.x, distance.y));
-	this->runAction(move);
-}
+
 
 
 
 void Monster::hit(int damage)
 {
 	this->m_Hp -= damage;
+}
+
+void Monster::hit(int damage, float flyingDegree)
+{
+	this->m_Hp -= damage;
+	auto curPos = getPosition();
+	auto vecToMove = Vec2(10 * cos(flyingDegree / 180 * 3.14), 10 * sin(flyingDegree / 180 * 3.14));
+	auto targetPos = curPos + vecToMove;
+	if (!m_map->isBarrier(m_map->convertToMapSpace(convertToWorldSpace(targetPos))))
+	{
+		auto move_action = MoveBy::create(0.1f, vecToMove);
+		this->runAction(move_action);
+	}
+	
 }
 
 

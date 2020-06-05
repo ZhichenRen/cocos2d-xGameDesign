@@ -2,7 +2,7 @@
 
 bool Pig::init()
 {
-	m_fIsFacingLeft = false;
+	m_fIsFacingRight = false;
 	setMonsterSpeed(0.5);
 	setHp(this->m_initHp);
 	setResTrack("Pig.png");
