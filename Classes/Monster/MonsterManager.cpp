@@ -133,7 +133,7 @@ void MonsterManager::update(float dt)
 
 			if (dis < 200)//200岆陸當毓峓
 			{
-				//monster->setTaunted(1);
+				monster->setTaunted(1);
 			}
 
 			if (!monster->isTaunted())//�譠敢輒健�
