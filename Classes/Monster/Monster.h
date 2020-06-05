@@ -1,5 +1,6 @@
 #ifndef __Monster_H__
 #define __Monster_H__
+#define BLUERATE 0.3
 
 #include "Entity/Entity.h"
 #include "cocos2d.h"

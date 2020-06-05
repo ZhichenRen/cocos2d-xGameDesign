@@ -1,5 +1,4 @@
 #include "Monster\Monster.h"
-#define BLUERATE 1
 Monster::Monster() 
 {
 	m_isAlive = false;

@@ -10,8 +10,6 @@
 USING_NS_CC;
 class MonsterManager : public Node {
 public:
-	MonsterManager();
-	~MonsterManager();
 	void createMonsters();
 	CREATE_FUNC(MonsterManager);
 	void bindMap(AdventureMapLayer* map);
@@ -19,8 +17,9 @@ public:
 	virtual bool init();
 	virtual void update(float dt);
 	void createMonsterPos();
-	void resetAllMons();
+	bool resetAllMons();
 	std::vector<Bullet*> getMonsterBullets();
+	bool isGameOver() { return m_fGameOver; }
 	CC_SYNTHESIZE(AdventureMapLayer*, m_map, ManagerMap);
 	CC_SYNTHESIZE(Sprite*, m_player);
 private:
@@ -30,12 +29,15 @@ private:
 	std::vector<Monster*> m_longMonsterList;
 	const int pigNum = 3;
 	const int slimeNum = 5;
-	int m_checkPoint;
+	int m_curCheckPoint;
+	const int m_allCheckPoint = 3;
 	std::map<Vec2, bool> m_monsPosMap;
 	int m_dirs[4][2] = { {0,1}, {1,0}, {0,-1},{-1,0} };
 	int m_deathMonsNum;
-	//设置怪物数量，生成怪物，死了之后消失，生成一个金币
+	bool m_fGameOver;
+	//设置怪物数量，生成怪物，死了之后消失，生成一个金币	√
 	//提供子弹的向量
 	//Player* m_player;
+	//野怪被嘲讽？
 };
 #endif
