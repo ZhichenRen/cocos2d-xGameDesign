@@ -6,12 +6,9 @@
 #include "Entity\Entity.h"
 #include "Monster\Slime.h"
 #include "Monster\Pig.h"
-
 USING_NS_CC;
 class MonsterManager : public Node {
 public:
-	MonsterManager();
-	~MonsterManager();
 	void createMonsters();
 	CREATE_FUNC(MonsterManager);
 	void bindMap(AdventureMapLayer* map);
@@ -19,24 +16,29 @@ public:
 	virtual bool init();
 	virtual void update(float dt);
 	void createMonsterPos();
-	void resetAllMons();
+	bool resetAllMons();
 	std::vector<Bullet*> getMonsterBullets();
+	bool isGameOver() { return m_fGameOver; }
 	std::vector<Monster*> getMonster()const;
 	CC_SYNTHESIZE(AdventureMapLayer*, m_map, ManagerMap);
-	CC_SYNTHESIZE(Sprite*, m_player);
 private:
 	std::vector<Monster*> m_monsterList;
 	std::vector<Bullet*> m_monsterBullet;
 	std::vector<Monster*> m_shortMonsterList;
 	std::vector<Monster*> m_longMonsterList;
+	Sprite* m_player;
 	const int pigNum = 3;
 	const int slimeNum = 5;
-	int m_checkPoint;
+	int m_curCheckPoint;
+	const int m_allCheckPoint = 3;
 	std::map<Vec2, bool> m_monsPosMap;
 	int m_dirs[4][2] = { {0,1}, {1,0}, {0,-1},{-1,0} };
 	int m_deathMonsNum;
-	//ÉèÖÃ¹ÖÎïÊıÁ¿£¬Éú³É¹ÖÎï£¬ËÀÁËÖ®ºóÏûÊ§£¬Éú³ÉÒ»¸ö½ğ±Ò
-	//Ìá¹©×Óµ¯µÄÏòÁ¿
+	bool m_fGameOver;
+	//è®¾ç½®æ€ªç‰©æ•°é‡ï¼Œç”Ÿæˆæ€ªç‰©ï¼Œæ­»äº†ä¹‹åæ¶ˆå¤±ï¼Œç”Ÿæˆä¸€ä¸ªé‡‘å¸	âˆš
+	//æä¾›å­å¼¹çš„å‘é‡
 	//Player* m_player;
+	//é‡æ€ªè¢«å˜²è®½ï¼Ÿ
+	//é‡æ€ªç¿»è½¬åŠ¨ç”»
 };
 #endif

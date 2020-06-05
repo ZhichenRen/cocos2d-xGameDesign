@@ -18,14 +18,14 @@ Scene* TollgateScene::createScene()
 void TollgateScene::loadMap()
 {
 	m_map = AdventureMapLayer::create();
-	this->addChild(m_map, 0, 100);//ÓÎÏ·µØÍ¼ tagÎª100
+	this->addChild(m_map, 0, 100);//æ¸¸æˆåœ°å›¾ tagä¸º100
 
 }
 
 void TollgateScene::addPlayer()
 {
-	TMXObjectGroup* group = m_map->getMap()->getObjectGroup("objects");//»ñÈ¡¶ÔÏó²ã
-	ValueMap spawnPoint = group->getObject("hero");//¸ù¾İhero¶ÔÏóµÄÎ»ÖÃ·ÅÖÃ¾«Áé
+	TMXObjectGroup* group = m_map->getMap()->getObjectGroup("objects");//è·å–å¯¹è±¡å±‚
+	ValueMap spawnPoint = group->getObject("hero");//æ ¹æ®heroå¯¹è±¡çš„ä½ç½®æ”¾ç½®ç²¾çµ
 	float x = spawnPoint["x"].asFloat();
 	float y = spawnPoint["y"].asFloat();
 	m_player = Ranger::create();
@@ -50,7 +50,7 @@ void TollgateScene::loadController()
 	this->addChild(playerController);
 	m_player->setController(playerController);
 	playerController->setPlayer(m_player);
-	playerController->setIsRanger(typeid(*m_player) == typeid(Ranger));//ÒÔºóÓëmemberSelect½áºÏ
+	playerController->setIsRanger(typeid(*m_player) == typeid(Ranger));//ä»¥åä¸memberSelectç»“åˆ
 	playerController->setStandAnimate(animate);
 
 }
@@ -98,8 +98,10 @@ void TollgateScene::loadMonsters()
 	monsterMgr->bindMap(m_map);
 	monsterMgr->bindPlayer((Sprite*)(this->m_player));
 	auto playerPos = this->convertToNodeSpace(m_player->getPosition());
-	playerPos.x -= 9 * 32;
-	playerPos.y -= 9 * 32;
+
+	playerPos.x -=   10 * 32;
+	playerPos.y -=  10 * 32;
+
 	monsterMgr->setPosition(playerPos);
 	m_map->addChild(monsterMgr, 2);
 }
@@ -150,16 +152,16 @@ void TollgateScene::updateMiniMap(TMXTiledMap* miniMap)
 		return;
 	}
 
-	miniMapLayer->setTileGID(2, 2 * lastRoomCoord);//Ô­·¿¼äÇ³»Ò
-	miniMapLayer->setTileGID(1, 2 * Vec2(roomCoord.y, roomCoord.x));//ÏÖ·¿¼äÉî»Ò
+	miniMapLayer->setTileGID(2, 2 * lastRoomCoord);//åŸæˆ¿é—´æµ…ç°
+	miniMapLayer->setTileGID(1, 2 * Vec2(roomCoord.y, roomCoord.x));//ç°æˆ¿é—´æ·±ç°
 
 	if (lastRoomCoord != Vec2(roomCoord.y, roomCoord.x))
 	{
-		if (lastRoomCoord.x == roomCoord.y)//ÉÏÏÂÏàÁ¬
+		if (lastRoomCoord.x == roomCoord.y)//ä¸Šä¸‹ç›¸è¿
 		{
 			miniMapLayer->setTileGID(4, lastRoomCoord + Vec2(roomCoord.y, roomCoord.x));
 		}
-		else//×óÓÒÏàÁ¬
+		else//å·¦å³ç›¸è¿
 		{
 			miniMapLayer->setTileGID(3, lastRoomCoord + Vec2(roomCoord.y, roomCoord.x));
 		}
@@ -178,12 +180,12 @@ void TollgateScene::update(float dt)
 
 	updateMiniMap(miniMap);
 
-	auto roomCoord = m_map->roomCoordFromPosition(playerPos);//·¿¼ä×ø±ê
-	auto roomNum = roomCoord.x * 5 + roomCoord.y;//·¿¼äĞòºÅ
+	auto roomCoord = m_map->roomCoordFromPosition(playerPos);//æˆ¿é—´åæ ‡
+	auto roomNum = roomCoord.x * 5 + roomCoord.y;//æˆ¿é—´åºå·
 
-	Vec2 dir[4] = { {0,1},{0,-1},{1,0},{-1,0} };//ËÄ¸ö·½Ïò
+	Vec2 dir[4] = { {0,1},{0,-1},{1,0},{-1,0} };//å››ä¸ªæ–¹å‘
 
-	if (true)//½øÈëÓĞ¹ÖÎïµÄ·¿¼ä£¬¿ªÊ¼Õ½¶·
+	if (true)//è¿›å…¥æœ‰æ€ªç‰©çš„æˆ¿é—´ï¼Œå¼€å§‹æˆ˜æ–—
 	{
 		std::vector<int>dirVec;
 		for (int i = 0; i < 4; i++)
@@ -202,7 +204,7 @@ void TollgateScene::update(float dt)
 			AdventureMapLayer::switchGate(wall, barrier, roomNum, elem, true);
 		}
 		auto t = time(nullptr);
-		if (t % 2)//½áÊøÕ½¶·
+		if (t % 2)//ç»“æŸæˆ˜æ–—
 		{
 			for (auto elem : dirVec)
 			{
