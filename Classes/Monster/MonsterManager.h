@@ -19,6 +19,7 @@ public:
 	bool resetAllMons();
 	std::vector<Bullet*> getMonsterBullets();
 	bool isGameOver() { return m_fGameOver; }
+	std::vector<Monster*> getMonster()const;
 	CC_SYNTHESIZE(AdventureMapLayer*, m_map, ManagerMap);
 private:
 	std::vector<Monster*> m_monsterList;
@@ -34,10 +35,10 @@ private:
 	int m_dirs[4][2] = { {0,1}, {1,0}, {0,-1},{-1,0} };
 	int m_deathMonsNum;
 	bool m_fGameOver;
-	//ÉèÖÃ¹ÖÎïÊıÁ¿£¬Éú³É¹ÖÎï£¬ËÀÁËÖ®ºóÏûÊ§£¬Éú³ÉÒ»¸ö½ğ±Ò	¡Ì
-	//Ìá¹©×Óµ¯µÄÏòÁ¿
+	//è®¾ç½®æ€ªç‰©æ•°é‡ï¼Œç”Ÿæˆæ€ªç‰©ï¼Œæ­»äº†ä¹‹åæ¶ˆå¤±ï¼Œç”Ÿæˆä¸€ä¸ªé‡‘å¸	âˆš
+	//æä¾›å­å¼¹çš„å‘é‡
 	//Player* m_player;
-	//Ò°¹Ö±»³°·í£¿
-	//Ò°¹Ö·­×ª¶¯»­
+	//é‡æ€ªè¢«å˜²è®½ï¼Ÿ
+	//é‡æ€ªç¿»è½¬åŠ¨ç”»
 };
 #endif

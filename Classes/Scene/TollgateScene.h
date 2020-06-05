@@ -44,5 +44,5 @@ private:
 	LoadingBar* m_mpBar = NULL;
 	Player* m_player;
 	AdventureMapLayer* m_map;
-
+	MonsterManager* monsterMgr;
 };

@@ -88,7 +88,6 @@ void LongRange::update(float dt)
 		if ((*it)->isUsed() == true)
 		{
 			it = m_bullet.erase(it);
-			log("Delete");
 		}
 		else
 		{
