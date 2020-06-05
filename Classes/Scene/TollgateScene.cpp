@@ -1,4 +1,10 @@
 #include "Scene/TollgateScene.h"
+#include "Scene/PauseScene.h"
+#include "Entity/Weapons/Bullets/ExplosiveBullet.h"
+#include "Entity/Weapons/RPG.h"
+#include "Entity/Weapons/Shotgun.h"
+
+USING_NS_CC;
 
 Scene* TollgateScene::createScene()
 {
@@ -12,14 +18,14 @@ Scene* TollgateScene::createScene()
 void TollgateScene::loadMap()
 {
 	m_map = AdventureMapLayer::create();
-	this->addChild(m_map, 0, 100);//��Ϸ��ͼ tagΪ100
+	this->addChild(m_map, 0, 100);//游戏地图 tag为100
 
 }
 
 void TollgateScene::addPlayer()
 {
-	TMXObjectGroup* group = m_map->getMap()->getObjectGroup("objects");//��ȡ�����
-	ValueMap spawnPoint = group->getObject("hero");//����hero�����λ�÷��þ���
+	TMXObjectGroup* group = m_map->getMap()->getObjectGroup("objects");//获取对象层
+	ValueMap spawnPoint = group->getObject("hero");//根据hero对象的位置放置精灵
 	float x = spawnPoint["x"].asFloat();
 	float y = spawnPoint["y"].asFloat();
 	m_player = Ranger::create();
@@ -32,7 +38,7 @@ void TollgateScene::addPlayer()
 
 void TollgateScene::addLongRangeWeapon()
 {
-	m_player->setLongRange(CandyGun::create());
+	m_player->setLongRange(Shotgun::create());
 }
 
 void TollgateScene::loadController()
@@ -44,24 +50,35 @@ void TollgateScene::loadController()
 	this->addChild(playerController);
 	m_player->setController(playerController);
 	playerController->setPlayer(m_player);
-	playerController->setIsRanger(typeid(*m_player) == typeid(Ranger));//�Ժ���memberSelect���
+	playerController->setIsRanger(typeid(*m_player) == typeid(Ranger));//以后与memberSelect结合
 	playerController->setStandAnimate(animate);
 
 }
-
-
 
 bool TollgateScene::init()
 {
 	if (!Layer::init())
 		return false;
+
+	this->scheduleUpdate();
+
 	loadMap();
 	loadUI();
 	addPlayer();
-	addLongRangeWeapon();
+	//addLongRangeWeapon();
 	loadController();
 	loadMonsters();
+	loadListeners();
+
 	return true;
+}
+
+void TollgateScene::onEnter()
+{
+	Layer::onEnter();
+	loadUI();
+	addLongRangeWeapon();
+	//loadListeners();
 }
 
 void TollgateScene::loadUI()
@@ -77,12 +94,190 @@ void TollgateScene::loadUI()
 
 void TollgateScene::loadMonsters()
 {
-	auto monsterMgr = MonsterManager::create();
+	monsterMgr = MonsterManager::create();
 	monsterMgr->bindMap(m_map);
 	monsterMgr->bindPlayer((Sprite*)(this->m_player));
 	auto playerPos = this->convertToNodeSpace(m_player->getPosition());
-	playerPos.x -=   9 * 32;
-	playerPos.y -=  9 * 32;
+
+	playerPos.x -=   10 * 32;
+	playerPos.y -=  10 * 32;
+
 	monsterMgr->setPosition(playerPos);
 	m_map->addChild(monsterMgr, 2);
+}
+
+void TollgateScene::loadListeners()
+{
+	auto pause_listener = EventListenerKeyboard::create();
+	pause_listener->onKeyPressed = [](EventKeyboard::KeyCode key, Event* event)
+	{
+		return true;
+	};
+	pause_listener->onKeyReleased = [=](EventKeyboard::KeyCode key, Event* event)
+	{
+		switch (key)
+		{
+		case EventKeyboard::KeyCode::KEY_ESCAPE:
+			Size visible_size = Director::getInstance()->getVisibleSize();
+			CCRenderTexture* background = CCRenderTexture::create(visible_size.width, visible_size.height);
+			background->begin();
+			this->visit();
+			background->end();
+			Director::getInstance()->pushScene(PauseScene::createScene(background));
+			break;
+		}
+	};
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(pause_listener, this);
+}
+
+const int coord[25][2] = {
+		{11,11},{52,11},{93,11},{134,11},{175,11},
+		{11,52},{52,52},{93,52},{134,52},{175,52},
+		{11,93},{52,93},{93,93},{134,93},{175,93},
+		{11,134},{52,134},{93,134},{134,134},{175,134},
+		{11,175},{52,175},{93,175},{134,175},{175,175} };
+
+Vec2 lastRoomCoord(2, 2);
+
+void TollgateScene::updateMiniMap(TMXTiledMap* miniMap)
+{
+	auto miniMapLayer = miniMap->getLayer("miniMapLayer");
+	auto playerPos = m_player->getPosition();
+	auto roomCoord = m_map->roomCoordFromPosition(playerPos);
+
+	miniMap->setPosition(playerPos + Vec2(200, 50));
+
+	if (roomCoord == Vec2(-1, -1))
+	{
+		return;
+	}
+
+	miniMapLayer->setTileGID(2, 2 * lastRoomCoord);//原房间浅灰
+	miniMapLayer->setTileGID(1, 2 * Vec2(roomCoord.y, roomCoord.x));//现房间深灰
+
+	if (lastRoomCoord != Vec2(roomCoord.y, roomCoord.x))
+	{
+		if (lastRoomCoord.x == roomCoord.y)//上下相连
+		{
+			miniMapLayer->setTileGID(4, lastRoomCoord + Vec2(roomCoord.y, roomCoord.x));
+		}
+		else//左右相连
+		{
+			miniMapLayer->setTileGID(3, lastRoomCoord + Vec2(roomCoord.y, roomCoord.x));
+		}
+	}
+	lastRoomCoord = Vec2(roomCoord.y, roomCoord.x);
+}
+
+void TollgateScene::update(float dt)
+{
+	auto playerPos = m_player->getPosition();
+	auto barrier = m_map->getCollidable();
+	auto map = m_map->getMap();
+	auto miniMap = m_map->getMiniMap();
+	auto wall = m_map->getWall();
+	auto roadPairs = m_map->getRoadPairs();
+
+	updateMiniMap(miniMap);
+
+	auto roomCoord = m_map->roomCoordFromPosition(playerPos);//房间坐标
+	auto roomNum = roomCoord.x * 5 + roomCoord.y;//房间序号
+
+	Vec2 dir[4] = { {0,1},{0,-1},{1,0},{-1,0} };//四个方向
+
+	if (true)//进入有怪物的房间，开始战斗
+	{
+		std::vector<int>dirVec;
+		for (int i = 0; i < 4; i++)
+		{
+			for (auto elem : roadPairs)
+			{
+				if (elem.first == roomCoord && elem.second == dir[i] + roomCoord ||
+					elem.second == roomCoord && elem.first == dir[i] + roomCoord)
+				{
+					dirVec.push_back(i);
+				}
+			}
+		}
+		for (auto elem : dirVec)
+		{
+			AdventureMapLayer::switchGate(wall, barrier, roomNum, elem, true);
+		}
+		auto t = time(nullptr);
+		if (t % 2)//结束战斗
+		{
+			for (auto elem : dirVec)
+			{
+				AdventureMapLayer::switchGate(wall, barrier, roomNum, elem, false);
+			}
+		}
+	}
+
+	//��ײ���
+	auto player_bullet = m_player->getBullet();
+	auto monsters_bullet = monsterMgr->getMonsterBullets();
+	auto monsters = monsterMgr->getMonster();
+
+	//player bullet
+	for (auto bullet : player_bullet)
+	{
+		//cocos2d::Point bullet_pos = convertToWorldSpace(bullet->getPosition());
+		//if (m_map->isBarrier(bullet_pos))
+		//{
+		//	if (typeid(*bullet) == typeid(ExplosiveBullet))
+		//	{
+		//		auto explosive_bullet = dynamic_cast<ExplosiveBullet*>(bullet);
+		//		explosive_bullet->explode();
+		//		for (auto unlucky_monster : monsters)
+		//		{
+		//			if (unlucky_monster->isAlive())
+		//			{
+		//				cocos2d::Point explosive_origin_point = convertToWorldSpace(explosive_bullet->getPosition());
+		//				if (unlucky_monster->getBoundingBox().intersectsCircle(explosive_origin_point, explosive_bullet->getExplosionRange()))
+		//				{
+		//					unlucky_monster->hit(explosive_bullet->getExplosionDamage());
+		//				}
+		//			}
+		//		}
+		//	}
+		//	bullet->setIsUsed(true);
+		//}
+		for (auto monster : monsters)
+		{
+			if (monster->isAlive())
+			{
+				if (bullet->isCollideWith(monster))
+				{
+					monster->hit(bullet->getDamage());
+					if (typeid(*bullet) == typeid(ExplosiveBullet))
+					{
+						auto explosive_bullet = dynamic_cast<ExplosiveBullet*>(bullet);
+						explosive_bullet->explode();
+						for (auto unlucky_monster : monsters)
+						{
+							if (unlucky_monster->isAlive())
+							{
+								cocos2d::Point explosive_origin_point = m_map->convertToWorldSpace(explosive_bullet->getPosition());
+								if (unlucky_monster->getBoundingBox().intersectsCircle(explosive_origin_point, explosive_bullet->getExplosionRange()))
+								{
+									unlucky_monster->hit(explosive_bullet->getExplosionDamage());
+								}
+							}
+						}
+					}
+					bullet->setIsUsed(true);
+				}
+			}
+		}			
+	}
+
+	//monster bullet
+	for (auto bullet : monsters_bullet)
+	{
+		if (bullet->isCollideWith(m_player))
+		{
+			m_player->hit(bullet->getDamage());
+			bullet->setIsUsed(true);
+		}
+	}
 }

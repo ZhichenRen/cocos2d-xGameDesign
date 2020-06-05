@@ -1,5 +1,6 @@
 #include "SafeMapScene.h"
 #include "AdventureMapScene.h"
+#include "Scene/TollgateScene.h"
 
 USING_NS_CC;
 
@@ -116,7 +117,7 @@ void SafeMapLayer::update(float dt)
     if (m_player->getPosition().x >= a.x && m_player->getPosition().x <= b.x && 
         m_player->getPosition().y <= a.y && m_player->getPosition().y >= b.y)
     {
-        auto scene = AdventureMapLayer::createScene();
+        auto scene = TollgateScene::createScene();
         Director::getInstance()->replaceScene(scene);
     }
 }

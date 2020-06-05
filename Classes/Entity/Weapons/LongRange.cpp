@@ -71,24 +71,23 @@ int LongRange::getDamage()const
 
 void LongRange::update(float dt)
 {
-	for (auto bullet : m_bullet)
-	{
-		if (bullet->getDistance() > m_range)
-		{
-			if (typeid(*bullet) == typeid(ExplosiveBullet))
-			{
-				dynamic_cast<ExplosiveBullet*>(bullet)->explode();
-			}
-			bullet->setIsUsed(true);
-		}
-	}
+	//for (auto bullet : m_bullet)
+	//{
+	//	if (bullet->getDistance() > m_range)
+	//	{
+	//		if (typeid(*bullet) == typeid(ExplosiveBullet))
+	//		{
+	//			dynamic_cast<ExplosiveBullet*>(bullet)->explode();
+	//		}
+	//		bullet->setIsUsed(true);
+	//	}
+	//}
 	auto it = m_bullet.begin();
 	while (it != m_bullet.end())
 	{
 		if ((*it)->isUsed() == true)
 		{
 			it = m_bullet.erase(it);
-			log("Delete");
 		}
 		else
 		{

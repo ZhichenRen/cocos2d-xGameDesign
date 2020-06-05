@@ -20,12 +20,21 @@ class TollgateScene :public Layer
 public:
 	static Scene* createScene();
 	virtual bool init();
+	virtual void onEnter();
 	void addPlayer();
 	void loadUI();
 	void loadMap();
 	void addLongRangeWeapon();
 	void loadController();
 	void loadMonsters();
+	void loadListeners();
+
+	void updateMiniMap(TMXTiledMap* miniMap);
+
+	virtual void update(float dt);
+	void menuOkCallback(Ref* pSender);
+
+
 	CREATE_FUNC(TollgateScene);
 
 
@@ -35,5 +44,5 @@ private:
 	LoadingBar* m_mpBar = NULL;
 	Player* m_player;
 	AdventureMapLayer* m_map;
-
+	MonsterManager* monsterMgr;
 };

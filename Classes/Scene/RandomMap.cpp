@@ -25,7 +25,8 @@
 USING_NS_CC;
 
 
-int coord[25][2] = {
+
+const int coord[25][2] = {
 		{11,11},{52,11},{93,11},{134,11},{175,11},
 		{11,52},{52,52},{93,52},{134,52},{175,52},
 		{11,93},{52,93},{93,93},{134,93},{175,93},
@@ -42,7 +43,7 @@ bool onMap(int x, int y)
 //创建一个随机生成的游戏地图
 void AdventureMapLayer::createRandomMap()
 {
-	m_tileMap = TMXTiledMap::create("AdventureMap_random.tmx");
+	m_tileMap = TMXTiledMap::create("map/AdventureMap_random.tmx");
 
 	m_collidable = m_tileMap->getLayer("barrier");//获取判断碰撞的障碍层
 
@@ -142,9 +143,9 @@ void AdventureMapLayer::createRandomMap()
 		int x = elem.x;
 		int y = elem.y;
 		int z = 5 * x + y;
-		buildRoom(Vec2(coord[z][0], coord[z][1]));
+		buildRoom(Vec2(coord[z][0],coord[z][1]));
 	}
-
+	m_roadPairs = roadPairs;
 	for (auto elem : roadPairs)
 	{
 		buildRoad(elem);
@@ -209,7 +210,15 @@ void AdventureMapLayer::buildRoad(std::pair<cocos2d::Vec2, cocos2d::Vec2> roadPa
 			for (int j = tileCoordY - 2; j <= tileCoordY + 2; j++)
 			{
 				m_road->setTileGID(ROAD_TILE, Vec2(i, j));
-				m_collidable->setTileGID(0, Vec2(i, j));
+				if (i != midTileCoordX - 9 && i != midTileCoordX + 10)
+				{
+					m_collidable->setTileGID(EMPTY_TILE, Vec2(i, j));
+				}
+				else
+				{
+					m_collidable->setTileGID(2, Vec2(i, j));
+				}
+				
 			}
 		}
 		int leftDoorX = midTileCoordX - 9;
@@ -232,6 +241,14 @@ void AdventureMapLayer::buildRoad(std::pair<cocos2d::Vec2, cocos2d::Vec2> roadPa
 			for (int j = tileCoordX - 2; j <= tileCoordX + 2; j++)
 			{
 				m_road->setTileGID(ROAD_TILE, Vec2(j, i));
+				if (i != midTileCoordY - 9 && i != midTileCoordY + 10)
+				{
+					m_collidable->setTileGID(EMPTY_TILE, Vec2(j, i));
+				}
+				else
+				{
+					m_collidable->setTileGID(2, Vec2(j, i));
+				}
 				m_collidable->setTileGID(EMPTY_TILE, Vec2(j, i));
 			}
 		}
@@ -245,4 +262,106 @@ void AdventureMapLayer::buildRoad(std::pair<cocos2d::Vec2, cocos2d::Vec2> roadPa
 			m_wall->setTileGID(ROAD_TILE, Vec2(i, downDoorY + 1));
 		}
 	}
+}
+
+Vec2 AdventureMapLayer::roomCoordFromPosition(Vec2 position)
+{
+
+	Vec2 tileCoord = tileCoordFromPosition(position);
+	int tileGid = m_ground->getTileGIDAt(tileCoord);
+	if (tileGid == 0)
+	{
+		return Vec2(-1, -1);
+	}
+	int y = (tileCoord.x - 1) / 41;
+	int x = (tileCoord.y - 1) / 41;
+	return Vec2(x, y);
+}
+
+
+void AdventureMapLayer::switchGate(TMXLayer* wall, TMXLayer* barrier, int roomNum, int dir, bool isClosed)
+{
+	if (dir == 0)//向右
+	{
+		for (int i = coord[roomNum][1] - 2; i <= coord[roomNum][1] + 2; i++)
+		{
+			if (isClosed)
+			{
+				wall->setTileGID(89, Vec2(coord[roomNum][0] + 11, i));
+				barrier->setTileGID(89, Vec2(coord[roomNum][0] + 11, i));
+			}
+			else
+			{
+				if (i == coord[roomNum][1] - 2)
+				{
+					wall->setTileGID(34, Vec2(coord[roomNum][0] + 11, i));
+				}
+				else
+				{
+					wall->setTileGID(56, Vec2(coord[roomNum][0] + 11, i));
+				}
+				barrier->setTileGID(2, Vec2(coord[roomNum][0] + 11, i));
+			}
+		}
+	}
+	else if (dir == 1)//向左
+	{
+		for (int i = coord[roomNum][1] - 2; i <= coord[roomNum][1] + 2; i++)
+		{
+			if (isClosed)
+			{
+				wall->setTileGID(89, Vec2(coord[roomNum][0] - 11, i));
+				barrier->setTileGID(89, Vec2(coord[roomNum][0] - 11, i));
+			}
+			else
+			{
+				if (i == coord[roomNum][1] - 2)
+				{
+					wall->setTileGID(34, Vec2(coord[roomNum][0] - 11, i));
+				}
+				else
+				{
+					wall->setTileGID(56, Vec2(coord[roomNum][0] - 11, i));
+				}
+				barrier->setTileGID(2, Vec2(coord[roomNum][0] - 11, i));
+			}
+		}
+	}
+	else if (dir == 2)//向下
+	{
+		for (int i = coord[roomNum][0] - 2; i <= coord[roomNum][0] + 2; i++)
+		{
+			if (isClosed)
+			{
+				wall->setTileGID(89, Vec2(i, coord[roomNum][1] + 11));
+				wall->setTileGID(111, Vec2(i, coord[roomNum][1] + 12));
+				barrier->setTileGID(89, Vec2(i, coord[roomNum][1] + 11));
+			}
+			else
+			{
+				wall->setTileGID(56, Vec2(i, coord[roomNum][1] + 11));
+				wall->setTileGID(56, Vec2(i, coord[roomNum][1] + 12));
+				barrier->setTileGID(2, Vec2(i, coord[roomNum][1] + 11));
+			}
+		}
+	}
+	else//向上
+	{
+		for (int i = coord[roomNum][0] - 2; i <= coord[roomNum][0] + 2; i++)
+		{
+			if (isClosed)
+			{
+				wall->setTileGID(89, Vec2(i, coord[roomNum][1] - 11));
+				wall->setTileGID(111, Vec2(i, coord[roomNum][1] - 10));
+				barrier->setTileGID(89, Vec2(i, coord[roomNum][1] - 11));
+			}
+			else
+			{
+				wall->setTileGID(56, Vec2(i, coord[roomNum][1] - 11));
+				wall->setTileGID(56, Vec2(i, coord[roomNum][1] - 10));
+				barrier->setTileGID(2, Vec2(i, coord[roomNum][1] - 11));
+			}
+		}
+	}
+
 }
