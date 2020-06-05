@@ -4,9 +4,15 @@ bool PlayerController::init()
 {
 	m_iXSpeed = 0;
 	m_iYSpeed = 0;
-	registeControllerEvent();
+	//registeControllerEvent();
 	this->scheduleUpdate();
 	return true;
+}
+
+void PlayerController::onEnter()
+{
+	Node::onEnter();
+	registeControllerEvent();
 }
 
 void PlayerController::update(float dt)
