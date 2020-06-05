@@ -11,6 +11,7 @@ class PlayerController :public MyController
 {
 public:
 	virtual bool init() override;
+	void onEnter();
 	CREATE_FUNC(PlayerController);
 	virtual void update(float dt) override;
 	void setPlayer(Player* player);

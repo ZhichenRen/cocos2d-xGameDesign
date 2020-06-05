@@ -1,4 +1,5 @@
 #include "Scene/TollgateScene.h"
+#include "Scene/PauseScene.h"
 
 USING_NS_CC;
 
@@ -14,14 +15,14 @@ Scene* TollgateScene::createScene()
 void TollgateScene::loadMap()
 {
 	m_map = AdventureMapLayer::create();
-	this->addChild(m_map, 0, 100);//ÓÎÏ·µØÍ¼ tagÎª100
+	this->addChild(m_map, 0, 100);//æ¸¸æˆåœ°å›¾ tagä¸º100
 
 }
 
 void TollgateScene::addPlayer()
 {
-	TMXObjectGroup* group = m_map->getMap()->getObjectGroup("objects");//»ñÈ¡¶ÔÏó²ã
-	ValueMap spawnPoint = group->getObject("hero");//¸ù¾İhero¶ÔÏóµÄÎ»ÖÃ·ÅÖÃ¾«Áé
+	TMXObjectGroup* group = m_map->getMap()->getObjectGroup("objects");//è·å–å¯¹è±¡å±‚
+	ValueMap spawnPoint = group->getObject("hero");//æ ¹æ®heroå¯¹è±¡çš„ä½ç½®æ”¾ç½®ç²¾çµ
 	float x = spawnPoint["x"].asFloat();
 	float y = spawnPoint["y"].asFloat();
 	m_player = Ranger::create();
@@ -46,12 +47,10 @@ void TollgateScene::loadController()
 	this->addChild(playerController);
 	m_player->setController(playerController);
 	playerController->setPlayer(m_player);
-	playerController->setIsRanger(typeid(*m_player) == typeid(Ranger));//ÒÔºóÓëmemberSelect½áºÏ
+	playerController->setIsRanger(typeid(*m_player) == typeid(Ranger));//ä»¥åä¸memberSelectç»“åˆ
 	playerController->setStandAnimate(animate);
 
 }
-
-
 
 bool TollgateScene::init()
 {
@@ -63,10 +62,20 @@ bool TollgateScene::init()
 	loadMap();
 	loadUI();
 	addPlayer();
-	addLongRangeWeapon();
+	//addLongRangeWeapon();
 	loadController();
 	loadMonsters();
+	loadListeners();
+
 	return true;
+}
+
+void TollgateScene::onEnter()
+{
+	Layer::onEnter();
+	loadUI();
+	addLongRangeWeapon();
+	//loadListeners();
 }
 
 void TollgateScene::loadUI()
@@ -86,12 +95,37 @@ void TollgateScene::loadMonsters()
 	monsterMgr->bindMap(m_map);
 	monsterMgr->bindPlayer((Sprite*)(this->m_player));
 	auto playerPos = this->convertToNodeSpace(m_player->getPosition());
+
 	playerPos.x -=   10 * 32;
 	playerPos.y -=  10 * 32;
+
 	monsterMgr->setPosition(playerPos);
 	m_map->addChild(monsterMgr, 2);
 }
 
+void TollgateScene::loadListeners()
+{
+	auto pause_listener = EventListenerKeyboard::create();
+	pause_listener->onKeyPressed = [](EventKeyboard::KeyCode key, Event* event)
+	{
+		return true;
+	};
+	pause_listener->onKeyReleased = [=](EventKeyboard::KeyCode key, Event* event)
+	{
+		switch (key)
+		{
+		case EventKeyboard::KeyCode::KEY_ESCAPE:
+			Size visible_size = Director::getInstance()->getVisibleSize();
+			CCRenderTexture* background = CCRenderTexture::create(visible_size.width, visible_size.height);
+			background->begin();
+			this->visit();
+			background->end();
+			Director::getInstance()->pushScene(PauseScene::createScene(background));
+			break;
+		}
+	};
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(pause_listener, this);
+}
 
 const int coord[25][2] = {
 		{11,11},{52,11},{93,11},{134,11},{175,11},
@@ -100,74 +134,6 @@ const int coord[25][2] = {
 		{11,134},{52,134},{93,134},{134,134},{175,134},
 		{11,175},{52,175},{93,175},{134,175},{175,175} };
 
-void switchGate(TMXLayer* wall, TMXLayer* barrier,int roomNum,int dir,bool isClosed)
-{
-	if (dir == 0)//ÏòÓÒ
-	{
-		for (int i = coord[roomNum][1] - 2; i <= coord[roomNum][1] + 2; i++)
-		{
-			if (isClosed)
-			{
-				wall->setTileGID(89, Vec2(coord[roomNum][0] + 11,i));
-				barrier->setTileGID(89, Vec2(coord[roomNum][0] + 11, i));
-			}
-			else
-			{
-				wall->setTileGID(56, Vec2(coord[roomNum][0] + 11, i));
-				barrier->setTileGID(2, Vec2(coord[roomNum][0] + 11, i));
-			}
-		}
-	}
-	else if (dir == 1)//Ïò×ó
-	{
-		for (int i = coord[roomNum][1] - 2; i <= coord[roomNum][1] + 2; i++)
-		{
-			if (isClosed)
-			{
-				wall->setTileGID(89, Vec2(coord[roomNum][0] - 11, i));
-				barrier->setTileGID(89, Vec2(coord[roomNum][0] - 11, i));
-			}
-			else
-			{
-				wall->setTileGID(56, Vec2(coord[roomNum][0] - 11, i));
-				barrier->setTileGID(2, Vec2(coord[roomNum][0] - 11, i));
-			}
-		}
-	}
-	else if (dir == 2)//ÏòÏÂ
-	{
-		for (int i = coord[roomNum][0] - 2; i <= coord[roomNum][0] + 2; i++)
-		{
-			if (isClosed)
-			{
-				wall->setTileGID(89, Vec2(i,coord[roomNum][1] + 11));
-				barrier->setTileGID(89, Vec2(i,coord[roomNum][1] + 11));
-			}
-			else
-			{
-				wall->setTileGID(56, Vec2(i, coord[roomNum][1] + 11));
-				barrier->setTileGID(2, Vec2(i, coord[roomNum][1] + 11));
-			}
-		}
-	}
-	else//ÏòÉÏ
-	{
-		for (int i = coord[roomNum][0] - 2; i <= coord[roomNum][0] + 2; i++)
-		{
-			if (isClosed)
-			{
-				wall->setTileGID(89, Vec2(i, coord[roomNum][1] - 11));
-				barrier->setTileGID(89, Vec2(i, coord[roomNum][1] - 11));
-			}
-			else
-			{
-				wall->setTileGID(56, Vec2(i, coord[roomNum][1] - 11));
-				barrier->setTileGID(2, Vec2(i, coord[roomNum][1] - 11));
-			}
-		}
-	}
-
-}
 Vec2 lastRoomCoord(2, 2);
 
 void TollgateScene::updateMiniMap(TMXTiledMap* miniMap)
@@ -178,16 +144,21 @@ void TollgateScene::updateMiniMap(TMXTiledMap* miniMap)
 
 	miniMap->setPosition(playerPos + Vec2(200, 50));
 
-	miniMapLayer->setTileGID(2, 2 * lastRoomCoord);//Ô­·¿¼äÇ³»Ò
-	miniMapLayer->setTileGID(1, 2 * Vec2(roomCoord.y, roomCoord.x));//ÏÖ·¿¼äÉî»Ò
+	if (roomCoord == Vec2(-1, -1))
+	{
+		return;
+	}
+
+	miniMapLayer->setTileGID(2, 2 * lastRoomCoord);//åŸæˆ¿é—´æµ…ç°
+	miniMapLayer->setTileGID(1, 2 * Vec2(roomCoord.y, roomCoord.x));//ç°æˆ¿é—´æ·±ç°
 
 	if (lastRoomCoord != Vec2(roomCoord.y, roomCoord.x))
 	{
-		if (lastRoomCoord.x == roomCoord.y)//ÉÏÏÂÏàÁ¬
+		if (lastRoomCoord.x == roomCoord.y)//ä¸Šä¸‹ç›¸è¿
 		{
 			miniMapLayer->setTileGID(4, lastRoomCoord + Vec2(roomCoord.y, roomCoord.x));
 		}
-		else//×óÓÒÏàÁ¬
+		else//å·¦å³ç›¸è¿
 		{
 			miniMapLayer->setTileGID(3, lastRoomCoord + Vec2(roomCoord.y, roomCoord.x));
 		}
@@ -206,19 +177,19 @@ void TollgateScene::update(float dt)
 
 	updateMiniMap(miniMap);
 
-	auto roomCoord = m_map->roomCoordFromPosition(playerPos);//·¿¼ä×ø±ê
-	auto roomNum = roomCoord.x * 5 + roomCoord.y;//·¿¼äĞòºÅ
+	auto roomCoord = m_map->roomCoordFromPosition(playerPos);//æˆ¿é—´åæ ‡
+	auto roomNum = roomCoord.x * 5 + roomCoord.y;//æˆ¿é—´åºå·
 
-	Vec2 dir[4] = { {0,1},{0,-1},{1,0},{-1,0} };//ËÄ¸ö·½Ïò
+	Vec2 dir[4] = { {0,1},{0,-1},{1,0},{-1,0} };//å››ä¸ªæ–¹å‘
 
-	if (true)//½øÈëÓĞ¹ÖÎïµÄ·¿¼ä£¬¿ªÊ¼Õ½¶·
+	if (true)//è¿›å…¥æœ‰æ€ªç‰©çš„æˆ¿é—´ï¼Œå¼€å§‹æˆ˜æ–—
 	{
 		std::vector<int>dirVec;
 		for (int i = 0; i < 4; i++)
 		{
 			for (auto elem : roadPairs)
 			{
-				if (elem.first == roomCoord && elem.second == dir[i] + roomCoord || 
+				if (elem.first == roomCoord && elem.second == dir[i] + roomCoord ||
 					elem.second == roomCoord && elem.first == dir[i] + roomCoord)
 				{
 					dirVec.push_back(i);
@@ -227,14 +198,14 @@ void TollgateScene::update(float dt)
 		}
 		for (auto elem : dirVec)
 		{
-			switchGate(wall, barrier, roomNum, elem, true);
+			AdventureMapLayer::switchGate(wall, barrier, roomNum, elem, true);
 		}
 		auto t = time(nullptr);
-		if (t%2)//½áÊøÕ½¶·
+		if (t % 2)//ç»“æŸæˆ˜æ–—
 		{
 			for (auto elem : dirVec)
 			{
-				switchGate(wall, barrier, roomNum, elem, false);
+				AdventureMapLayer::switchGate(wall, barrier, roomNum, elem, false);
 			}
 		}
 	}

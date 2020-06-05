@@ -31,6 +31,7 @@ public:
 	virtual void createRandomMap();
 	virtual void buildRoom(cocos2d::Vec2 roomCoord);
 	virtual void buildRoad(std::pair<cocos2d::Vec2, cocos2d::Vec2> roadPair);
+	static void switchGate(cocos2d::TMXLayer* wall, cocos2d::TMXLayer* barrier, int roomNum, int dir, bool isClosed);
 
 
 	cocos2d::Vec2 tileCoordFromPosition(cocos2d::Vec2 position);
