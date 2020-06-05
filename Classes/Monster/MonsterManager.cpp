@@ -12,7 +12,7 @@ void MonsterManager::bindMap(AdventureMapLayer* map)
 	return;
 }
 
-void MonsterManager::bindPlayer(Sprite* player)
+void MonsterManager::bindPlayer(Entity* player)
 {
 	m_player = player;
 	this->scheduleUpdate();
@@ -148,36 +148,12 @@ void MonsterManager::update(float dt)
 			auto posToMove = ccp(curPos.x + xDirToMove, curPos.y + yDirToMove);
 
 			//探测周围有没有同类
-			for (int i = 0; i < 4; i++)
+			int i = 0;
+			while (!monster->mySetPosition(posToMove)
+				&& i++ < 4)
 			{
-				
-				auto tmp = ccp(blockOccupied.x + m_dirs[i][0], blockOccupied.y + m_dirs[i][1]);
-				if (m_monsPosMap[tmp])//如果该位置有敌人，就往反方向退
-				{
-					posToMove.x -= 2 * m_dirs[i][0] * xDirToMove;
-					posToMove.y -= 2 * m_dirs[i][0] * yDirToMove;
-					break;
-				}
-
+				posToMove = ccp(curPos.x + m_dirs[i][0] * xDirToMove, curPos.y + m_dirs[i][1] * yDirToMove);//以防怪物卡墙
 			}
-			//monster->moveTo(ccp(curPos.x + xDirToMove,curPos.y + yDirToMove));
-			if (!m_map->isBarrier(m_map->convertToMapSpace(convertToWorldSpace(posToMove)))
-				&&!m_monsPosMap[blockOccupied])
-					//如果没有障碍就可以向这个位置奔跑
-			{
-				
-				monster->mySetPosition(posToMove);
-			}
-			else
-			{
-				auto differ = posToMove - curPos;
-				posToMove -= 2 * differ;
-				monster->mySetPosition(posToMove);
-			}//还是会卡墙
-
-			///////////////卡墙现象最后应该修复
-			blockOccupied = ccp(static_cast<int>(posToMove.x) / 21, static_cast<int>(posToMove.y) / 21);
-			m_monsPosMap[blockOccupied] = 1;
 		}
 		else
 		{
@@ -193,7 +169,7 @@ void MonsterManager::update(float dt)
 
 
 
-std::vector<Bullet*> MonsterManager::getMonsterBullets()
+std::vector<Bullet*> MonsterManager::getMonsterBullets() const
 {
 	std::vector<Bullet*> monsterBullets;
 	for (auto monster : m_monsterList)

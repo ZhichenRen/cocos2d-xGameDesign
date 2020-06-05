@@ -1,4 +1,5 @@
 #include "Monster\Monster.h"
+#include "Monster/MonsterManager.h"
 Monster::Monster() 
 {
 	m_isAlive = false;
@@ -37,8 +38,12 @@ bool Monster::isAlive()
 	return m_isAlive;
 }
 
-void Monster::mySetPosition(Vec2 target)
-{
+bool Monster::mySetPosition(Vec2 target)
+{//重构，所有的方位都要进这个函数
+	auto worldTar = target + m_monsMgr->getPosition();//是一种很好的写法哦
+	if (m_map->isBarrier(worldTar))
+		return false;
+	
 	auto curPos = this->getPosition();
 	auto dif = target - curPos;
 	if (dif.x > 1 && !m_fIsFacingRight)	//面朝左但是跑向右		
@@ -46,12 +51,13 @@ void Monster::mySetPosition(Vec2 target)
 		m_sprite->setFlipX(true);
 		m_fIsFacingRight = 1;
 	}
-	else if (dif.x < 0 && m_fIsFacingRight)//面朝右但是跑向右
+	else if (dif.x < 0 && m_fIsFacingRight)//面朝右但是跑向左
 	{
 		m_sprite->setFlipX(false);
 		m_fIsFacingRight = 0;
 	}
 	setPosition(target);
+	return true;
 }
 
 
@@ -61,6 +67,16 @@ void Monster::mySetPosition(Vec2 target)
 void Monster::hit(int damage)
 {
 	this->m_Hp -= damage;
+}
+
+void Monster::bindMap(AdventureMapLayer* map)
+{
+	m_map = map;
+}
+
+void Monster::bindMonsMgr(MonsterManager* monsMgr)
+{
+	m_monsMgr = monsMgr; 
 }
 
 void Monster::hit(int damage, float flyingDegree)

@@ -96,10 +96,10 @@ void TollgateScene::loadMonsters()
 {
 	monsterMgr = MonsterManager::create();
 	monsterMgr->bindMap(m_map);
-	monsterMgr->bindPlayer((Sprite*)(this->m_player));
+	monsterMgr->bindPlayer(static_cast<Entity*>(this->m_player));
 	auto playerPos = this->convertToNodeSpace(m_player->getPosition());
 
-	playerPos.x -=   10 * 32;
+	playerPos.x -=  10 * 32;
 	playerPos.y -=  10 * 32;
 
 	monsterMgr->setPosition(playerPos);

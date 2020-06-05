@@ -20,10 +20,10 @@ public:
 	void show();
 	void hide();
 	bool isAlive();
-	void mySetPosition(Vec2 target);
+	bool mySetPosition(Vec2 target);
 	void hit(int damage);
-	void bindMap(AdventureMapLayer* map) { m_map = map; }
-	void bindMonsMgr(MonsterManager* monsMgr) { m_monsMgr = monsMgr; }
+	void bindMap(AdventureMapLayer* map);
+	void bindMonsMgr(MonsterManager* monsMgr);
 	void hit(int damage, float flyingDegree);
 	void die();
 	virtual void resetPropoties() { m_isAlive = true; }
@@ -36,6 +36,7 @@ public:
 protected:
 	AdventureMapLayer* m_map;
 	MonsterManager* m_monsMgr;
-	bool m_fIsFacingRight;
+	bool m_fIsFacingRight = false;
+	bool m_fIsTaunted = false;
 };
 #endif // !__Monster_H__
