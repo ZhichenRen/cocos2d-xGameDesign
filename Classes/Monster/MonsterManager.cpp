@@ -12,7 +12,7 @@ void MonsterManager::bindMap(AdventureMapLayer* map)
 	return;
 }
 
-void MonsterManager::bindPlayer(Sprite* player)
+void MonsterManager::bindPlayer(Entity* player)
 {
 	m_player = player;
 	this->scheduleUpdate();
@@ -36,6 +36,8 @@ void MonsterManager::createMonsters()
 	for (int i = 0; i < this->pigNum; i++)
 	{
 		pig = Pig::create();
+		pig->bindMap(m_map);
+		pig->bindMonsMgr(this);
 		this->addChild(pig);
 		m_monsterList.push_back(pig);
 		m_shortMonsterList.push_back(pig);
@@ -45,6 +47,8 @@ void MonsterManager::createMonsters()
 	{
 		slime = Slime::create();
 		this->addChild(slime);
+		slime->bindMap(m_map);
+		slime->bindMonsMgr(this);
 		m_monsterList.push_back(slime);
 		m_longMonsterList.push_back(slime);
 	}
@@ -58,17 +62,18 @@ void MonsterManager::createMonsterPos()
 	auto curMap = m_map->getBarrierMap();
 	for (int i = 0; i < m_monsterList.size(); i++)
 	{
-		auto ranF = CCRANDOM_0_1();
-		int randInt = ranF * 441;		
-		auto monsterPos = Vec2(randInt % 21 , randInt / 21);
-		if (curMap.count(monsterPos))//若是障碍物则直接continue
+		auto randInt1 = rand() % (21 * 32);
+		auto randInt2 = rand() % (21 * 32);
+		
+		auto monsterPos = ccp(randInt1, randInt2);
+		auto worldTar = monsterPos  + getPosition();
+		if (m_map->isBarrier(worldTar))//若是障碍物则直接continue
 		{
 			i--;
 			continue;
 		}
-		m_monsPosMap[monsterPos] = 1;
-		monsterPos.x *= 32;
-		monsterPos.y *= 32;
+		Vec2 tarBlock = ccp(static_cast<int>(monsterPos.x) / 21, static_cast<int>(monsterPos.y) / 21);
+		m_monsPosMap[tarBlock] = 1;
 		m_monsterList[k]->setPosition(monsterPos);
 		k++;
 	}
@@ -91,6 +96,11 @@ bool MonsterManager::resetAllMons()
 	return true;
 }
 
+bool MonsterManager::isGameOver()
+{
+	return m_fGameOver;
+}
+
 
 void MonsterManager::update(float dt)
 {
@@ -109,6 +119,7 @@ void MonsterManager::update(float dt)
 	{
 		auto curPos = monster->getPosition();
 		Vec2 blockOccupied = ccp(static_cast<int>(curPos.x) / 21, static_cast<int>(curPos.y) / 21);
+		auto dis = sqrtf(pow(playerPosition.x - curPos.x, 2) + pow(playerPosition.y - curPos.y, 2));
 		if (monster->isAlive())
 		{
 			if (monster->getHp() <= 0) //更新活着的状态
@@ -118,13 +129,21 @@ void MonsterManager::update(float dt)
 				m_deathMonsNum++;
 				continue;
 			}
-			auto monsWeapon = monster->getMonsterWeapon(); 
-			
-			//auto curAbsPos = convertToWorldSpace( monster->getPosition());
 			
 
 
-			auto dis = sqrtf(pow(playerPosition.x - curPos.x, 2) + pow(playerPosition.y - curPos.y, 2));
+			if (dis < 200)//200是嘲讽范围
+			{
+				monster->setTaunted(1);
+			}
+
+			if (!monster->isTaunted())//若未被嘲讽
+			{
+				monster->wander();
+				continue;
+			}
+			
+			auto monsWeapon = monster->getMonsterWeapon();
 			if (dis < 2 * monsWeapon->getRange())//两倍距离以内再攻击
 				//攻击要用到地图中的坐标。
 				monsWeapon->attack(m_map->convertToWorldSpace(m_player->getPosition()));
@@ -138,46 +157,19 @@ void MonsterManager::update(float dt)
 			float yDirToMove = curPos.y > playerPosition.y ? -monster->getMonsterSpeed() : monster->getMonsterSpeed();
 
 			
-			if (abs(curPos.x - playerPosition.x) < 5)	xDirToMove = 0;
-			if (abs(curPos.y - playerPosition.y) < 5)	yDirToMove = 0;//若差距不大则不走位了
+			if (abs(curPos.x - playerPosition.x) < 3)	xDirToMove = 0;
+			if (abs(curPos.y - playerPosition.y) < 3)	yDirToMove = 0;//若差距不大则不走位了
 
 			auto posToMove = ccp(curPos.x + xDirToMove, curPos.y + yDirToMove);
 
 			//探测周围有没有同类
-			for (int i = 0; i < 4; i++)
+			int i = 0;
+			while (!monster->mySetPosition(posToMove)
+				&& i++ < 4)
 			{
-				
-				auto tmp = ccp(blockOccupied.x + m_dirs[i][0], blockOccupied.y + m_dirs[i][1]);
-				if (m_monsPosMap[tmp])//如果该位置有敌人，就往反方向退
-				{
-					posToMove.x -= 2 * m_dirs[i][0] * xDirToMove;
-					posToMove.y -= 2 * m_dirs[i][0] * yDirToMove;
-					break;
-				}
-
+				posToMove = ccp(curPos.x + m_dirs[i][0] * xDirToMove, curPos.y + m_dirs[i][1] * yDirToMove);
+				//以防怪物卡墙
 			}
-			//monster->moveTo(ccp(curPos.x + xDirToMove,curPos.y + yDirToMove));
-			if (!m_map->isBarrier(m_map->convertToMapSpace(convertToWorldSpace(posToMove)))
-				&&!m_monsPosMap[blockOccupied])
-					//如果没有障碍就可以向这个位置奔跑
-			{
-				
-				monster->setPosition(posToMove);
-			}
-			else
-			{
-				auto differ = posToMove - curPos;
-				posToMove -= 2 * differ;
-				monster->setPosition(posToMove);
-			}//还是会卡墙
-
-			///////////////卡墙现象最后应该修复
-			blockOccupied = ccp(static_cast<int>(posToMove.x) / 21, static_cast<int>(posToMove.y) / 21);
-			m_monsPosMap[blockOccupied] = 1;
-		}
-		else
-		{
-
 		}
 	}
 }
@@ -189,7 +181,7 @@ void MonsterManager::update(float dt)
 
 
 
-std::vector<Bullet*> MonsterManager::getMonsterBullets()
+std::vector<Bullet*> MonsterManager::getMonsterBullets() const
 {
 	std::vector<Bullet*> monsterBullets;
 	for (auto monster : m_monsterList)
@@ -204,4 +196,14 @@ std::vector<Bullet*> MonsterManager::getMonsterBullets()
 std::vector<Monster*> MonsterManager::getMonster()const
 {
 	return m_monsterList;
+}
+
+void MonsterManager::setPosMap(Vec2 pos, bool flag)
+{
+	m_monsPosMap[pos] = flag;
+}
+
+bool MonsterManager::isPosOccupied(Vec2 pos)
+{
+	return m_monsPosMap[pos];
 }

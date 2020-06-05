@@ -1,3 +1,4 @@
+#pragma once
 #ifndef __Monster_H__
 #define __Monster_H__
 #define BLUERATE 0.3
@@ -7,8 +8,8 @@
 #include "Entity\Coin\Coin.h"
 #include "Entity\Weapons\MonsterGun.h"
 #include "Entity/Blue/Blue.h"
-
 USING_NS_CC;
+class MonsterManager;
 class Monster :public Entity {
 public:
 	Monster();
@@ -18,18 +19,29 @@ public:
 public:
 	void show();
 	void hide();
-	bool isAlive();
-	void moveTo(const Vec2& targetPosition);
-	void moveBy(const Vec2& distance);
 	void hit(int damage);
+	void bindMap(AdventureMapLayer* map);
+	void bindMonsMgr(MonsterManager* monsMgr);
+	void hit(int damage, float flyingDegree);
 	void die();
-	virtual void resetPropoties() { m_isAlive = true; }
+	void wander();
+
+	bool isAlive();
+	bool isTaunted();
+	bool setTaunted(bool flag);
+	bool mySetPosition(Vec2 target);
+
+	virtual void resetPropoties();
+	
 	CC_SYNTHESIZE(float, m_fSpeed, MonsterSpeed);
 	CC_SYNTHESIZE(int, m_Hp, Hp);
 	CC_SYNTHESIZE(std::string, m_resTrack, ResTrack);
 	CC_SYNTHESIZE(bool, m_isAlive);
 	CC_SYNTHESIZE(Weapon*, m_weapon, MonsterWeapon);
 protected:
-	bool m_fIsFacingLeft;
+	AdventureMapLayer* m_map;
+	MonsterManager* m_monsMgr;
+	bool m_fIsFacingRight = false;
+	bool m_fIsTaunted = false;
 };
 #endif // !__Monster_H__

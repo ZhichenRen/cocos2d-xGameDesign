@@ -2,6 +2,7 @@
 
 bool Slime::init()
 {
+	m_fIsFacingRight = false;
 	setMonsterSpeed(0.2);
 	setHp(this->m_initHp);
 	setResTrack("Slime.png"); 
