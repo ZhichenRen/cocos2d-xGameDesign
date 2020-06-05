@@ -122,7 +122,7 @@ int Player::isPositiveOrNegative(int num)
 void Player::setLongRange(LongRange* longRange)
 { 
 	m_longRange = longRange; 
-	m_longRange->setPosition( 0, 0);
+	m_longRange->setPosition( 0, -5);
 	m_longRange->bindMap(m_map);
 	this->addChild(m_longRange);
 	auto listener = EventListenerTouchOneByOne::create();
@@ -165,4 +165,24 @@ void Player::setLeftToward()
 		this->setRightSide(true);
 		m_sprite->setFlipX(false);
 	}
+}
+
+std::vector<Bullet*> Player::getBullet()const
+{
+	std::vector<Bullet*> bullets;
+	for (auto bullet : m_longRange->getBullet())
+	{
+		bullets.push_back(bullet);
+	}
+	return bullets;
+}
+
+void Player::hit(int damage)
+{
+
+}
+
+void Player::getBulletFromWeapon()
+{
+	
 }
