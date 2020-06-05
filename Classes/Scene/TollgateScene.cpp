@@ -1,9 +1,5 @@
 #include "Scene/TollgateScene.h"
-<<<<<<< HEAD
-#include "SafeMapScene.h"
-=======
 #include "Scene/PauseScene.h"
->>>>>>> e6859c667532a31a6914608fbb4f7888a4ad3aa2
 
 USING_NS_CC;
 
@@ -68,31 +64,13 @@ bool TollgateScene::init()
 	loadMap();
 	loadUI();
 	addPlayer();
-	//addLongRangeWeapon();
+	addLongRangeWeapon();
 	loadController();
 	loadMonsters();
 	loadListeners();
 
 	return true;
 }
-
-void TollgateScene::onEnter()
-{
-	Layer::onEnter();
-
-	auto visibleSize = Director::getInstance()->getVisibleSize();
-	auto okMenuItem = MenuItemImage::create("menu/CheckMark.png", "menu/CheckMark.png", CC_CALLBACK_1(TollgateScene::menuOkCallback, this));
-	okMenuItem->setPosition(Vec2(visibleSize.width - 50, visibleSize.height - 100));
-
-	auto menu = Menu::create(okMenuItem, nullptr);
-	menu->setPosition(Vec2::ZERO);
-	this->addChild(menu);
-	
-	addLongRangeWeapon();
-
-	loadUI();
-}
-
 
 void TollgateScene::loadUI()
 {
@@ -111,8 +89,8 @@ void TollgateScene::loadMonsters()
 	monsterMgr->bindMap(m_map);
 	monsterMgr->bindPlayer((Sprite*)(this->m_player));
 	auto playerPos = this->convertToNodeSpace(m_player->getPosition());
-	playerPos.x -=   9 * 32;
-	playerPos.y -=  9 * 32;
+	playerPos.x -= 9 * 32;
+	playerPos.y -= 9 * 32;
 	monsterMgr->setPosition(playerPos);
 	m_map->addChild(monsterMgr, 2);
 }
@@ -148,6 +126,74 @@ const int coord[25][2] = {
 		{11,134},{52,134},{93,134},{134,134},{175,134},
 		{11,175},{52,175},{93,175},{134,175},{175,175} };
 
+void switchGate(TMXLayer* wall, TMXLayer* barrier, int roomNum, int dir, bool isClosed)
+{
+	if (dir == 0)//向右
+	{
+		for (int i = coord[roomNum][1] - 2; i <= coord[roomNum][1] + 2; i++)
+		{
+			if (isClosed)
+			{
+				wall->setTileGID(89, Vec2(coord[roomNum][0] + 11, i));
+				barrier->setTileGID(89, Vec2(coord[roomNum][0] + 11, i));
+			}
+			else
+			{
+				wall->setTileGID(56, Vec2(coord[roomNum][0] + 11, i));
+				barrier->setTileGID(2, Vec2(coord[roomNum][0] + 11, i));
+			}
+		}
+	}
+	else if (dir == 1)//向左
+	{
+		for (int i = coord[roomNum][1] - 2; i <= coord[roomNum][1] + 2; i++)
+		{
+			if (isClosed)
+			{
+				wall->setTileGID(89, Vec2(coord[roomNum][0] - 11, i));
+				barrier->setTileGID(89, Vec2(coord[roomNum][0] - 11, i));
+			}
+			else
+			{
+				wall->setTileGID(56, Vec2(coord[roomNum][0] - 11, i));
+				barrier->setTileGID(2, Vec2(coord[roomNum][0] - 11, i));
+			}
+		}
+	}
+	else if (dir == 2)//向下
+	{
+		for (int i = coord[roomNum][0] - 2; i <= coord[roomNum][0] + 2; i++)
+		{
+			if (isClosed)
+			{
+				wall->setTileGID(89, Vec2(i, coord[roomNum][1] + 11));
+				barrier->setTileGID(89, Vec2(i, coord[roomNum][1] + 11));
+			}
+			else
+			{
+				wall->setTileGID(56, Vec2(i, coord[roomNum][1] + 11));
+				barrier->setTileGID(2, Vec2(i, coord[roomNum][1] + 11));
+			}
+		}
+	}
+	else//向上
+	{
+		for (int i = coord[roomNum][0] - 2; i <= coord[roomNum][0] + 2; i++)
+		{
+			if (isClosed)
+			{
+				wall->setTileGID(89, Vec2(i, coord[roomNum][1] - 11));
+				barrier->setTileGID(89, Vec2(i, coord[roomNum][1] - 11));
+			}
+			else
+			{
+				wall->setTileGID(56, Vec2(i, coord[roomNum][1] - 11));
+				barrier->setTileGID(2, Vec2(i, coord[roomNum][1] - 11));
+			}
+		}
+	}
+
+}
 Vec2 lastRoomCoord(2, 2);
 
 void TollgateScene::updateMiniMap(TMXTiledMap* miniMap)
@@ -157,11 +203,6 @@ void TollgateScene::updateMiniMap(TMXTiledMap* miniMap)
 	auto roomCoord = m_map->roomCoordFromPosition(playerPos);
 
 	miniMap->setPosition(playerPos + Vec2(200, 50));
-
-	if (roomCoord == Vec2(-1, -1))
-	{
-		return;
-	}
 
 	miniMapLayer->setTileGID(2, 2 * lastRoomCoord);//原房间浅灰
 	miniMapLayer->setTileGID(1, 2 * Vec2(roomCoord.y, roomCoord.x));//现房间深灰
@@ -203,7 +244,7 @@ void TollgateScene::update(float dt)
 		{
 			for (auto elem : roadPairs)
 			{
-				if (elem.first == roomCoord && elem.second == dir[i] + roomCoord || 
+				if (elem.first == roomCoord && elem.second == dir[i] + roomCoord ||
 					elem.second == roomCoord && elem.first == dir[i] + roomCoord)
 				{
 					dirVec.push_back(i);
@@ -212,21 +253,15 @@ void TollgateScene::update(float dt)
 		}
 		for (auto elem : dirVec)
 		{
-			AdventureMapLayer::switchGate(wall, barrier, roomNum, elem, true);
+			switchGate(wall, barrier, roomNum, elem, true);
 		}
 		auto t = time(nullptr);
-		if (t%2)//结束战斗
+		if (t % 2)//结束战斗
 		{
 			for (auto elem : dirVec)
 			{
-				AdventureMapLayer::switchGate(wall, barrier, roomNum, elem, false);
+				switchGate(wall, barrier, roomNum, elem, false);
 			}
 		}
 	}
-}
-
-void TollgateScene::menuOkCallback(cocos2d::Ref* pSender)
-{
-	auto scene = SafeMapLayer::createScene();
-	Director::getInstance()->replaceScene(scene);
 }
