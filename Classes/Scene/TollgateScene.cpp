@@ -250,6 +250,7 @@ void TollgateScene::update(float dt)
 				if (bullet->isCollideWith(monster))
 				{
 					monster->hit(bullet->getDamage(), bullet->getDegree());
+					monster->setTaunted(1);
 					if (typeid(*bullet) == typeid(ExplosiveBullet))
 					{
 						auto explosive_bullet = dynamic_cast<ExplosiveBullet*>(bullet);
