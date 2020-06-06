@@ -17,7 +17,7 @@ public:
 	CREATE_FUNC(MonsterManager);
 	void bindMap(AdventureMapLayer* map);
 	void bindPlayer(Entity* player);
-
+	void reviveAllMonsters();
 	virtual bool init();
 	virtual void update(float dt);
 
@@ -30,6 +30,9 @@ public:
 	std::map<Vec2, bool> getMonsPosMap()const { return m_monsPosMap; }
 	void setPosMap(Vec2 pos, bool flag);
 	bool isPosOccupied(Vec2 pos);
+
+	void setCurRoom(Vec2 curRoom);
+	Vec2 getCurRoom();
 private:
 	std::vector<Monster*> m_monsterList;
 	std::vector<Bullet*> m_monsterBullet;
@@ -47,6 +50,6 @@ private:
 	int m_dirs[4][2] = { {0,1}, {1,0}, {0,-1},{-1,0} };
 	int m_deathMonsNum;
 	bool m_fGameOver = false;
-	
+	Vec2 m_curRoom;
 };
 #endif

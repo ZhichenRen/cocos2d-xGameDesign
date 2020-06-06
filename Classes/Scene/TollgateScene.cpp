@@ -92,19 +92,39 @@ void TollgateScene::loadUI()
 }
 
 
+
+
+const int coord[25][2] = {
+		{11,11},{52,11},{93,11},{134,11},{175,11},
+		{11,52},{52,52},{93,52},{134,52},{175,52},
+		{11,93},{52,93},{93,93},{134,93},{175,93},
+		{11,134},{52,134},{93,134},{134,134},{175,134},
+		{11,175},{52,175},{93,175},{134,175},{175,175} };//25个房间的中心坐标
+
+void TollgateScene::loadMonstersInNewRoom()
+{
+	auto roomCoord = m_monsterMgr->getCurRoom();
+	auto midPoint = ccp(coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][0],
+		coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][1]);
+	auto LUPoint = (midPoint - ccp(10, 10)) * 32;
+	log("current room is%f, %f\n", roomCoord.x, roomCoord.y);
+	log("LUPoint  is%f, %f\n", LUPoint.x, LUPoint.y);
+	m_monsterMgr->setPosition(LUPoint);
+	m_monsterMgr->reviveAllMonsters();
+}
 void TollgateScene::loadMonsters()
 {
-	monsterMgr = MonsterManager::create();
-	auto playerPos = this->convertToNodeSpace(m_player->getPosition());
-	playerPos.x -= 10 * 32;
-	playerPos.y -= 10 * 32;
-	monsterMgr->setPosition(playerPos);
-	monsterMgr->bindMap(m_map);
-	monsterMgr->bindPlayer(static_cast<Entity*>(this->m_player));
-	
-
-	
-	m_map->addChild(monsterMgr, 2);
+	auto playerPos = m_player->getPosition();
+	auto roomCoord = m_map->roomCoordFromPosition(playerPos);
+	m_monsterMgr = MonsterManager::create();
+	m_monsterMgr->setCurRoom(roomCoord);
+	auto midPoint = ccp( coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][0] ,
+		coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][1]);
+	auto LUPoint = (midPoint - ccp(10,10)) * 32;
+	m_monsterMgr->setPosition(LUPoint);
+	m_monsterMgr->bindMap(m_map);
+	m_monsterMgr->bindPlayer(static_cast<Entity*>(this->m_player));
+	m_map->addChild(m_monsterMgr, 2);
 }
 
 void TollgateScene::loadListeners()
@@ -179,12 +199,17 @@ void TollgateScene::update(float dt)
 	auto miniMap = m_map->getMiniMap();
 	auto wall = m_map->getWall();
 	auto roadPairs = m_map->getRoadPairs();
-
 	updateMiniMap(miniMap);
+
 
 	auto roomCoord = m_map->roomCoordFromPosition(playerPos);//鎴块棿鍧愭爣
 	auto roomNum = roomCoord.x * 5 + roomCoord.y;//鎴块棿搴忓彿
-
+	if (roomCoord.x >= 0 && roomCoord.y >= 0	//首先它得是个房间
+		&&roomCoord != m_monsterMgr->getCurRoom())
+	{
+		m_monsterMgr->setCurRoom(roomCoord);
+		loadMonstersInNewRoom();
+	}
 	Vec2 dir[4] = { {0,1},{0,-1},{1,0},{-1,0} };//鍥涗釜鏂瑰悜
 
 	if (true)//杩涘叆鏈夋�墿鐨勬埧闂达紝寮�濮嬫垬鏂?
@@ -206,7 +231,7 @@ void TollgateScene::update(float dt)
 			AdventureMapLayer::switchGate(wall, barrier, roomNum, elem, true);
 		}
 		//auto t = time(nullptr);
-		if (monsterMgr->isGameOver())//缁撴潫鎴樻枟
+		if (m_monsterMgr->isGameOver())//缁撴潫鎴樻枟
 		{
 			for (auto elem : dirVec)
 			{
@@ -217,8 +242,8 @@ void TollgateScene::update(float dt)
 
 	//碰撞检测
 	auto player_bullet = m_player->getBullet();
-	auto monsters_bullet = monsterMgr->getMonsterBullets();
-	auto monsters = monsterMgr->getMonster();
+	auto monsters_bullet = m_monsterMgr->getMonsterBullets();
+	auto monsters = m_monsterMgr->getMonster();
 
 	//player bullet
 	for (auto bullet : player_bullet)
@@ -251,7 +276,7 @@ void TollgateScene::update(float dt)
 				if (bullet->isCollideWith(monster))
 				{
 					monster->hit(bullet->getDamage(), bullet->getDegree());
-					monster->setTaunted(1);
+					
 					if (typeid(*bullet) == typeid(ExplosiveBullet))
 					{
 						auto explosive_bullet = dynamic_cast<ExplosiveBullet*>(bullet);

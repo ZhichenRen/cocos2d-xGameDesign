@@ -18,11 +18,24 @@ void MonsterManager::bindPlayer(Entity* player)
 	this->scheduleUpdate();
 }
 
+void MonsterManager::reviveAllMonsters()
+{//有bug
+	m_curCheckPoint = 1;
+	m_fGameOver = 0;
+	m_deathMonsNum = 0;
+	for (auto monster : m_monsterList)
+	{
+		monster->resetPropoties();
+	}
+	createMonsterPos();
+}
+
 bool MonsterManager::init() 
 {
 	m_curCheckPoint = 1;
 	m_deathMonsNum = 0;
 	m_fGameOver = 0;
+	m_curRoom = ccp(-1, -1);
 	return true;
 }
 
@@ -59,7 +72,6 @@ void MonsterManager::createMonsterPos()
 	auto size = Size(19 * 32, 19 * 32);
 	int k = 0;
 	//生成随机野怪
-	auto curMap = m_map->getBarrierMap();
 	for (int i = 0; i < m_monsterList.size(); i++)
 	{
 		auto randInt1 = rand() % (21 * 32);
@@ -67,7 +79,8 @@ void MonsterManager::createMonsterPos()
 		
 		auto monsterPos = ccp(randInt1, randInt2);
 		auto worldTar = monsterPos  + getPosition();
-		if (m_map->isBarrier(worldTar))//若是障碍物则直接continue
+		auto worldTarToTest = monsterPos * (-1, 1) + getPosition();
+		if (m_map->isBarrier(worldTarToTest))//若是障碍物则直接continue
 		{
 			i--;
 			continue;
@@ -206,4 +219,14 @@ void MonsterManager::setPosMap(Vec2 pos, bool flag)
 bool MonsterManager::isPosOccupied(Vec2 pos)
 {
 	return m_monsPosMap[pos];
+}
+
+void MonsterManager::setCurRoom(Vec2 curRoom)
+{
+	m_curRoom = curRoom;
+}
+
+Vec2 MonsterManager::getCurRoom()
+{
+	return m_curRoom;
 }
