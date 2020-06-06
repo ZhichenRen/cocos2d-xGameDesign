@@ -153,8 +153,14 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
   <ItemGroup>
     <ClCompile Include="..\..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\..\Classes\AuxiliaryClass\AnimationUtil\AnimationUtil.cpp" />
+    <ClCompile Include="..\..\Classes\Controller\Move\PlayerController.cpp" />
+    <ClCompile Include="..\..\Classes\Controller\MyController.cpp" />
+    <ClCompile Include="..\..\Classes\Entity\Blue\Blue.cpp" />
     <ClCompile Include="..\..\Classes\Entity\Coin\Coin.cpp" />
     <ClCompile Include="..\..\Classes\Entity\Entity.cpp" />
+    <ClCompile Include="..\..\Classes\Entity\Item\Item.cpp" />
+    <ClCompile Include="..\..\Classes\Entity\Item\Player\Player.cpp" />
+    <ClCompile Include="..\..\Classes\Entity\Item\Player\Ranger\Ranger.cpp" />
     <ClCompile Include="..\..\Classes\Entity\Weapons\Bullets\Bullet.cpp" />
     <ClCompile Include="..\..\Classes\Entity\Weapons\Bullets\ExplosiveBullet.cpp" />
     <ClCompile Include="..\..\Classes\Entity\Weapons\CandyGun.cpp" />
@@ -171,16 +177,26 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClCompile Include="..\..\Classes\Monster\Pig.cpp" />
     <ClCompile Include="..\..\Classes\Monster\Slime.cpp" />
     <ClCompile Include="..\..\Classes\Scene\AdventureMapScene.cpp" />
+    <ClCompile Include="..\..\Classes\Scene\HomeScene.cpp" />
     <ClCompile Include="..\..\Classes\Scene\PauseScene.cpp" />
     <ClCompile Include="..\..\Classes\Scene\RandomMap.cpp" />
-    <ClCompile Include="..\..\Classes\TollgateScene.cpp" />
+    <ClCompile Include="..\..\Classes\Scene\SafeMapScene.cpp" />
+    <ClCompile Include="..\..\Classes\Scene\SettingScene.cpp" />
+    <ClCompile Include="..\..\Classes\Scene\TollgateScene.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Classes\AppDelegate.h" />
     <ClInclude Include="..\..\Classes\AuxiliaryClass\AnimationUtil\AnimationUtil.h" />
+    <ClInclude Include="..\..\Classes\Controller\ControllerListener.h" />
+    <ClInclude Include="..\..\Classes\Controller\Move\PlayerController.h" />
+    <ClInclude Include="..\..\Classes\Controller\MyController.h" />
+    <ClInclude Include="..\..\Classes\Entity\Blue\Blue.h" />
     <ClInclude Include="..\..\Classes\Entity\Coin\Coin.h" />
     <ClInclude Include="..\..\Classes\Entity\Entity.h" />
+    <ClInclude Include="..\..\Classes\Entity\Item\Item.h" />
+    <ClInclude Include="..\..\Classes\Entity\Item\Player\Player.h" />
+    <ClInclude Include="..\..\Classes\Entity\Item\Player\Ranger\Ranger.h" />
     <ClInclude Include="..\..\Classes\Entity\Weapons\Bullets\Bullet.h" />
     <ClInclude Include="..\..\Classes\Entity\Weapons\Bullets\ExplosiveBullet.h" />
     <ClInclude Include="..\..\Classes\Entity\Weapons\CandyGun.h" />
@@ -197,8 +213,11 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\..\Classes\Monster\Pig.h" />
     <ClInclude Include="..\..\Classes\Monster\Slime.h" />
     <ClInclude Include="..\..\Classes\Scene\AdventureMapScene.h" />
+    <ClInclude Include="..\..\Classes\Scene\HomeScene.h" />
     <ClInclude Include="..\..\Classes\Scene\PauseScene.h" />
-    <ClInclude Include="..\..\Classes\TollgateScene.h" />
+    <ClInclude Include="..\..\Classes\Scene\SafeMapScene.h" />
+    <ClInclude Include="..\..\Classes\Scene\SettingScene.h" />
+    <ClInclude Include="..\..\Classes\Scene\TollgateScene.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>

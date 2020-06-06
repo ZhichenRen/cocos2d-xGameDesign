@@ -25,6 +25,7 @@ public:
 	void setDegree(float degree);
 	float getDegree()const;
 protected:
+	float m_degree;
 	int m_bullet_range;
 	int m_bullet_damage;
 	bool m_is_used;
