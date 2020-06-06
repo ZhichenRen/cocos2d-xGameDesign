@@ -45,6 +45,7 @@ void Bullet::setIsUsed(bool status)
 	if (status == true)
 	{
 		getSprite()->setVisible(false);
+		stopAllActions();
 	}
 }
 
@@ -65,6 +66,17 @@ void Bullet::setBulletAction(float degree, int speed)
 	auto move_action = MoveBy::create(1.0f, Vec2(speed*cos(degree / 180 * PI), speed*sin(degree / 180 * PI)));
 	auto attack_action = RepeatForever::create(move_action);
 	this->runAction(attack_action);
+	setDegree(degree);
+}
+
+void Bullet::setDegree(float degree)
+{
+	m_degree = degree;
+}
+
+float Bullet::getDegree()const
+{
+	return m_degree;
 }
 
 Bullet::~Bullet()

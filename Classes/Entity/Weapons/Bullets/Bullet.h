@@ -22,10 +22,13 @@ public:
 	void setOriginPos(const Point& pos);
 	float getDistance()const;
 	void setBulletAction(float degree, int speed);
+	void setDegree(float degree);
+	float getDegree()const;
 protected:
 	int m_bullet_range;
 	int m_bullet_damage;
 	bool m_is_used;
+	float m_degree;
 	Point m_origin_pos;//in map coordinate
 };
 #endif
