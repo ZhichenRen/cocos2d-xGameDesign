@@ -1,16 +1,5 @@
 #include "Scene/AdventureMapScene.h"
 
-
-#define EMPTY 0
-#define BEGIN 1
-#define BONUS 2
-#define SHOP 3
-#define ENEMY 4
-#define BOSS 5
-#define END 6
-
-#define ROOM_NUM 7
-
 #define EMPTY_TILE 0
 
 #define WALL_TILE_UP 12
@@ -33,7 +22,6 @@ const int coord[25][2] = {
 		{11,134},{52,134},{93,134},{134,134},{175,134},
 		{11,175},{52,175},{93,175},{134,175},{175,175} };//25个房间的中心坐标
 
-int rooms[5][5] = { 0 };//房间的占用情况
 
 bool onMap(int x, int y)
 {
@@ -56,14 +44,13 @@ void AdventureMapLayer::createRandomMap()
 
 	std::vector<Vec2>occupiedRoom = {};//占用房间的坐标
 
+	m_rooms = {};
+
 	std::vector<std::pair<Vec2, Vec2>>roadPairs = {};//连接两房间的道路
 
 	Vec2 startRoom = Vec2(2, 2);//起始房间
 
-	int roomX = startRoom.x;
-	int roomY = startRoom.y;
-
-	rooms[roomX][roomY] = BEGIN;
+	m_rooms[startRoom] = BEGIN;
 	occupiedRoom.push_back(startRoom);
 
 	Vec2 dir[4] = { {0,1},{0,-1},{1,0},{-1,0} };//四个方向
@@ -73,7 +60,7 @@ void AdventureMapLayer::createRandomMap()
 	int randDir = rand() % 4;
 
 	Vec2 nextRoom = Vec2(startRoom.x + dir[randDir].x, startRoom.y + dir[randDir].y);//起始房间仅与一个房间相连
-	rooms[static_cast<int>(nextRoom.x)][static_cast<int>(nextRoom.y)] = ENEMY;
+	m_rooms[nextRoom] = ENEMY;
 	occupiedRoom.push_back(nextRoom);
 
 	roadPairs.push_back({ startRoom,nextRoom });
@@ -86,8 +73,9 @@ void AdventureMapLayer::createRandomMap()
 		std::vector<int>dirVec = {};//所有能走的方向
 		for (int i = 0; i < 4; i++)//遍历四个方向
 		{
+			Vec2 offset = Vec2(dir[i].x, dir[i].y);
 			if (onMap(nextRoom.x + dir[i].x, nextRoom.y + dir[i].y) &&
-				rooms[static_cast<int>(nextRoom.x + dir[i].x)][static_cast<int>(nextRoom.y + dir[i].y)] == EMPTY)
+				m_rooms[nextRoom + offset] == EMPTY)
 			{
 				dirVec.push_back(i);//将能走的方向放入dirVec
 			}
@@ -108,38 +96,37 @@ void AdventureMapLayer::createRandomMap()
 		while (nearRoomCnt != randRoomNum)//延伸出1~3个房间
 		{
 			randDir = rand()% dirVec.size();//选取随机方向
-			roomX = static_cast<int>(nextRoom.x + dir[dirVec[randDir]].x);
-			roomY = static_cast<int>(nextRoom.y + dir[dirVec[randDir]].y);
-			if (rooms[roomX][roomY] == EMPTY)
+			Vec2 offset = Vec2(dir[dirVec[randDir]].x, dir[dirVec[randDir]].y);
+			if (m_rooms[nextRoom+offset] == EMPTY)
 			{
-				occupiedRoom.push_back(Vec2(roomX, roomY));//存入房间
+				occupiedRoom.push_back(offset + nextRoom);
 
-				roadPairs.push_back({ nextRoom,Vec2(roomX, roomY) });//存入道路
+				roadPairs.push_back({ nextRoom,offset + nextRoom });
 
 				nearRoomCnt++;
 				roomCnt++;
 
 				if (roomCnt == ROOM_NUM)
 				{
-					rooms[roomX][roomY] = END;
+					m_rooms[nextRoom + offset] = END;
 					break;
 				}
 				else if (roomCnt == ROOM_NUM - 2)
 				{
-					rooms[roomX][roomY] = BONUS;
+					m_rooms[nextRoom + offset] = BONUS;
 					
 				}
 				else if (roomCnt == ROOM_NUM - 1)
 				{
-					rooms[roomX][roomY] = SHOP;
+					m_rooms[nextRoom + offset] = SHOP;
 				}
 				else
 				{
-					rooms[roomX][roomY] = ENEMY;
+					m_rooms[nextRoom + offset] = ENEMY;
 				}
 			}
 		}
-		nextRoom = Vec2(roomX, roomY);//更新房间
+		nextRoom += Vec2(dir[dirVec[randDir]].x, dir[dirVec[randDir]].y);//更新房间
 	}
 
 	for (auto elem : occupiedRoom)
@@ -276,17 +263,23 @@ void AdventureMapLayer::buildBonus()
 	{
 		for (int j = 0; j < 5; j++)
 		{
-			if (rooms[i][j] == BONUS)
+			if (m_rooms[Vec2(i,j)] == BONUS)
 			{
 				m_chest = Sprite::create("chest.png");
 				m_chest->setPosition(m_ground->getPositionAt(Vec2(coord[5 * i + j][0], coord[5 * i + j][1])));
 				this->addChild(m_chest);
 			}
-			else if (rooms[i][j] == SHOP)
+			else if (m_rooms[Vec2(i, j)] == SHOP)
 			{
 				m_shop = Sprite::create("cat.png");
 				m_shop->setPosition(m_ground->getPositionAt(Vec2(coord[5 * i + j][0], coord[5 * i + j][1])));
 				this->addChild(m_shop);
+			}
+			else if (m_rooms[Vec2(i, j)] == END)
+			{
+				m_portal = Sprite::create("portal.png");
+				m_portal->setPosition(m_ground->getPositionAt(Vec2(coord[5 * i + j][0], coord[5 * i + j][1])));
+				this->addChild(m_portal);
 			}
 		}
 	}

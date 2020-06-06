@@ -148,6 +148,14 @@ void TollgateScene::loadListeners()
 				m_map->getChest()->setVisible(false);
 				m_player->setLongRange(RPG::create());
 			}
+			else if (m_player->getPosition() < m_map->getPortal()->getPosition() + Vec2(50, 50) &&
+				m_player->getPosition() > m_map->getPortal()->getPosition() - Vec2(50, 50))
+			{
+				//auto layer = TollgateScene::create();
+				//this->addChild(layer);
+				auto scene = TollgateScene::createScene();
+				Director::getInstance()->replaceScene(scene);
+			}
 			break;
 		case EventKeyboard::KeyCode::KEY_ESCAPE:
 			Size visible_size = Director::getInstance()->getVisibleSize();

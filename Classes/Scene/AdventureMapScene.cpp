@@ -38,7 +38,7 @@ bool AdventureMapLayer::init()
 
 
 //ÏñËØ×ø±ê×ª»»ÎªÍßÆ¬×ø±ê
-cocos2d::Vec2 AdventureMapLayer::tileCoordFromPosition(cocos2d::Vec2 pos)
+cocos2d::Vec2 AdventureMapLayer::tileCoordFromPosition(Vec2 pos)
 {
 	int x = pos.x / m_tileMap->getTileSize().width;
 	int y = ((m_tileMap->getMapSize().height * m_tileMap->getTileSize().height) - pos.y) / m_tileMap->getTileSize().height;
@@ -47,7 +47,7 @@ cocos2d::Vec2 AdventureMapLayer::tileCoordFromPosition(cocos2d::Vec2 pos)
 }
 
 
-cocos2d::Point AdventureMapLayer::convertToMapSpace(const cocos2d::Point& point)
+cocos2d::Point AdventureMapLayer::convertToMapSpace(const Point& point)
 {
 	return convertToNodeSpace(point);
 }
@@ -57,7 +57,7 @@ std::map<Vec2, bool> AdventureMapLayer::getBarrierMap()
 	return this->m_barrierMap;
 }
 
-bool AdventureMapLayer::isBarrier(cocos2d::Vec2 position)
+bool AdventureMapLayer::isBarrier(Vec2 position)
 {
 	Vec2 tileCoord = this->tileCoordFromPosition(position);//ÏñËØ×ø±ê×ª»»ÎªÍßÆ¬×ø±ê
 
@@ -70,4 +70,9 @@ bool AdventureMapLayer::isBarrier(cocos2d::Vec2 position)
 		return valueMap["Collidable"].asBool();
 	}
 	return false;
+}
+
+bool AdventureMapLayer::isMonsterRoom(Vec2 roomCoord)
+{
+	return m_rooms[roomCoord] == ENEMY;
 }
