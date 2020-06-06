@@ -106,10 +106,12 @@ void TollgateScene::loadMonstersInNewRoom()
 	auto roomCoord = m_monsterMgr->getCurRoom();
 	auto midPoint = ccp(coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][0],
 		coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][1]);
-	auto LUPoint = (midPoint - ccp(10, 10)) * 32;
+	midPoint.y = 186 - midPoint.y;
+	auto LUPoint = (midPoint + ccp(-10,- 10)) * 32;
 	log("current room is%f, %f\n", roomCoord.x, roomCoord.y);
 	log("LUPoint  is%f, %f\n", LUPoint.x, LUPoint.y);
 	m_monsterMgr->setPosition(LUPoint);
+	
 	m_monsterMgr->reviveAllMonsters();
 }
 void TollgateScene::loadMonsters()
@@ -120,7 +122,8 @@ void TollgateScene::loadMonsters()
 	m_monsterMgr->setCurRoom(roomCoord);
 	auto midPoint = ccp( coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][0] ,
 		coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][1]);
-	auto LUPoint = (midPoint - ccp(10,10)) * 32;
+	midPoint.y = 186 - midPoint.y;
+	auto LUPoint = (midPoint + ccp(-10, -10)) * 32;
 	m_monsterMgr->setPosition(LUPoint);
 	m_monsterMgr->bindMap(m_map);
 	m_monsterMgr->bindPlayer(static_cast<Entity*>(this->m_player));

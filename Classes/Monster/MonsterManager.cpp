@@ -78,9 +78,9 @@ void MonsterManager::createMonsterPos()
 		auto randInt2 = rand() % (21 * 32);
 		
 		auto monsterPos = ccp(randInt1, randInt2);
+		
 		auto worldTar = monsterPos  + getPosition();
-		auto worldTarToTest = monsterPos * (-1, 1) + getPosition();
-		if (m_map->isBarrier(worldTarToTest))//若是障碍物则直接continue
+		if (m_map->isBarrier(worldTar))//若是障碍物则直接continue
 		{
 			i--;
 			continue;
@@ -117,7 +117,7 @@ bool MonsterManager::isGameOver()
 
 void MonsterManager::update(float dt)
 {
-	Point playerPosition = this->convertToNodeSpace(m_map->convertToWorldSpace(m_player->getPosition()));
+	Point playerPosition = m_player->getPosition() - getPosition();
 	//相对坐标的转化
 	//playerPosition = convertToNodeSpace(playerPosition);
 	if (m_deathMonsNum == m_monsterList.size())
