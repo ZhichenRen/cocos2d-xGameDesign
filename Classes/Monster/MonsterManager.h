@@ -33,12 +33,17 @@ public:
 
 	void setCurRoom(Vec2 curRoom);
 	Vec2 getCurRoom();
+
+	void markRoomVisited(Vec2 room);
+	bool isRoomVisited(Vec2 room);
 private:
 	std::vector<Monster*> m_monsterList;
 	std::vector<Bullet*> m_monsterBullet;
 	std::vector<Monster*> m_shortMonsterList;
 	std::vector<Monster*> m_longMonsterList;
 	std::map<Vec2, bool> m_monsPosMap;
+	std::map<Vec2, bool> m_visitedRoom;
+
 
 	Entity* m_player = NULL;
 	AdventureMapLayer* m_map;

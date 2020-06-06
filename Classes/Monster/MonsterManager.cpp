@@ -230,3 +230,13 @@ Vec2 MonsterManager::getCurRoom()
 {
 	return m_curRoom;
 }
+
+void MonsterManager::markRoomVisited(Vec2 room)
+{
+	m_visitedRoom[room] = true;
+}
+
+bool MonsterManager::isRoomVisited(Vec2 room)
+{
+	return m_visitedRoom[room];
+}
