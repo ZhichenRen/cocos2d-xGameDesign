@@ -104,6 +104,7 @@ const int coord[25][2] = {
 void TollgateScene::loadMonstersInNewRoom()
 {
 	auto roomCoord = m_monsterMgr->getCurRoom();
+	m_monsterMgr->markRoomVisited(roomCoord);
 	auto midPoint = ccp(coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][0],
 		coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][1]);
 	midPoint.y = 186 - midPoint.y;
@@ -118,7 +119,9 @@ void TollgateScene::loadMonsters()
 {
 	auto playerPos = m_player->getPosition();
 	auto roomCoord = m_map->roomCoordFromPosition(playerPos);
+	
 	m_monsterMgr = MonsterManager::create();
+	m_monsterMgr->markRoomVisited(roomCoord);
 	m_monsterMgr->setCurRoom(roomCoord);
 	auto midPoint = ccp( coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][0] ,
 		coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][1]);
@@ -215,8 +218,8 @@ void TollgateScene::update(float dt)
 
 	auto roomCoord = m_map->roomCoordFromPosition(playerPos);//鎴块棿鍧愭爣
 	auto roomNum = roomCoord.x * 5 + roomCoord.y;//鎴块棿搴忓彿
-	if (roomCoord.x >= 0 && roomCoord.y >= 0	//首先它得是个房间
-		&&roomCoord != m_monsterMgr->getCurRoom())
+	if (roomCoord.x >= 0 && roomCoord.y >= 0	//首先它得是个怪物房间
+		&&!m_monsterMgr->isRoomVisited(roomCoord))//其次它没有被到访过
 	{
 		m_monsterMgr->setCurRoom(roomCoord);
 		loadMonstersInNewRoom();

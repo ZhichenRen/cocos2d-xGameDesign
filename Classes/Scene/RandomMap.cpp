@@ -383,3 +383,13 @@ void AdventureMapLayer::switchGate(TMXLayer* wall, TMXLayer* barrier, int roomNu
 		}
 	}
 }
+
+void AdventureMapLayer::addCoin(Coin* coin)
+{
+	m_coinList.push_back(coin);
+}
+
+void AdventureMapLayer::addBlue(Blue* blue)
+{
+	m_blueList.push_back(blue);
+}
