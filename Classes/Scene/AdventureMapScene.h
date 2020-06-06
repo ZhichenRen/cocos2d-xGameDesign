@@ -14,6 +14,7 @@ private:
 	cocos2d::Sprite* m_player;
 	cocos2d::Sprite* m_chest;
 	cocos2d::Sprite* m_shop;
+	
 
 	std::map<cocos2d::EventKeyboard::KeyCode, bool> m_keyMap;
 	std::map<cocos2d::Vec2, bool> m_barrierMap;

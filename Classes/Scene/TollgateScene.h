@@ -23,6 +23,7 @@ public:
 	virtual void onEnter();
 	void addPlayer();
 	void loadUI();
+	void loadMonstersInNewRoom();
 	void loadMap();
 	void addLongRangeWeapon();
 	void loadController();
@@ -44,5 +45,5 @@ private:
 	LoadingBar* m_mpBar = NULL;
 	Player* m_player;
 	AdventureMapLayer* m_map;
-	MonsterManager* monsterMgr;
+	MonsterManager* m_monsterMgr;
 };
