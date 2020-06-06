@@ -1,7 +1,8 @@
 #pragma once
 
 #include "cocos2d.h"
-
+#include "Entity/Coin/Coin.h"
+#include "Entity/Blue/Blue.h"
 class AdventureMapLayer : public cocos2d::Layer
 {
 private:
@@ -19,7 +20,8 @@ private:
 	std::map<cocos2d::EventKeyboard::KeyCode, bool> m_keyMap;
 	std::map<cocos2d::Vec2, bool> m_barrierMap;
 	std::vector<std::pair<cocos2d::Vec2, cocos2d::Vec2>>m_roadPairs;
-
+	std::vector<Coin*> m_coinList;
+	std::vector<Blue*> m_blueList;
 public:
 	inline cocos2d::TMXTiledMap* getMap() { return m_tileMap; }
 	inline cocos2d::TMXTiledMap* getMiniMap() { return m_miniMap; }
@@ -38,7 +40,8 @@ public:
 	virtual void buildRoad(std::pair<cocos2d::Vec2, cocos2d::Vec2> roadPair);
 	virtual void buildBonus();
 	static void switchGate(cocos2d::TMXLayer* wall, cocos2d::TMXLayer* barrier, int roomNum, int dir, bool isClosed);
-
+	void addCoin(Coin* coin);
+	void addBlue(Blue* blue);
 
 	cocos2d::Vec2 tileCoordFromPosition(cocos2d::Vec2 position);
 	cocos2d::Vec2 roomCoordFromPosition(cocos2d::Vec2 position);

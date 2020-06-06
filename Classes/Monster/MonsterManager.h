@@ -7,6 +7,8 @@
 #include "Entity\Entity.h"
 #include "Monster\Slime.h"
 #include "Monster\Pig.h"
+#include "Monster\ChiefOfTribe.h"
+#include "Monster\Duck.h"
 USING_NS_CC;
 class Player;
 class MonsterManager : public Node {
@@ -49,6 +51,8 @@ private:
 	AdventureMapLayer* m_map;
 	const int pigNum = 3;
 	const int slimeNum = 5;
+	const int chiefOfTribeNum = 2;
+	const int duckNum = 2;
 	const int m_allCheckPoint = 3;
 
 	int m_curCheckPoint;
