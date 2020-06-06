@@ -33,6 +33,7 @@ const int coord[25][2] = {
 		{11,134},{52,134},{93,134},{134,134},{175,134},
 		{11,175},{52,175},{93,175},{134,175},{175,175} };//25个房间的中心坐标
 
+int rooms[5][5] = { 0 };//房间的占用情况
 
 bool onMap(int x, int y)
 {
@@ -52,8 +53,6 @@ void AdventureMapLayer::createRandomMap()
 	m_wall = m_tileMap->getLayer("wall");//获取墙壁层
 
 	m_road = m_tileMap->getLayer("road");//获取过道层
-
-	int rooms[5][5] = { 0 };//房间的占用情况
 
 	std::vector<Vec2>occupiedRoom = {};//占用房间的坐标
 
@@ -128,6 +127,11 @@ void AdventureMapLayer::createRandomMap()
 				else if (roomCnt == ROOM_NUM - 2)
 				{
 					rooms[roomX][roomY] = BONUS;
+					
+				}
+				else if (roomCnt == ROOM_NUM - 1)
+				{
+					rooms[roomX][roomY] = SHOP;
 				}
 				else
 				{
@@ -150,9 +154,10 @@ void AdventureMapLayer::createRandomMap()
 	{
 		buildRoad(elem);
 	}
+	this->addChild(m_tileMap, 0, 100);//游戏地图 tag为100
+
+	buildBonus();
 }
-
-
 
 void AdventureMapLayer::buildRoom(Vec2 roomCoord)
 {
@@ -264,9 +269,32 @@ void AdventureMapLayer::buildRoad(std::pair<cocos2d::Vec2, cocos2d::Vec2> roadPa
 	}
 }
 
+void AdventureMapLayer::buildBonus()
+{
+	TMXObjectGroup* group = m_tileMap->getObjectGroup("objects");
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			if (rooms[i][j] == BONUS)
+			{
+				m_chest = Sprite::create("chest.png");
+				m_chest->setPosition(m_ground->getPositionAt(Vec2(coord[5 * i + j][0], coord[5 * i + j][1])));
+				this->addChild(m_chest);
+			}
+			else if (rooms[i][j] == SHOP)
+			{
+				m_shop = Sprite::create("cat.png");
+				m_shop->setPosition(m_ground->getPositionAt(Vec2(coord[5 * i + j][0], coord[5 * i + j][1])));
+				this->addChild(m_shop);
+			}
+		}
+	}
+	
+}
+
 Vec2 AdventureMapLayer::roomCoordFromPosition(Vec2 position)
 {
-
 	Vec2 tileCoord = tileCoordFromPosition(position);
 	int tileGid = m_ground->getTileGIDAt(tileCoord);
 	if (tileGid == 0)
@@ -281,8 +309,9 @@ Vec2 AdventureMapLayer::roomCoordFromPosition(Vec2 position)
 
 void AdventureMapLayer::switchGate(TMXLayer* wall, TMXLayer* barrier, int roomNum, int dir, bool isClosed)
 {
-	if (dir == 0)//向右
+	switch (dir)
 	{
+	case 0://右
 		for (int i = coord[roomNum][1] - 2; i <= coord[roomNum][1] + 2; i++)
 		{
 			if (isClosed)
@@ -303,9 +332,8 @@ void AdventureMapLayer::switchGate(TMXLayer* wall, TMXLayer* barrier, int roomNu
 				barrier->setTileGID(2, Vec2(coord[roomNum][0] + 11, i));
 			}
 		}
-	}
-	else if (dir == 1)//向左
-	{
+		break;
+	case 1://左
 		for (int i = coord[roomNum][1] - 2; i <= coord[roomNum][1] + 2; i++)
 		{
 			if (isClosed)
@@ -326,9 +354,8 @@ void AdventureMapLayer::switchGate(TMXLayer* wall, TMXLayer* barrier, int roomNu
 				barrier->setTileGID(2, Vec2(coord[roomNum][0] - 11, i));
 			}
 		}
-	}
-	else if (dir == 2)//向下
-	{
+		break;
+	case 2://下
 		for (int i = coord[roomNum][0] - 2; i <= coord[roomNum][0] + 2; i++)
 		{
 			if (isClosed)
@@ -344,9 +371,8 @@ void AdventureMapLayer::switchGate(TMXLayer* wall, TMXLayer* barrier, int roomNu
 				barrier->setTileGID(2, Vec2(i, coord[roomNum][1] + 11));
 			}
 		}
-	}
-	else//向上
-	{
+		break;
+	default://上
 		for (int i = coord[roomNum][0] - 2; i <= coord[roomNum][0] + 2; i++)
 		{
 			if (isClosed)
@@ -363,5 +389,4 @@ void AdventureMapLayer::switchGate(TMXLayer* wall, TMXLayer* barrier, int roomNu
 			}
 		}
 	}
-
 }

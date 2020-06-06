@@ -118,6 +118,14 @@ void TollgateScene::loadListeners()
 	{
 		switch (key)
 		{
+		case EventKeyboard::KeyCode::KEY_E:
+			if (m_player->getPosition() < m_map->getChest()->getPosition() + Vec2(50, 50) &&
+				m_player->getPosition() > m_map->getChest()->getPosition() - Vec2(50, 50))
+			{
+				m_map->getChest()->setVisible(false);
+				m_player->setLongRange(RPG::create());
+			}
+			break;
 		case EventKeyboard::KeyCode::KEY_ESCAPE:
 			Size visible_size = Director::getInstance()->getVisibleSize();
 			CCRenderTexture* background = CCRenderTexture::create(visible_size.width, visible_size.height);
@@ -130,13 +138,6 @@ void TollgateScene::loadListeners()
 	};
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(pause_listener, this);
 }
-
-const int coord[25][2] = {
-		{11,11},{52,11},{93,11},{134,11},{175,11},
-		{11,52},{52,52},{93,52},{134,52},{175,52},
-		{11,93},{52,93},{93,93},{134,93},{175,93},
-		{11,134},{52,134},{93,134},{134,134},{175,134},
-		{11,175},{52,175},{93,175},{134,175},{175,175} };
 
 Vec2 lastRoomCoord(2, 2);
 
@@ -204,8 +205,8 @@ void TollgateScene::update(float dt)
 		{
 			AdventureMapLayer::switchGate(wall, barrier, roomNum, elem, true);
 		}
-		auto t = time(nullptr);
-		if (t % 2)//结束战斗
+		//auto t = time(nullptr);
+		if (monsterMgr->isGameOver())//结束战斗
 		{
 			for (auto elem : dirVec)
 			{

@@ -12,6 +12,8 @@ private:
 	cocos2d::TMXLayer* m_wall;
 	cocos2d::TMXLayer* m_road;
 	cocos2d::Sprite* m_player;
+	cocos2d::Sprite* m_chest;
+	cocos2d::Sprite* m_shop;
 
 	std::map<cocos2d::EventKeyboard::KeyCode, bool> m_keyMap;
 	std::map<cocos2d::Vec2, bool> m_barrierMap;
@@ -25,12 +27,15 @@ public:
 	inline cocos2d::TMXLayer* getWall() { return m_wall; }
 	inline cocos2d::TMXLayer* getRoad() { return m_road; }
 	inline cocos2d::Sprite* getPlayer() { return m_player; }
+	inline cocos2d::Sprite* getChest() { return m_chest; }
+	inline cocos2d::Sprite* getShop() { return m_shop; }
 	static cocos2d::Scene* createScene();
 	virtual bool init();
 
 	virtual void createRandomMap();
 	virtual void buildRoom(cocos2d::Vec2 roomCoord);
 	virtual void buildRoad(std::pair<cocos2d::Vec2, cocos2d::Vec2> roadPair);
+	virtual void buildBonus();
 	static void switchGate(cocos2d::TMXLayer* wall, cocos2d::TMXLayer* barrier, int roomNum, int dir, bool isClosed);
 
 
