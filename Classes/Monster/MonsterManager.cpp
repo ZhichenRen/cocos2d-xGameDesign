@@ -44,6 +44,8 @@ void MonsterManager::createMonsters()
 	Pig* pig = NULL;
 	Slime* slime = NULL;
 	Sprite* sprite = NULL;
+	ChiefOfTribe* chiefOfTribe = NULL;
+	Duck* duck = NULL;
 	int k = 0;
 	
 	for (int i = 0; i < this->pigNum; i++)
@@ -56,6 +58,16 @@ void MonsterManager::createMonsters()
 		m_shortMonsterList.push_back(pig);
 	}
 
+	for (int i = 0; i < this->duckNum; i++)
+	{
+		duck = Duck::create();
+		duck->bindMap(m_map);
+		duck->bindMonsMgr(this);
+		this->addChild(duck);
+		m_monsterList.push_back(duck);
+		m_shortMonsterList.push_back(duck);
+	}
+
 	for (int i = 0; i < this->slimeNum; i++)
 	{
 		slime = Slime::create();
@@ -64,6 +76,16 @@ void MonsterManager::createMonsters()
 		slime->bindMonsMgr(this);
 		m_monsterList.push_back(slime);
 		m_longMonsterList.push_back(slime);
+	}
+
+	for (int i = 0; i < this->chiefOfTribeNum; i++)
+	{
+		chiefOfTribe = ChiefOfTribe::create();
+		this->addChild(chiefOfTribe);
+		chiefOfTribe->bindMap(m_map);
+		chiefOfTribe->bindMonsMgr(this);
+		m_monsterList.push_back(chiefOfTribe);
+		m_longMonsterList.push_back(chiefOfTribe);
 	}
 }
 
@@ -229,4 +251,14 @@ void MonsterManager::setCurRoom(Vec2 curRoom)
 Vec2 MonsterManager::getCurRoom()
 {
 	return m_curRoom;
+}
+
+void MonsterManager::markRoomVisited(Vec2 room)
+{
+	m_visitedRoom[room] = true;
+}
+
+bool MonsterManager::isRoomVisited(Vec2 room)
+{
+	return m_visitedRoom[room];
 }

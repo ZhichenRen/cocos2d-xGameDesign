@@ -138,10 +138,11 @@ void Monster::die()
 		blue->setPosition(this->getPosition() + m_monsMgr->getPosition());
 		m_map->addChild(blue,2);
 		blue->setRandomPosition();
-
+		m_map->addBlue(blue);
 	}
 	coin->setPosition(this->getPosition() + m_monsMgr->getPosition());
 	m_map->addChild(coin,1);
+	m_map->addCoin(coin);
 }
 
 void Monster::wander()
