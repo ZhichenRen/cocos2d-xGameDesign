@@ -18,14 +18,14 @@ Scene* TollgateScene::createScene()
 void TollgateScene::loadMap()
 {
 	m_map = AdventureMapLayer::create();
-	this->addChild(m_map, 0, 100);//游戏地图 tag为100
+	this->addChild(m_map, 0, 100);//游戏地图 tag�?00
 
 }
 
 void TollgateScene::addPlayer()
 {
-	TMXObjectGroup* group = m_map->getMap()->getObjectGroup("objects");//获取对象层
-	ValueMap spawnPoint = group->getObject("hero");//根据hero对象的位置放置精灵
+	TMXObjectGroup* group = m_map->getMap()->getObjectGroup("objects");//获取对象�?
+	ValueMap spawnPoint = group->getObject("hero");//根据hero对象的位置放置精�?
 	float x = spawnPoint["x"].asFloat();
 	float y = spawnPoint["y"].asFloat();
 	m_player = Ranger::create();
@@ -38,7 +38,7 @@ void TollgateScene::addPlayer()
 
 void TollgateScene::addLongRangeWeapon()
 {
-	m_player->setLongRange(Shotgun::create());
+	m_player->setLongRange(RPG::create());
 }
 
 void TollgateScene::loadController()
@@ -152,8 +152,8 @@ void TollgateScene::updateMiniMap(TMXTiledMap* miniMap)
 		return;
 	}
 
-	miniMapLayer->setTileGID(2, 2 * lastRoomCoord);//原房间浅灰
-	miniMapLayer->setTileGID(1, 2 * Vec2(roomCoord.y, roomCoord.x));//现房间深灰
+	miniMapLayer->setTileGID(2, 2 * lastRoomCoord);//原房间浅�?
+	miniMapLayer->setTileGID(1, 2 * Vec2(roomCoord.y, roomCoord.x));//现房间深�?
 
 	if (lastRoomCoord != Vec2(roomCoord.y, roomCoord.x))
 	{
@@ -185,7 +185,7 @@ void TollgateScene::update(float dt)
 
 	Vec2 dir[4] = { {0,1},{0,-1},{1,0},{-1,0} };//四个方向
 
-	if (true)//进入有怪物的房间，开始战斗
+	if (true)//进入有怪物的房间，开始战�?
 	{
 		std::vector<int>dirVec;
 		for (int i = 0; i < 4; i++)
@@ -221,27 +221,30 @@ void TollgateScene::update(float dt)
 	//player bullet
 	for (auto bullet : player_bullet)
 	{
-		//cocos2d::Point bullet_pos = convertToWorldSpace(bullet->getPosition());
-		//if (m_map->isBarrier(bullet_pos))
-		//{
-		//	if (typeid(*bullet) == typeid(ExplosiveBullet))
-		//	{
-		//		auto explosive_bullet = dynamic_cast<ExplosiveBullet*>(bullet);
-		//		explosive_bullet->explode();
-		//		for (auto unlucky_monster : monsters)
-		//		{
-		//			if (unlucky_monster->isAlive())
-		//			{
-		//				cocos2d::Point explosive_origin_point = convertToWorldSpace(explosive_bullet->getPosition());
-		//				if (unlucky_monster->getBoundingBox().intersectsCircle(explosive_origin_point, explosive_bullet->getExplosionRange()))
-		//				{
-		//					unlucky_monster->hit(explosive_bullet->getExplosionDamage());
-		//				}
-		//			}
-		//		}
-		//	}
-		//	bullet->setIsUsed(true);
-		//}
+		cocos2d::Point bullet_pos = bullet->getPosition();
+		if (m_map->isBarrier(bullet_pos))
+		{
+			if (typeid(*bullet) == typeid(ExplosiveBullet))
+			{
+				auto explosive_bullet = dynamic_cast<ExplosiveBullet*>(bullet);
+				if (!explosive_bullet->isUsed() && !explosive_bullet->isExplode())
+				{
+					explosive_bullet->explode();
+				}
+				for (auto unlucky_monster : monsters)
+				{
+					if (unlucky_monster->isAlive())
+					{
+						cocos2d::Point explosive_origin_point = m_map->convertToWorldSpace(explosive_bullet->getPosition());
+						if (unlucky_monster->getBoundingBox().intersectsCircle(explosive_origin_point, explosive_bullet->getExplosionRange()))
+						{
+							unlucky_monster->hit(explosive_bullet->getExplosionDamage());
+						}
+					}
+				}
+			}
+			else bullet->setIsUsed(true);
+		}
 		for (auto monster : monsters)
 		{
 			if (monster->isAlive())
@@ -252,7 +255,10 @@ void TollgateScene::update(float dt)
 					if (typeid(*bullet) == typeid(ExplosiveBullet))
 					{
 						auto explosive_bullet = dynamic_cast<ExplosiveBullet*>(bullet);
-						explosive_bullet->explode();
+						if (!explosive_bullet->isUsed() && !explosive_bullet->isExplode())
+						{
+							explosive_bullet->explode();
+						}
 						for (auto unlucky_monster : monsters)
 						{
 							if (unlucky_monster->isAlive())
@@ -265,7 +271,7 @@ void TollgateScene::update(float dt)
 							}
 						}
 					}
-					bullet->setIsUsed(true);
+					else bullet->setIsUsed(true);
 				}
 			}
 		}			
@@ -274,6 +280,11 @@ void TollgateScene::update(float dt)
 	//monster bullet
 	for (auto bullet : monsters_bullet)
 	{
+		cocos2d::Point bullet_pos = bullet->getPosition();
+		if (m_map->isBarrier(bullet_pos))
+		{
+			bullet->setIsUsed(true);
+		}
 		if (bullet->isCollideWith(m_player))
 		{
 			m_player->hit(bullet->getDamage());
