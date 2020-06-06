@@ -62,7 +62,7 @@ float Bullet::getDistance()const
 
 void Bullet::setBulletAction(float degree, int speed)
 {
-	auto move_action = MoveBy::create(1.0f, Vec2(speed*cos(degree / 180 * PI), speed*sin(degree / 180 * PI)));
+	auto move_action = MoveBy::create(1.0f, Vec2(speed * cos(degree / 180 * PI), speed * sin(degree / 180 * PI)));
 	auto attack_action = RepeatForever::create(move_action);
 	this->runAction(attack_action);
 	setDegree(degree);

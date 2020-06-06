@@ -28,8 +28,7 @@ bool AdventureMapLayer::init()
 	}
 
 	createRandomMap();
-	this->addChild(m_tileMap, 0, 100);//ÓÎÏ·µØÍ¼ tagÎª100
-
+	
 	m_miniMap = TMXTiledMap::create("map/miniMap.tmx");
 	this->addChild(m_miniMap, 0, 300);
 
