@@ -74,7 +74,7 @@ void Bullet::setDegree(float degree)
 	m_degree = degree;
 }
 
-float Bullet::getDegree()const
+float Bullet::getDegree() const
 {
 	return m_degree;
 }
