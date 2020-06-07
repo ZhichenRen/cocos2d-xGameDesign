@@ -18,11 +18,24 @@ void MonsterManager::bindPlayer(Entity* player)
 	this->scheduleUpdate();
 }
 
+void MonsterManager::reviveAllMonsters()
+{//有bug
+	m_curCheckPoint = 1;
+	m_fGameOver = 0;
+	m_deathMonsNum = 0;
+	for (auto monster : m_monsterList)
+	{
+		monster->resetPropoties();
+	}
+	createMonsterPos();
+}
+
 bool MonsterManager::init() 
 {
 	m_curCheckPoint = 1;
 	m_deathMonsNum = 0;
 	m_fGameOver = 0;
+	m_curRoom = ccp(-1, -1);
 	return true;
 }
 
@@ -31,6 +44,8 @@ void MonsterManager::createMonsters()
 	Pig* pig = NULL;
 	Slime* slime = NULL;
 	Sprite* sprite = NULL;
+	ChiefOfTribe* chiefOfTribe = NULL;
+	Duck* duck = NULL;
 	int k = 0;
 	
 	for (int i = 0; i < this->pigNum; i++)
@@ -43,6 +58,16 @@ void MonsterManager::createMonsters()
 		m_shortMonsterList.push_back(pig);
 	}
 
+	for (int i = 0; i < this->duckNum; i++)
+	{
+		duck = Duck::create();
+		duck->bindMap(m_map);
+		duck->bindMonsMgr(this);
+		this->addChild(duck);
+		m_monsterList.push_back(duck);
+		m_shortMonsterList.push_back(duck);
+	}
+
 	for (int i = 0; i < this->slimeNum; i++)
 	{
 		slime = Slime::create();
@@ -52,6 +77,16 @@ void MonsterManager::createMonsters()
 		m_monsterList.push_back(slime);
 		m_longMonsterList.push_back(slime);
 	}
+
+	for (int i = 0; i < this->chiefOfTribeNum; i++)
+	{
+		chiefOfTribe = ChiefOfTribe::create();
+		this->addChild(chiefOfTribe);
+		chiefOfTribe->bindMap(m_map);
+		chiefOfTribe->bindMonsMgr(this);
+		m_monsterList.push_back(chiefOfTribe);
+		m_longMonsterList.push_back(chiefOfTribe);
+	}
 }
 
 void MonsterManager::createMonsterPos() 
@@ -59,13 +94,13 @@ void MonsterManager::createMonsterPos()
 	auto size = Size(19 * 32, 19 * 32);
 	int k = 0;
 	//生成随机野怪
-	auto curMap = m_map->getBarrierMap();
 	for (int i = 0; i < m_monsterList.size(); i++)
 	{
 		auto randInt1 = rand() % (21 * 32);
 		auto randInt2 = rand() % (21 * 32);
 		
 		auto monsterPos = ccp(randInt1, randInt2);
+		
 		auto worldTar = monsterPos  + getPosition();
 		if (m_map->isBarrier(worldTar))//若是障碍物则直接continue
 		{
@@ -104,7 +139,7 @@ bool MonsterManager::isGameOver()
 
 void MonsterManager::update(float dt)
 {
-	Point playerPosition = this->convertToNodeSpace(m_map->convertToWorldSpace(m_player->getPosition()));
+	Point playerPosition = m_player->getPosition() - getPosition();
 	//相对坐标的转化
 	//playerPosition = convertToNodeSpace(playerPosition);
 	if (m_deathMonsNum == m_monsterList.size())
@@ -206,4 +241,24 @@ void MonsterManager::setPosMap(Vec2 pos, bool flag)
 bool MonsterManager::isPosOccupied(Vec2 pos)
 {
 	return m_monsPosMap[pos];
+}
+
+void MonsterManager::setCurRoom(Vec2 curRoom)
+{
+	m_curRoom = curRoom;
+}
+
+Vec2 MonsterManager::getCurRoom()
+{
+	return m_curRoom;
+}
+
+void MonsterManager::markRoomVisited(Vec2 room)
+{
+	m_visitedRoom[room] = true;
+}
+
+bool MonsterManager::isRoomVisited(Vec2 room)
+{
+	return m_visitedRoom[room];
 }

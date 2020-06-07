@@ -6,6 +6,8 @@
 
 USING_NS_CC;
 
+extern int coinNum;
+
 Scene* TollgateScene::createScene()
 {
 	auto scene = Scene::create();
@@ -92,19 +94,45 @@ void TollgateScene::loadUI()
 }
 
 
+
+
+const int coord[25][2] = {
+		{11,11},{52,11},{93,11},{134,11},{175,11},
+		{11,52},{52,52},{93,52},{134,52},{175,52},
+		{11,93},{52,93},{93,93},{134,93},{175,93},
+		{11,134},{52,134},{93,134},{134,134},{175,134},
+		{11,175},{52,175},{93,175},{134,175},{175,175} };//25个房间的中心坐标
+
+void TollgateScene::loadMonstersInNewRoom()
+{
+	auto roomCoord = m_monsterMgr->getCurRoom();
+	m_monsterMgr->markRoomVisited(roomCoord);
+	auto midPoint = ccp(coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][0],
+		coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][1]);
+	midPoint.y = 186 - midPoint.y;
+	auto LUPoint = (midPoint + ccp(-10,- 10)) * 32;
+	log("current room is%f, %f\n", roomCoord.x, roomCoord.y);
+	log("LUPoint  is%f, %f\n", LUPoint.x, LUPoint.y);
+	m_monsterMgr->setPosition(LUPoint);
+	
+	m_monsterMgr->reviveAllMonsters();
+}
 void TollgateScene::loadMonsters()
 {
-	monsterMgr = MonsterManager::create();
-	auto playerPos = this->convertToNodeSpace(m_player->getPosition());
-	playerPos.x -= 10 * 32;
-	playerPos.y -= 10 * 32;
-	monsterMgr->setPosition(playerPos);
-	monsterMgr->bindMap(m_map);
-	monsterMgr->bindPlayer(static_cast<Entity*>(this->m_player));
+	auto playerPos = m_player->getPosition();
+	auto roomCoord = m_map->roomCoordFromPosition(playerPos);
 	
-
-	
-	m_map->addChild(monsterMgr, 2);
+	m_monsterMgr = MonsterManager::create();
+	m_monsterMgr->markRoomVisited(roomCoord);
+	m_monsterMgr->setCurRoom(roomCoord);
+	auto midPoint = ccp( coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][0] ,
+		coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][1]);
+	midPoint.y = 186 - midPoint.y;
+	auto LUPoint = (midPoint + ccp(-10, -10)) * 32;
+	m_monsterMgr->setPosition(LUPoint);
+	m_monsterMgr->bindMap(m_map);
+	m_monsterMgr->bindPlayer(static_cast<Entity*>(this->m_player));
+	m_map->addChild(m_monsterMgr, 2);
 }
 
 void TollgateScene::loadListeners()
@@ -125,6 +153,20 @@ void TollgateScene::loadListeners()
 				m_map->getChest()->setVisible(false);
 				m_player->setLongRange(RPG::create());
 			}
+			else if (m_player->getPosition() < m_map->getShop()->getPosition() + Vec2(50, 50) &&
+				m_player->getPosition() > m_map->getShop()->getPosition() - Vec2(50, 50))
+			{
+				coinNum -= 20;
+				m_player->setLongRange(RPG::create());
+			}
+			else if (m_player->getPosition() < m_map->getPortal()->getPosition() + Vec2(50, 50) &&
+				m_player->getPosition() > m_map->getPortal()->getPosition() - Vec2(50, 50))
+			{
+				//auto layer = TollgateScene::create();
+				//this->addChild(layer);
+				auto scene = TollgateScene::createScene();
+				Director::getInstance()->replaceScene(scene);
+			}
 			break;
 		case EventKeyboard::KeyCode::KEY_ESCAPE:
 			Size visible_size = Director::getInstance()->getVisibleSize();
@@ -143,11 +185,14 @@ Vec2 lastRoomCoord(2, 2);
 
 void TollgateScene::updateMiniMap(TMXTiledMap* miniMap)
 {
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	auto origin = Director::getInstance()->getVisibleOrigin();
+
 	auto miniMapLayer = miniMap->getLayer("miniMapLayer");
 	auto playerPos = m_player->getPosition();
 	auto roomCoord = m_map->roomCoordFromPosition(playerPos);
 
-	miniMap->setPosition(playerPos + Vec2(200, 50));
+	miniMap->setPosition(m_map->convertToNodeSpace(this->getPosition()) + Vec2(700, 400));
 
 	if (roomCoord == Vec2(-1, -1))
 	{
@@ -171,6 +216,21 @@ void TollgateScene::updateMiniMap(TMXTiledMap* miniMap)
 	lastRoomCoord = Vec2(roomCoord.y, roomCoord.x);
 }
 
+void TollgateScene::updateCoinNum()
+{
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	auto n = this->getChildByTag(101);
+	if (n)
+	{
+		this->removeChildByTag(101);
+	}
+	auto num = __String::createWithFormat("%d", coinNum);
+	auto coinLabel = Label::createWithTTF(num->getCString(), "fonts/arial.ttf", 30);
+
+	coinLabel->setPosition(Vec2(visibleSize.width - 50, visibleSize.height - 600));
+	this->addChild(coinLabel, 20, 101);
+}
+
 void TollgateScene::update(float dt)
 {
 	auto playerPos = m_player->getPosition();
@@ -179,16 +239,23 @@ void TollgateScene::update(float dt)
 	auto miniMap = m_map->getMiniMap();
 	auto wall = m_map->getWall();
 	auto roadPairs = m_map->getRoadPairs();
-
 	updateMiniMap(miniMap);
+
+	updateCoinNum();
 
 	auto roomCoord = m_map->roomCoordFromPosition(playerPos);//鎴块棿鍧愭爣
 	auto roomNum = roomCoord.x * 5 + roomCoord.y;//鎴块棿搴忓彿
-
+	if (m_map->isMonsterRoom(roomCoord)	//首先它得是个怪物房间
+		&&!m_monsterMgr->isRoomVisited(roomCoord))//其次它没有被到访过
+	{
+		m_monsterMgr->setCurRoom(roomCoord);
+		loadMonstersInNewRoom();
+	}
 	Vec2 dir[4] = { {0,1},{0,-1},{1,0},{-1,0} };//鍥涗釜鏂瑰悜
 
 	if (true)//杩涘叆鏈夋�墿鐨勬埧闂达紝寮�濮嬫垬鏂?
 	{
+		miniMap->setVisible(false);
 		std::vector<int>dirVec;
 		for (int i = 0; i < 4; i++)
 		{
@@ -206,19 +273,20 @@ void TollgateScene::update(float dt)
 			AdventureMapLayer::switchGate(wall, barrier, roomNum, elem, true);
 		}
 		//auto t = time(nullptr);
-		if (monsterMgr->isGameOver())//缁撴潫鎴樻枟
+		if (m_monsterMgr->isGameOver())//缁撴潫鎴樻枟
 		{
 			for (auto elem : dirVec)
 			{
 				AdventureMapLayer::switchGate(wall, barrier, roomNum, elem, false);
 			}
+			miniMap->setVisible(true);
 		}
 	}
 
 	//碰撞检测
 	auto player_bullet = m_player->getBullet();
-	auto monsters_bullet = monsterMgr->getMonsterBullets();
-	auto monsters = monsterMgr->getMonster();
+	auto monsters_bullet = m_monsterMgr->getMonsterBullets();
+	auto monsters = m_monsterMgr->getMonster();
 
 	//player bullet
 	for (auto bullet : player_bullet)
@@ -254,6 +322,7 @@ void TollgateScene::update(float dt)
 				if (bullet->isCollideWith(monster))
 				{
 					monster->hit(bullet->getDamage(), bullet->getDegree());
+					
 					if (typeid(*bullet) == typeid(ExplosiveBullet))
 					{
 						auto explosive_bullet = dynamic_cast<ExplosiveBullet*>(bullet);
@@ -291,6 +360,17 @@ void TollgateScene::update(float dt)
 		{
 			m_player->hit(bullet->getDamage());
 			bullet->setIsUsed(true);
+		}
+	}
+
+	for (auto coin : m_map->getCoinList())
+	{
+		if (coin->getPosition() > m_player->getPosition() - Vec2(10, 10) &&
+			coin->getPosition() < m_player->getPosition() + Vec2(10, 10) && 
+			coin->isVisible())
+		{
+			coin->setVisible(false);
+			coinNum++;
 		}
 	}
 }
