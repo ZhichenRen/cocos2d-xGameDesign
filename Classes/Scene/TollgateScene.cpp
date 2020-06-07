@@ -117,6 +117,8 @@ void TollgateScene::loadMonstersInNewRoom()
 	
 	m_monsterMgr->reviveAllMonsters();
 }
+
+
 void TollgateScene::loadMonsters()
 {
 	auto playerPos = m_player->getPosition();

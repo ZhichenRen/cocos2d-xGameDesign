@@ -21,6 +21,7 @@ void Slime::resetPropoties()
 {
 	show();
 	setHp(this->m_initHp);
+	m_fIsTaunted = 0;
 	m_isAlive = true;
 }
 

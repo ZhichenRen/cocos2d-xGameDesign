@@ -22,5 +22,6 @@ void Pig::resetPropoties()
 	show();
 	setHp(this->m_initHp);
 	m_weapon->setVisible(true);
+	m_fIsTaunted = 0;
 	m_isAlive = true;
 }

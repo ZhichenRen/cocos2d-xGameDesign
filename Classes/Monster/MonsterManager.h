@@ -19,6 +19,9 @@ public:
 	CREATE_FUNC(MonsterManager);
 	void bindMap(AdventureMapLayer* map);
 	void bindPlayer(Entity* player);
+	void createRandomPos();
+	void showPreRec();
+	void hidePreRec();
 	void reviveAllMonsters();
 	virtual bool init();
 	virtual void update(float dt);

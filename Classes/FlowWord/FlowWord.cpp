@@ -52,3 +52,23 @@ void FlowWord::showMonsDmg(const char* text)
 
 	this->runAction(actions);
 }
+
+void FlowWord::showMonsTaunted()
+{
+	m_message->setString("!!");
+	m_message->setPosition(getPosition() + ccp(0, 40));
+	m_message->setVisible(true);
+	auto scaleUp = ScaleBy::create(0.2f, 2.0);
+	auto scaleDown = ScaleTo::create(0.6f, 1);
+	auto callBack = CallFunc::create
+	(
+		[&]()
+	{
+		m_message->setVisible(false);
+		//m_message->removeFromParentAndCleanup(true);
+	}
+	);
+	auto actions = Sequence::create(scaleUp, scaleDown, callBack, NULL);
+	this->runAction(actions);
+}
+

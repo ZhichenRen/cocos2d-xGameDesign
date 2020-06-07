@@ -3,6 +3,9 @@
 #include <string>
 Monster::Monster() 
 {
+	m_preRec = Sprite::create("PreRect.png");
+	this->addChild(m_preRec, 1, "preRect");
+	//this->getChildByName("preRect")->setVisible(false);
 	m_isAlive = false;
 }
 
@@ -22,6 +25,7 @@ void Monster::show()
 	if (getSprite())
 	{
 		m_sprite->setVisible(true);
+		m_sprite->setOpacity(255);
 		//m_weapon->setVisible(false);
 	}
 	m_isAlive = true;
@@ -111,6 +115,7 @@ void Monster::bindMonsMgr(MonsterManager* monsMgr)
 
 void Monster::hit(int damage)
 {
+	setMonsTaunted();
 	this->m_Hp -= damage;
 	std::string msg = '-' + std::to_string(damage) + "hp";
 	m_damageMsg->showWord(msg.c_str(), getPosition());
@@ -119,7 +124,7 @@ void Monster::hit(int damage)
 void Monster::hit(int damage, float flyingDegree)
 {
 	this->m_Hp -= damage;
-	this->m_fIsTaunted = 1;
+	setMonsTaunted();
 	this->stopAllActions();
 	auto curPos = getPosition();
 	auto vecToMove = Vec2( 3* cos(flyingDegree / 180 * 3.14), 3* sin(flyingDegree / 180 * 3.14));
@@ -139,7 +144,9 @@ void Monster::hit(int damage, float flyingDegree)
 
 void Monster::die()
 {
-	hide();
+	m_isAlive = false;
+	auto fade = FadeTo::create(1.5, 80);//消失至某一透明度
+	this->getSprite()->runAction(fade);
 	auto coin = Coin::create();
 	//this->getSprite()->setVisible(false);//怪物消失
 	auto ranF = CCRANDOM_0_1();
@@ -152,6 +159,7 @@ void Monster::die()
 		m_map->addBlue(blue);
 	}
 	coin->setPosition(this->getPosition() + m_monsMgr->getPosition());
+	
 	m_map->addChild(coin,1);
 	m_map->addCoin(coin);
 }
@@ -164,21 +172,14 @@ void Monster::wander()
 	mySetPosition(tarPos);
 }
 
-void Monster::showWords()
+
+
+void Monster::setMonsTaunted()
 {
-	auto scaleUp = ScaleBy::create(0.2f, 1.2);
-	auto scaleDown = ScaleTo::create(0.2f, 1);
-
-	auto callBack = CallFunc::create
-	(
-		[&]()
-	{
-		m_damageMsg->setVisible(false);
-	}
-	);
-	auto actions = Sequence::create(scaleUp, scaleDown, callBack, NULL);
-
-	this->runAction(actions);
+	if (isTaunted())
+		return;
+	m_fIsTaunted = 1;
+	m_damageMsg->showMonsTaunted();
 }
 
 

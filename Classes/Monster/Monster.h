@@ -27,8 +27,9 @@ public:
 	void hit(int damage, float flyingDegree);
 	void die();
 	void wander();
-	void showWords();
-
+	//void showWords();
+	//void dieWithNothing();
+	void setMonsTaunted();
 	bool isAlive();
 	bool isTaunted();
 	bool setTaunted(bool flag);
@@ -47,5 +48,6 @@ protected:
 	bool m_fIsFacingRight = false;
 	bool m_fIsTaunted = false;
 	FlowWord* m_damageMsg;
+	Sprite* m_preRec;
 };
 #endif // !__Monster_H__

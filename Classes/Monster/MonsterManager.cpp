@@ -91,26 +91,75 @@ void MonsterManager::createMonsters()
 
 void MonsterManager::createMonsterPos() 
 {
+	
+	createRandomPos();
+	showPreRec();
+	auto callback2 = CallFunc::create(
+		[this]() {
+		hidePreRec();
+	}
+	);
+	auto createAction = Sequence::create(DelayTime::create(2.0f), callback2,NULL);
+	runAction(createAction);
+}
+
+void MonsterManager::createRandomPos() {
 	auto size = Size(19 * 32, 19 * 32);
 	int k = 0;
+
 	//生成随机野怪
 	for (int i = 0; i < m_monsterList.size(); i++)
 	{
 		auto randInt1 = rand() % (21 * 32);
 		auto randInt2 = rand() % (21 * 32);
-		
+
 		auto monsterPos = ccp(randInt1, randInt2);
-		
-		auto worldTar = monsterPos  + getPosition();
+
+		auto worldTar = monsterPos + getPosition();
 		if (m_map->isBarrier(worldTar))//若是障碍物则直接continue
 		{
 			i--;
 			continue;
 		}
+		if (m_player)
+		{
+			if (m_player->getPosition() - worldTar < ccp(100, 100) &&
+				m_player->getPosition() - worldTar > ccp(-100, -100))
+			{//以防一上来就嘲讽
+				i--;
+				continue;
+			}
+		}
+
 		Vec2 tarBlock = ccp(static_cast<int>(monsterPos.x) / 21, static_cast<int>(monsterPos.y) / 21);
 		m_monsPosMap[tarBlock] = 1;
 		m_monsterList[k]->setPosition(monsterPos);
+
 		k++;
+	}
+}
+
+void MonsterManager::showPreRec()
+{
+	//auto fadein = FadeIn::create(0.5f);
+	for (auto monster : m_monsterList)
+	{
+		//monster->getChildByName("preRect")->runAction(fadein);
+		monster->getChildByName("preRect")->setVisible(true);
+		monster->getSprite()->setVisible(false);
+		monster->hide();
+	}
+}
+
+void MonsterManager::hidePreRec()
+{
+	//auto fadeout = FadeOut::create(0.5f);
+	for (auto monster : m_monsterList)
+	{
+		monster->getChildByName("preRect")->setVisible(false);
+		//monster->getChildByName("preRect")->runAction(fadeout);
+		monster->getSprite()->setVisible(true);
+		monster->show();
 	}
 }
 
@@ -169,7 +218,7 @@ void MonsterManager::update(float dt)
 
 			if (dis < 200)//200是嘲讽范围
 			{
-				monster->setTaunted(1);
+				monster->setMonsTaunted();
 			}
 
 			if (!monster->isTaunted())//若未被嘲讽
