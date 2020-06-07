@@ -1,5 +1,6 @@
 #include "Monster\Monster.h"
 #include "Monster/MonsterManager.h"
+#include <string>
 Monster::Monster() 
 {
 	m_isAlive = false;
@@ -19,7 +20,10 @@ bool Monster::init()
 void Monster::show()
 {
 	if (getSprite())
-		setVisible(true);
+	{
+		m_sprite->setVisible(true);
+		//m_weapon->setVisible(false);
+	}
 	m_isAlive = true;
 }
 
@@ -27,7 +31,8 @@ void Monster::hide()
 {
 	if (getSprite() != NULL)
 	{
-		setVisible(false);
+		m_sprite->setVisible(false);
+		m_weapon->setVisible(false);
 		m_isAlive = false;
 	}
 }
@@ -92,10 +97,7 @@ void Monster::resetPropoties()
 
 
 
-void Monster::hit(int damage)
-{
-	this->m_Hp -= damage;
-}
+
 
 void Monster::bindMap(AdventureMapLayer* map)
 {
@@ -105,6 +107,13 @@ void Monster::bindMap(AdventureMapLayer* map)
 void Monster::bindMonsMgr(MonsterManager* monsMgr)
 {
 	m_monsMgr = monsMgr; 
+}
+
+void Monster::hit(int damage)
+{
+	this->m_Hp -= damage;
+	std::string msg = '-' + std::to_string(damage) + "hp";
+	m_damageMsg->showWord(msg.c_str(), getPosition());
 }
 
 void Monster::hit(int damage, float flyingDegree)
@@ -122,8 +131,10 @@ void Monster::hit(int damage, float flyingDegree)
 		
 		this->runAction(move_action);
 	}*/
-	
+	std::string msg = '-' + std::to_string(damage);
+	m_damageMsg->showMonsDmg(msg.c_str());
 }
+
 
 
 void Monster::die()
@@ -151,6 +162,23 @@ void Monster::wander()
 	auto tarPos = m_fIsFacingRight ? ccp(this->getMonsterSpeed(), 0) + curPos : -ccp(this->getMonsterSpeed(), 0) + curPos;
 	
 	mySetPosition(tarPos);
+}
+
+void Monster::showWords()
+{
+	auto scaleUp = ScaleBy::create(0.2f, 1.2);
+	auto scaleDown = ScaleTo::create(0.2f, 1);
+
+	auto callBack = CallFunc::create
+	(
+		[&]()
+	{
+		m_damageMsg->setVisible(false);
+	}
+	);
+	auto actions = Sequence::create(scaleUp, scaleDown, callBack, NULL);
+
+	this->runAction(actions);
 }
 
 

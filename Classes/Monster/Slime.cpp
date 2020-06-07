@@ -5,6 +5,8 @@ bool Slime::init()
 	m_fIsFacingRight = false;
 	setMonsterSpeed(0.2);
 	setHp(this->m_initHp);
+	m_damageMsg = FlowWord::create();
+	this->addChild(m_damageMsg);
 	setResTrack("Slime.png"); 
 	auto gun = MonsterGun::create();
 	gun->setPosition(this->getPosition());

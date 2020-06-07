@@ -8,6 +8,8 @@
 #include "Entity\Coin\Coin.h"
 #include "Entity\Weapons\MonsterGun.h"
 #include "Entity/Blue/Blue.h"
+#include "FlowWord/FlowWord.h"
+
 USING_NS_CC;
 class MonsterManager;
 class Monster :public Entity {
@@ -25,6 +27,7 @@ public:
 	void hit(int damage, float flyingDegree);
 	void die();
 	void wander();
+	void showWords();
 
 	bool isAlive();
 	bool isTaunted();
@@ -43,5 +46,6 @@ protected:
 	MonsterManager* m_monsMgr;
 	bool m_fIsFacingRight = false;
 	bool m_fIsTaunted = false;
+	FlowWord* m_damageMsg;
 };
 #endif // !__Monster_H__

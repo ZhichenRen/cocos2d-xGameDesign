@@ -3,6 +3,8 @@
 bool Duck::init()
 {
 	m_fIsFacingRight = false;
+	m_damageMsg = FlowWord::create();
+	this->addChild(m_damageMsg);
 	setMonsterSpeed(0.5);
 	setHp(this->m_initHp);
 	setResTrack("duck.png");

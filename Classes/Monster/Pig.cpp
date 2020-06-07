@@ -4,6 +4,8 @@ bool Pig::init()
 {
 	m_fIsFacingRight = false;
 	setMonsterSpeed(0.5);
+	m_damageMsg = FlowWord::create();
+	this->addChild(m_damageMsg);
 	setHp(this->m_initHp);
 	setResTrack("Pig.png");
 	this->bindSprite(Sprite::create(this->getResTrack()),0.6f,0.6f);
@@ -19,5 +21,6 @@ void Pig::resetPropoties()
 {
 	show();
 	setHp(this->m_initHp);
+	m_weapon->setVisible(true);
 	m_isAlive = true;
 }
