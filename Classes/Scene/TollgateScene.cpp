@@ -6,6 +6,8 @@
 
 USING_NS_CC;
 
+extern int coinNum;
+
 Scene* TollgateScene::createScene()
 {
 	auto scene = Scene::create();
@@ -151,6 +153,12 @@ void TollgateScene::loadListeners()
 				m_map->getChest()->setVisible(false);
 				m_player->setLongRange(RPG::create());
 			}
+			else if (m_player->getPosition() < m_map->getShop()->getPosition() + Vec2(50, 50) &&
+				m_player->getPosition() > m_map->getShop()->getPosition() - Vec2(50, 50))
+			{
+				coinNum -= 20;
+				m_player->setLongRange(RPG::create());
+			}
 			else if (m_player->getPosition() < m_map->getPortal()->getPosition() + Vec2(50, 50) &&
 				m_player->getPosition() > m_map->getPortal()->getPosition() - Vec2(50, 50))
 			{
@@ -177,11 +185,14 @@ Vec2 lastRoomCoord(2, 2);
 
 void TollgateScene::updateMiniMap(TMXTiledMap* miniMap)
 {
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	auto origin = Director::getInstance()->getVisibleOrigin();
+
 	auto miniMapLayer = miniMap->getLayer("miniMapLayer");
 	auto playerPos = m_player->getPosition();
 	auto roomCoord = m_map->roomCoordFromPosition(playerPos);
 
-	miniMap->setPosition(playerPos + Vec2(200, 50));
+	miniMap->setPosition(m_map->convertToNodeSpace(this->getPosition()) + Vec2(700, 400));
 
 	if (roomCoord == Vec2(-1, -1))
 	{
@@ -205,6 +216,21 @@ void TollgateScene::updateMiniMap(TMXTiledMap* miniMap)
 	lastRoomCoord = Vec2(roomCoord.y, roomCoord.x);
 }
 
+void TollgateScene::updateCoinNum()
+{
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	auto n = this->getChildByTag(101);
+	if (n)
+	{
+		this->removeChildByTag(101);
+	}
+	auto num = __String::createWithFormat("%d", coinNum);
+	auto coinLabel = Label::createWithTTF(num->getCString(), "fonts/arial.ttf", 30);
+
+	coinLabel->setPosition(Vec2(visibleSize.width - 50, visibleSize.height - 600));
+	this->addChild(coinLabel, 20, 101);
+}
+
 void TollgateScene::update(float dt)
 {
 	auto playerPos = m_player->getPosition();
@@ -215,10 +241,11 @@ void TollgateScene::update(float dt)
 	auto roadPairs = m_map->getRoadPairs();
 	updateMiniMap(miniMap);
 
+	updateCoinNum();
 
 	auto roomCoord = m_map->roomCoordFromPosition(playerPos);//鎴块棿鍧愭爣
 	auto roomNum = roomCoord.x * 5 + roomCoord.y;//鎴块棿搴忓彿
-	if (roomCoord.x >= 0 && roomCoord.y >= 0	//首先它得是个怪物房间
+	if (m_map->isMonsterRoom(roomCoord)	//首先它得是个怪物房间
 		&&!m_monsterMgr->isRoomVisited(roomCoord))//其次它没有被到访过
 	{
 		m_monsterMgr->setCurRoom(roomCoord);
@@ -228,6 +255,7 @@ void TollgateScene::update(float dt)
 
 	if (true)//杩涘叆鏈夋�墿鐨勬埧闂达紝寮�濮嬫垬鏂?
 	{
+		miniMap->setVisible(false);
 		std::vector<int>dirVec;
 		for (int i = 0; i < 4; i++)
 		{
@@ -251,6 +279,7 @@ void TollgateScene::update(float dt)
 			{
 				AdventureMapLayer::switchGate(wall, barrier, roomNum, elem, false);
 			}
+			miniMap->setVisible(true);
 		}
 	}
 
@@ -320,6 +349,17 @@ void TollgateScene::update(float dt)
 		{
 			m_player->hit(bullet->getDamage());
 			bullet->setIsUsed(true);
+		}
+	}
+
+	for (auto coin : m_map->getCoinList())
+	{
+		if (coin->getPosition() > m_player->getPosition() - Vec2(10, 10) &&
+			coin->getPosition() < m_player->getPosition() + Vec2(10, 10) && 
+			coin->isVisible())
+		{
+			coin->setVisible(false);
+			coinNum++;
 		}
 	}
 }
