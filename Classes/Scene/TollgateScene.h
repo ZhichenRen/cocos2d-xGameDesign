@@ -31,6 +31,7 @@ public:
 	void loadListeners();
 
 	void updateMiniMap(TMXTiledMap* miniMap);
+	void updateCoinNum();
 
 	virtual void update(float dt);
 	void menuOkCallback(Ref* pSender);
