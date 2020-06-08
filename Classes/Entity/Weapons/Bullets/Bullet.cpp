@@ -79,6 +79,16 @@ float Bullet::getDegree() const
 	return m_degree;
 }
 
+void Bullet::setCritRate(float rate)
+{
+	m_crit_rate = rate;
+}
+
+float Bullet::getCritRate()const
+{
+	return m_crit_rate;
+}
+
 Bullet::~Bullet()
 {
 

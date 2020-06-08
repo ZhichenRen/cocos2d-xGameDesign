@@ -17,6 +17,7 @@ bool RPG::init()
 	m_attack_speed = 0.3f;
 	m_explosion_damage = 30;
 	m_explosion_range = 30;
+	m_crit_rate = 0.0f;
 	m_bullet_picture = std::string("RPG.png");
 	bindSprite(Sprite::create("Fist_of_Heaven.png"), 0.15f, 0.15f);
 	m_sprite->setAnchorPoint(Vec2(0.0f, 0.5f));
@@ -69,6 +70,7 @@ ExplosiveBullet* RPG::generateExplosiveBullet(float degree, float scale_x, float
 	ExplosiveBullet* new_bullet = ExplosiveBullet::create();
 	new_bullet->bindSprite(Sprite::create(m_bullet_picture.c_str()), scale_x, scale_y);
 	new_bullet->setInfo(m_range, m_bullet_damage, m_explosion_range, m_explosion_damage);
+	new_bullet->setCritRate(m_crit_rate);
 	Point origin_pos = Point(getSprite()->getPositionX() + getSprite()->getBoundingBox().size.width * cos(degree / 180 * PI)
 		, getSprite()->getPositionY() + getSprite()->getBoundingBox().size.width * sin(degree / 180 * PI));
 	origin_pos = m_map->convertToMapSpace(convertToWorldSpace(origin_pos));
