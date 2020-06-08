@@ -5,11 +5,6 @@
 void MonsterManager::bindMap(AdventureMapLayer* map)
 {
 	m_map = map;
-	createMonsters();
-	createMonsterPos();
-	for (auto monster : m_monsterList)
-		monster->getMonsterWeapon()->bindMap(map);
-	return;
 }
 
 void MonsterManager::bindPlayer(Entity* player)
@@ -30,6 +25,12 @@ void MonsterManager::reviveAllMonsters()
 	createMonsterPos();
 }
 
+void MonsterManager::bindMapForWeapon()
+{
+	for (auto monster : m_monsterList)
+		monster->getMonsterWeapon()->bindMap(m_map);
+}
+
 bool MonsterManager::init() 
 {
 	m_curCheckPoint = 1;
@@ -39,79 +40,184 @@ bool MonsterManager::init()
 	return true;
 }
 
-void MonsterManager::createMonsters()
+
+
+void MonsterManager::createMonsterPos() 
+{//创建怪物位置，在显示怪物之前显示预选框。
+	
+	createRandomPos();
+	showPreRec();
+	auto callback2 = CallFunc::create(
+		[this]() {
+		hidePreRec();
+	}
+	);
+	auto createAction = Sequence::create(DelayTime::create(2.0f), callback2, NULL);
+	runAction(createAction);
+}
+
+void MonsterManager::createRandomPos() {
+	auto size = Size(19 * 32, 19 * 32);
+	int k = 0;
+
+	//生成随机野怪
+	for (int i = 0; i < m_monsterList.size(); i++)
+	{
+		auto randInt1 = rand() % (21 * 32);
+		auto randInt2 = rand() % (21 * 32);
+
+		auto monsterPos = ccp(randInt1, randInt2);
+
+		auto worldTar = monsterPos + getPosition();
+		if (m_map->isBarrier(worldTar))//若是障碍物则直接continue
+		{
+			i--;
+			continue;
+		}
+		if (m_player)
+		{
+			if (m_player->getPosition() - worldTar < ccp(100, 100) &&
+				m_player->getPosition() - worldTar > ccp(-100, -100))
+			{//以防一上来就嘲讽
+				i--;
+				continue;
+			}
+		}
+
+		Vec2 tarBlock = ccp(static_cast<int>(monsterPos.x) / 21, static_cast<int>(monsterPos.y) / 21);
+		m_monsPosMap[tarBlock] = 1;
+		m_monsterList[k]->setPosition(monsterPos);
+
+		k++;
+	}
+
+	bulkUpRandMons(this->m_bulkMonsterNum);
+}
+
+void MonsterManager::bulkUpRandMons(int totalNum)
 {
+	int totalBulkMonster = totalNum;
+	std::set<int> bulkMap;
+	int randMons;
+	int monsNum = m_monsterList.size();
+	while (1)
+	{
+		randMons = rand() % monsNum;
+		if (bulkMap.count(randMons))
+		{
+			continue;
+		}
+		bulkMap.insert(randMons);
+
+		m_monsterList[randMons]->bulkUp();
+
+		totalNum--;
+		if (totalNum <= 0)
+		{
+			break;
+		}
+	}
+}
+
+void MonsterManager::createMonstersWithGiantNum(int giantNum , int totalNum )
+{
+	//giantNum为0：没有巨大化的怪物
+	//giantNum为1以上：有giantNum个巨大化的怪物
+	auto randVec = createRandomNums(4, totalNum - 4);
+	this->m_bulkMonsterNum = giantNum;
+	if (giantNum > totalNum - 4)
+	{
+		assert("too much giant monsters");
+	}
 	Pig* pig = NULL;
 	Slime* slime = NULL;
 	Sprite* sprite = NULL;
 	ChiefOfTribe* chiefOfTribe = NULL;
 	Duck* duck = NULL;
-	int k = 0;
-	
-	for (int i = 0; i < this->pigNum; i++)
+	//int k = 0;
+	for (int i = 0; i < randVec[0] + 1; i++)
 	{
 		pig = Pig::create();
 		pig->bindMap(m_map);
+		pig->getMonsterWeapon()->bindMap(m_map);
 		pig->bindMonsMgr(this);
 		this->addChild(pig);
 		m_monsterList.push_back(pig);
 		m_shortMonsterList.push_back(pig);
 	}
 
-	for (int i = 0; i < this->duckNum; i++)
+	for (int i = 0; i < randVec[1] + 1; i++)
 	{
 		duck = Duck::create();
 		duck->bindMap(m_map);
+		duck->getMonsterWeapon()->bindMap(m_map);
 		duck->bindMonsMgr(this);
 		this->addChild(duck);
 		m_monsterList.push_back(duck);
 		m_shortMonsterList.push_back(duck);
 	}
 
-	for (int i = 0; i < this->slimeNum; i++)
+	for (int i = 0; i < randVec[2] + 1; i++)
 	{
 		slime = Slime::create();
 		this->addChild(slime);
 		slime->bindMap(m_map);
+		slime->getMonsterWeapon()->bindMap(m_map);
 		slime->bindMonsMgr(this);
 		m_monsterList.push_back(slime);
 		m_longMonsterList.push_back(slime);
 	}
 
-	for (int i = 0; i < this->chiefOfTribeNum; i++)
+	for (int i = 0; i < randVec[3] + 1; i++)
 	{
 		chiefOfTribe = ChiefOfTribe::create();
 		this->addChild(chiefOfTribe);
 		chiefOfTribe->bindMap(m_map);
+		chiefOfTribe->getMonsterWeapon()->bindMap(m_map);
 		chiefOfTribe->bindMonsMgr(this);
 		m_monsterList.push_back(chiefOfTribe);
 		m_longMonsterList.push_back(chiefOfTribe);
 	}
+
 }
 
-void MonsterManager::createMonsterPos() 
+void MonsterManager::showPreRec()
 {
-	auto size = Size(19 * 32, 19 * 32);
-	int k = 0;
-	//生成随机野怪
-	for (int i = 0; i < m_monsterList.size(); i++)
+	//auto fadein = FadeIn::create(0.5f);
+	for (auto monster : m_monsterList)
 	{
-		auto randInt1 = rand() % (21 * 32);
-		auto randInt2 = rand() % (21 * 32);
-		
-		auto monsterPos = ccp(randInt1, randInt2);
-		
-		auto worldTar = monsterPos  + getPosition();
-		if (m_map->isBarrier(worldTar))//若是障碍物则直接continue
-		{
-			i--;
-			continue;
-		}
-		Vec2 tarBlock = ccp(static_cast<int>(monsterPos.x) / 21, static_cast<int>(monsterPos.y) / 21);
-		m_monsPosMap[tarBlock] = 1;
-		m_monsterList[k]->setPosition(monsterPos);
-		k++;
+		//monster->getChildByName("preRect")->runAction(fadein);
+		monster->getChildByName("preRect")->setVisible(true);
+		monster->getSprite()->setVisible(false);
+		monster->hide();
 	}
+}
+
+void MonsterManager::hidePreRec()
+{
+	//auto fadeout = FadeOut::create(0.5f);
+	for (auto monster : m_monsterList)
+	{
+		monster->getChildByName("preRect")->setVisible(false);
+		//monster->getChildByName("preRect")->runAction(fadeout);
+		monster->getSprite()->setVisible(true);
+		monster->show();
+	}
+}
+
+std::vector<int> MonsterManager::createRandomNums(int numCnt, int sum)
+{
+	std::vector<int> randomVec;
+	int randNum;
+	numCnt -= 1;
+	while (numCnt--)
+	{
+		randNum = rand() % sum;
+		randomVec.push_back(randNum);
+		sum -= randNum;
+	}
+	randomVec.push_back(sum);
+	return randomVec;
 }
 
 bool MonsterManager::resetAllMons()
@@ -133,17 +239,28 @@ bool MonsterManager::resetAllMons()
 
 bool MonsterManager::isGameOver()
 {
+	if (!m_fIsInited)
+		return true;
 	return m_fGameOver;
 }
-
-
+void MonsterManager::setInited()
+{
+	m_fIsInited = 1;
+}
+bool MonsterManager::getInited()
+{
+	return m_fIsInited;
+}
 void MonsterManager::update(float dt)
 {
+	if (!m_fIsInited)
+		return;
 	Point playerPosition = m_player->getPosition() - getPosition();
 	//相对坐标的转化
 	//playerPosition = convertToNodeSpace(playerPosition);
 	if (m_deathMonsNum == m_monsterList.size())
 	{
+		
 		resetAllMons();
 	}
 	if (m_fGameOver)//游戏结束了
@@ -169,7 +286,7 @@ void MonsterManager::update(float dt)
 
 			if (dis < 200)//200是嘲讽范围
 			{
-				monster->setTaunted(1);
+				monster->setMonsTaunted();
 			}
 
 			if (!monster->isTaunted())//若未被嘲讽
@@ -184,7 +301,6 @@ void MonsterManager::update(float dt)
 				monsWeapon->attack(m_map->convertToWorldSpace(m_player->getPosition()));
 
 			
-
 			m_monsPosMap[blockOccupied] = 0;
 			//建立走位后的信息
 			
@@ -210,12 +326,6 @@ void MonsterManager::update(float dt)
 }
 
 
-
-
-
-
-
-
 std::vector<Bullet*> MonsterManager::getMonsterBullets() const
 {
 	std::vector<Bullet*> monsterBullets;
@@ -238,7 +348,7 @@ void MonsterManager::setPosMap(Vec2 pos, bool flag)
 	m_monsPosMap[pos] = flag;
 }
 
-bool MonsterManager::isPosOccupied(Vec2 pos)
+bool MonsterManager::isPosOccupied(Vec2 pos) 
 {
 	return m_monsPosMap[pos];
 }
@@ -262,3 +372,56 @@ bool MonsterManager::isRoomVisited(Vec2 room)
 {
 	return m_visitedRoom[room];
 }
+void MonsterManager::setBulkMonsterNum(int giantNum)
+{
+	m_bulkMonsterNum = giantNum;
+}
+//void MonsterManager::createMonsters()
+//{
+//	Pig* pig = NULL;
+//	Slime* slime = NULL;
+//	Sprite* sprite = NULL;
+//	ChiefOfTribe* chiefOfTribe = NULL;
+//	Duck* duck = NULL;
+//	int k = 0;
+//	
+//	for (int i = 0; i < this->pigNum; i++)
+//	{
+//		pig = Pig::create();
+//		pig->bindMap(m_map);
+//		pig->bindMonsMgr(this);
+//		this->addChild(pig);
+//		m_monsterList.push_back(pig);
+//		m_shortMonsterList.push_back(pig);
+//	}
+//
+//	for (int i = 0; i < this->duckNum; i++)
+//	{
+//		duck = Duck::create();
+//		duck->bindMap(m_map);
+//		duck->bindMonsMgr(this);
+//		this->addChild(duck);
+//		m_monsterList.push_back(duck);
+//		m_shortMonsterList.push_back(duck);
+//	}
+//
+//	for (int i = 0; i < this->slimeNum; i++)
+//	{
+//		slime = Slime::create();
+//		this->addChild(slime);
+//		slime->bindMap(m_map);
+//		slime->bindMonsMgr(this);
+//		m_monsterList.push_back(slime);
+//		m_longMonsterList.push_back(slime);
+//	}
+//
+//	for (int i = 0; i < this->chiefOfTribeNum; i++)
+//	{
+//		chiefOfTribe = ChiefOfTribe::create();
+//		this->addChild(chiefOfTribe);
+//		chiefOfTribe->bindMap(m_map);
+//		chiefOfTribe->bindMonsMgr(this);
+//		m_monsterList.push_back(chiefOfTribe);
+//		m_longMonsterList.push_back(chiefOfTribe);
+//	}
+//}

@@ -31,7 +31,9 @@ protected:
 	int m_bullet_range;
 	int m_bullet_damage;
 	bool m_is_used;
+
 	float m_crit_rate;
+
 	Point m_origin_pos;//in map coordinate
 };
 #endif

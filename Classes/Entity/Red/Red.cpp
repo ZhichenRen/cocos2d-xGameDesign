@@ -1,26 +1,26 @@
-#include "Entity\Blue\Blue.h"
+#include "Entity\Red\Red.h"
 #define RANDOMRANGE 10
 
 
-bool Blue::init()
+bool Red::init()
 {
-	bindSprite(Sprite::create("Blue.png"), 1.0f, 1.0f);
-	
+	bindSprite(Sprite::create("Red.png"), 1.0f, 1.0f);
+
 	return true;
 }
 
-int Blue::getBlueValue()const
+int Red::getRedValue()const
 {
-	return m_blueValue;
+	return m_RedValue;
 }
 
-void Blue::disappear()
+void Red::disappear()
 {
 	m_sprite->setVisible(false);
 }
 
 //可以让蓝一直上下跳
-void Blue::setRandomPosition()
+void Red::setRandomPosition()
 {
 	auto curPosition = getPosition();
 
@@ -29,6 +29,6 @@ void Blue::setRandomPosition()
 	auto xDif = ranF1 * RANDOMRANGE * 2 - RANDOMRANGE;
 	auto yDif = ranF2 * RANDOMRANGE * 2 - RANDOMRANGE;
 	auto ranPosition = ccp(curPosition.x + xDif, curPosition.y + yDif);
-		//设置一个偏差范围
+	//设置一个偏差范围
 	this->setPosition(ranPosition);
 }
