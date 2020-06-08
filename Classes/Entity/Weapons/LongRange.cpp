@@ -87,6 +87,7 @@ void LongRange::update(float dt)
 	{
 		if ((*it)->isUsed() == true)
 		{
+			(*it)->removeFromParentAndCleanup(true);
 			it = m_bullet.erase(it);
 		}
 		else

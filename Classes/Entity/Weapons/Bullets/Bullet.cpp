@@ -45,6 +45,7 @@ void Bullet::setIsUsed(bool status)
 	if (status == true)
 	{
 		getSprite()->setVisible(false);
+		stopAllActions();
 	}
 }
 

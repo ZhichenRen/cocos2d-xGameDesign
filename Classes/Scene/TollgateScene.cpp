@@ -40,7 +40,7 @@ void TollgateScene::addPlayer()
 
 void TollgateScene::addLongRangeWeapon()
 {
-	m_player->setLongRange(Shotgun::create());
+	m_player->setLongRange(RPG::create());
 }
 
 void TollgateScene::loadController()
@@ -293,27 +293,30 @@ void TollgateScene::update(float dt)
 	//player bullet
 	for (auto bullet : player_bullet)
 	{
-		//cocos2d::Point bullet_pos = convertToWorldSpace(bullet->getPosition());
-		//if (m_map->isBarrier(bullet_pos))
-		//{
-		//	if (typeid(*bullet) == typeid(ExplosiveBullet))
-		//	{
-		//		auto explosive_bullet = dynamic_cast<ExplosiveBullet*>(bullet);
-		//		explosive_bullet->explode();
-		//		for (auto unlucky_monster : monsters)
-		//		{
-		//			if (unlucky_monster->isAlive())
-		//			{
-		//				cocos2d::Point explosive_origin_point = convertToWorldSpace(explosive_bullet->getPosition());
-		//				if (unlucky_monster->getBoundingBox().intersectsCircle(explosive_origin_point, explosive_bullet->getExplosionRange()))
-		//				{
-		//					unlucky_monster->hit(explosive_bullet->getExplosionDamage());
-		//				}
-		//			}
-		//		}
-		//	}
-		//	bullet->setIsUsed(true);
-		//}
+		cocos2d::Point bullet_pos = bullet->getPosition();
+		if (m_map->isBarrier(bullet_pos))
+		{
+			if (typeid(*bullet) == typeid(ExplosiveBullet))
+			{
+				auto explosive_bullet = dynamic_cast<ExplosiveBullet*>(bullet);
+				if (!explosive_bullet->isUsed() && !explosive_bullet->isExplode())
+				{
+					explosive_bullet->explode();
+				}
+				for (auto unlucky_monster : monsters)
+				{
+					if (unlucky_monster->isAlive())
+					{
+						cocos2d::Point explosive_origin_point = m_map->convertToWorldSpace(explosive_bullet->getPosition());
+						if (unlucky_monster->getBoundingBox().intersectsCircle(explosive_origin_point, explosive_bullet->getExplosionRange()))
+						{
+							unlucky_monster->hit(explosive_bullet->getExplosionDamage());
+						}
+					}
+				}
+			}
+			else bullet->setIsUsed(true);
+		}
 		for (auto monster : monsters)
 		{
 			if (monster->isAlive())
@@ -325,7 +328,10 @@ void TollgateScene::update(float dt)
 					if (typeid(*bullet) == typeid(ExplosiveBullet))
 					{
 						auto explosive_bullet = dynamic_cast<ExplosiveBullet*>(bullet);
-						explosive_bullet->explode();
+						if (!explosive_bullet->isUsed() && !explosive_bullet->isExplode())
+						{
+							explosive_bullet->explode();
+						}
 						for (auto unlucky_monster : monsters)
 						{
 							if (unlucky_monster->isAlive())
@@ -338,7 +344,7 @@ void TollgateScene::update(float dt)
 							}
 						}
 					}
-					bullet->setIsUsed(true);
+					else bullet->setIsUsed(true);
 				}
 			}
 		}			
@@ -347,6 +353,11 @@ void TollgateScene::update(float dt)
 	//monster bullet
 	for (auto bullet : monsters_bullet)
 	{
+		cocos2d::Point bullet_pos = bullet->getPosition();
+		if (m_map->isBarrier(bullet_pos))
+		{
+			bullet->setIsUsed(true);
+		}
 		if (bullet->isCollideWith(m_player))
 		{
 			m_player->hit(bullet->getDamage());
