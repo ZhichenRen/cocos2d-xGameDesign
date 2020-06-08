@@ -45,6 +45,7 @@ void Bullet::setIsUsed(bool status)
 	if (status == true)
 	{
 		getSprite()->setVisible(false);
+		stopAllActions();
 	}
 }
 
@@ -76,6 +77,16 @@ void Bullet::setDegree(float degree)
 float Bullet::getDegree() const
 {
 	return m_degree;
+}
+
+void Bullet::setCritRate(float rate)
+{
+	m_crit_rate = rate;
+}
+
+float Bullet::getCritRate()const
+{
+	return m_crit_rate;
 }
 
 Bullet::~Bullet()
