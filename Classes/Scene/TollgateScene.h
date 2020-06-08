@@ -23,7 +23,7 @@ public:
 	virtual void onEnter();
 	void addPlayer();
 	void loadUI();
-	void loadMonstersInNewRoom();
+	void loadMonstersInNewRoom(int giantNum);
 	void loadMap();
 	void addLongRangeWeapon();
 	void loadController();

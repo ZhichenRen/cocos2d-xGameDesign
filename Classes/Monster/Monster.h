@@ -51,7 +51,6 @@ protected:
 	bool m_isBulkUp = false;
 	FlowWord* m_damageMsg;
 	Sprite* m_preRec; 
-private:
-	int m_initHp;
+
 };
 #endif // !__Monster_H__

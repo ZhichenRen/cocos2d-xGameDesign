@@ -103,7 +103,7 @@ const int coord[25][2] = {
 		{11,134},{52,134},{93,134},{134,134},{175,134},
 		{11,175},{52,175},{93,175},{134,175},{175,175} };//25个房间的中心坐标
 
-void TollgateScene::loadMonstersInNewRoom()
+void TollgateScene::loadMonstersInNewRoom(int giantNum = 0)
 {
 	auto roomCoord = m_monsterMgr->getCurRoom();
 	m_monsterMgr->markRoomVisited(roomCoord);
@@ -111,10 +111,8 @@ void TollgateScene::loadMonstersInNewRoom()
 		coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][1]);
 	midPoint.y = 186 - midPoint.y;
 	auto LUPoint = (midPoint + ccp(-10,- 10)) * 32;
-	log("current room is%f, %f\n", roomCoord.x, roomCoord.y);
-	log("LUPoint  is%f, %f\n", LUPoint.x, LUPoint.y);
 	m_monsterMgr->setPosition(LUPoint);
-	
+	m_monsterMgr->setBulkMonsterNum(giantNum);
 	m_monsterMgr->reviveAllMonsters();
 }
 
@@ -123,16 +121,23 @@ void TollgateScene::loadMonsters()
 {
 	auto playerPos = m_player->getPosition();
 	auto roomCoord = m_map->roomCoordFromPosition(playerPos);
-	
+	//绑定房间
 	m_monsterMgr = MonsterManager::create();
 	m_monsterMgr->markRoomVisited(roomCoord);
 	m_monsterMgr->setCurRoom(roomCoord);
+	
+	//设置位置
 	auto midPoint = ccp( coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][0] ,
 		coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][1]);
 	midPoint.y = 186 - midPoint.y;
 	auto LUPoint = (midPoint + ccp(-10, -10)) * 32;
 	m_monsterMgr->setPosition(LUPoint);
+
+	//初始化工作
 	m_monsterMgr->bindMap(m_map);
+	m_monsterMgr->createMonstersWithGiantNum(3, 10);
+	m_monsterMgr->bindMapForWeapon();
+	m_monsterMgr->createMonsterPos();
 	m_monsterMgr->bindPlayer(static_cast<Entity*>(this->m_player));
 	m_map->addChild(m_monsterMgr, 2);
 }
@@ -251,7 +256,7 @@ void TollgateScene::update(float dt)
 		&&!m_monsterMgr->isRoomVisited(roomCoord))//其次它没有被到访过
 	{
 		m_monsterMgr->setCurRoom(roomCoord);
-		loadMonstersInNewRoom();
+		loadMonstersInNewRoom(2);
 	}
 	Vec2 dir[4] = { {0,1},{0,-1},{1,0},{-1,0} };//鍥涗釜鏂瑰悜
 

@@ -13,15 +13,16 @@ USING_NS_CC;
 class Player;
 class MonsterManager : public Node {
 public:
-	void createMonsters();
+	//void createMonsters();
 	void createMonsterPos();
-
+	void createMonstersWithGiantNum(int giantNum = 3, int totalNum = 10);
 	CREATE_FUNC(MonsterManager);
 	void bindMap(AdventureMapLayer* map);
 	void bindPlayer(Entity* player);
 	void createRandomPos();
-	void createMonstersWithGiantNum(int giantNum);
+	void bulkUpRandMons(int totalNum);
 	void reviveAllMonsters();
+	void bindMapForWeapon();
 	virtual bool init();
 	virtual void update(float dt);
 
@@ -40,7 +41,7 @@ public:
 	bool isPosOccupied(Vec2 pos);
 	void markRoomVisited(Vec2 room);
 	bool isRoomVisited(Vec2 room);
-
+	void setBulkMonsterNum(int giantNum);
 private:
 
 	void showPreRec();
@@ -67,5 +68,7 @@ private:
 	int m_deathMonsNum;
 	bool m_fGameOver = false;
 	Vec2 m_curRoom;
+
+	int m_bulkMonsterNum;
 };
 #endif

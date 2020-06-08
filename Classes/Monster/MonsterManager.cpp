@@ -5,11 +5,6 @@
 void MonsterManager::bindMap(AdventureMapLayer* map)
 {
 	m_map = map;
-	createMonstersWithGiantNum(1);
-	createMonsterPos();
-	for (auto monster : m_monsterList)
-		monster->getMonsterWeapon()->bindMap(map);
-	return;
 }
 
 void MonsterManager::bindPlayer(Entity* player)
@@ -30,6 +25,12 @@ void MonsterManager::reviveAllMonsters()
 	createMonsterPos();
 }
 
+void MonsterManager::bindMapForWeapon()
+{
+	for (auto monster : m_monsterList)
+		monster->getMonsterWeapon()->bindMap(m_map);
+}
+
 bool MonsterManager::init() 
 {
 	m_curCheckPoint = 1;
@@ -39,58 +40,10 @@ bool MonsterManager::init()
 	return true;
 }
 
-void MonsterManager::createMonsters()
-{
-	Pig* pig = NULL;
-	Slime* slime = NULL;
-	Sprite* sprite = NULL;
-	ChiefOfTribe* chiefOfTribe = NULL;
-	Duck* duck = NULL;
-	int k = 0;
-	
-	for (int i = 0; i < this->pigNum; i++)
-	{
-		pig = Pig::create();
-		pig->bindMap(m_map);
-		pig->bindMonsMgr(this);
-		this->addChild(pig);
-		m_monsterList.push_back(pig);
-		m_shortMonsterList.push_back(pig);
-	}
 
-	for (int i = 0; i < this->duckNum; i++)
-	{
-		duck = Duck::create();
-		duck->bindMap(m_map);
-		duck->bindMonsMgr(this);
-		this->addChild(duck);
-		m_monsterList.push_back(duck);
-		m_shortMonsterList.push_back(duck);
-	}
-
-	for (int i = 0; i < this->slimeNum; i++)
-	{
-		slime = Slime::create();
-		this->addChild(slime);
-		slime->bindMap(m_map);
-		slime->bindMonsMgr(this);
-		m_monsterList.push_back(slime);
-		m_longMonsterList.push_back(slime);
-	}
-
-	for (int i = 0; i < this->chiefOfTribeNum; i++)
-	{
-		chiefOfTribe = ChiefOfTribe::create();
-		this->addChild(chiefOfTribe);
-		chiefOfTribe->bindMap(m_map);
-		chiefOfTribe->bindMonsMgr(this);
-		m_monsterList.push_back(chiefOfTribe);
-		m_longMonsterList.push_back(chiefOfTribe);
-	}
-}
 
 void MonsterManager::createMonsterPos() 
-{
+{//创建怪物位置，在显示怪物之前显示预选框。
 	
 	createRandomPos();
 	showPreRec();
@@ -137,14 +90,41 @@ void MonsterManager::createRandomPos() {
 
 		k++;
 	}
+
+	bulkUpRandMons(this->m_bulkMonsterNum);
 }
 
-void MonsterManager::createMonstersWithGiantNum(int gialtNum)
+void MonsterManager::bulkUpRandMons(int totalNum)
 {
-	//gialtNum为0：没有巨大化的怪物
-	//gialtNum为1以上：有gialtNum个巨大化的怪物
-	auto randVec = createRandomNums(4, 10);
-	if (gialtNum > 10)
+	int totalBulkMonster = totalNum;
+	std::set<int> bulkMap;
+	int randMons;
+	int monsNum = m_monsterList.size();
+	while (1)
+	{
+		randMons = rand() % monsNum;
+		if (bulkMap.count(randMons))
+		{
+			continue;
+		}
+		bulkMap.insert(randMons);
+
+		m_monsterList[randMons]->bulkUp();
+
+		totalNum--;
+		if (totalNum <= 0)
+		{
+			break;
+		}
+	}
+}
+
+void MonsterManager::createMonstersWithGiantNum(int giantNum , int totalNum )
+{
+	//giantNum为0：没有巨大化的怪物
+	//giantNum为1以上：有giantNum个巨大化的怪物
+	auto randVec = createRandomNums(4, totalNum - 4);
+	if (giantNum > totalNum - 4)
 	{
 		assert("too much giant monsters");
 	}
@@ -154,7 +134,7 @@ void MonsterManager::createMonstersWithGiantNum(int gialtNum)
 	ChiefOfTribe* chiefOfTribe = NULL;
 	Duck* duck = NULL;
 	//int k = 0;
-	for (int i = 0; i < randVec[0]; i++)
+	for (int i = 0; i < randVec[0] + 1; i++)
 	{
 		pig = Pig::create();
 		pig->bindMap(m_map);
@@ -164,7 +144,7 @@ void MonsterManager::createMonstersWithGiantNum(int gialtNum)
 		m_shortMonsterList.push_back(pig);
 	}
 
-	for (int i = 0; i < randVec[1]; i++)
+	for (int i = 0; i < randVec[1] + 1; i++)
 	{
 		duck = Duck::create();
 		duck->bindMap(m_map);
@@ -174,7 +154,7 @@ void MonsterManager::createMonstersWithGiantNum(int gialtNum)
 		m_shortMonsterList.push_back(duck);
 	}
 
-	for (int i = 0; i < randVec[2]; i++)
+	for (int i = 0; i < randVec[2] + 1; i++)
 	{
 		slime = Slime::create();
 		this->addChild(slime);
@@ -184,7 +164,7 @@ void MonsterManager::createMonstersWithGiantNum(int gialtNum)
 		m_longMonsterList.push_back(slime);
 	}
 
-	for (int i = 0; i < randVec[3]; i++)
+	for (int i = 0; i < randVec[3] + 1; i++)
 	{
 		chiefOfTribe = ChiefOfTribe::create();
 		this->addChild(chiefOfTribe);
@@ -194,30 +174,6 @@ void MonsterManager::createMonstersWithGiantNum(int gialtNum)
 		m_longMonsterList.push_back(chiefOfTribe);
 	}
 
-	if (gialtNum >= 1)
-	{
-		int totalBulkMonster = gialtNum;
-		std::set<int> bulkMap;
-		int randMons;
-		int monsNum = m_monsterList.size();
-		while (1)
-		{
-			randMons = rand() % monsNum;
-			if (bulkMap.count(randMons))
-			{
-				continue;
-			}
-			bulkMap.insert(randMons);
-			
-			m_monsterList[randMons]->bulkUp();
-
-			gialtNum--;
-			if (gialtNum == 0)
-			{
-				break;
-			}
-		}
-	}
 }
 
 void MonsterManager::showPreRec()
@@ -289,6 +245,7 @@ void MonsterManager::update(float dt)
 	//playerPosition = convertToNodeSpace(playerPosition);
 	if (m_deathMonsNum == m_monsterList.size())
 	{
+		
 		resetAllMons();
 	}
 	if (m_fGameOver)//游戏结束了
@@ -355,12 +312,6 @@ void MonsterManager::update(float dt)
 }
 
 
-
-
-
-
-
-
 std::vector<Bullet*> MonsterManager::getMonsterBullets() const
 {
 	std::vector<Bullet*> monsterBullets;
@@ -407,3 +358,56 @@ bool MonsterManager::isRoomVisited(Vec2 room)
 {
 	return m_visitedRoom[room];
 }
+void MonsterManager::setBulkMonsterNum(int giantNum)
+{
+	m_bulkMonsterNum = giantNum;
+}
+//void MonsterManager::createMonsters()
+//{
+//	Pig* pig = NULL;
+//	Slime* slime = NULL;
+//	Sprite* sprite = NULL;
+//	ChiefOfTribe* chiefOfTribe = NULL;
+//	Duck* duck = NULL;
+//	int k = 0;
+//	
+//	for (int i = 0; i < this->pigNum; i++)
+//	{
+//		pig = Pig::create();
+//		pig->bindMap(m_map);
+//		pig->bindMonsMgr(this);
+//		this->addChild(pig);
+//		m_monsterList.push_back(pig);
+//		m_shortMonsterList.push_back(pig);
+//	}
+//
+//	for (int i = 0; i < this->duckNum; i++)
+//	{
+//		duck = Duck::create();
+//		duck->bindMap(m_map);
+//		duck->bindMonsMgr(this);
+//		this->addChild(duck);
+//		m_monsterList.push_back(duck);
+//		m_shortMonsterList.push_back(duck);
+//	}
+//
+//	for (int i = 0; i < this->slimeNum; i++)
+//	{
+//		slime = Slime::create();
+//		this->addChild(slime);
+//		slime->bindMap(m_map);
+//		slime->bindMonsMgr(this);
+//		m_monsterList.push_back(slime);
+//		m_longMonsterList.push_back(slime);
+//	}
+//
+//	for (int i = 0; i < this->chiefOfTribeNum; i++)
+//	{
+//		chiefOfTribe = ChiefOfTribe::create();
+//		this->addChild(chiefOfTribe);
+//		chiefOfTribe->bindMap(m_map);
+//		chiefOfTribe->bindMonsMgr(this);
+//		m_monsterList.push_back(chiefOfTribe);
+//		m_longMonsterList.push_back(chiefOfTribe);
+//	}
+//}
