@@ -2,12 +2,14 @@
 #ifndef __Monster_H__
 #define __Monster_H__
 #define BLUERATE 0.3
+#define REDRATE 0.05
 
 #include "Entity/Entity.h"
 #include "cocos2d.h"
 #include "Entity\Coin\Coin.h"
 #include "Entity\Weapons\MonsterGun.h"
 #include "Entity/Blue/Blue.h"
+#include "Entity/Red/Red.h"
 #include "FlowWord/FlowWord.h"
 
 USING_NS_CC;
@@ -36,7 +38,7 @@ public:
 	bool mySetPosition(Vec2 target);
 	void bulkUp();
 	virtual void resetPropoties();
-	
+
 	CC_SYNTHESIZE(float, m_fSpeed, MonsterSpeed);
 	CC_SYNTHESIZE(int, m_Hp, Hp);
 	CC_SYNTHESIZE(std::string, m_resTrack, ResTrack);

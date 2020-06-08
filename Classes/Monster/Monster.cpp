@@ -116,6 +116,7 @@ void Monster::resetPropoties()
 void Monster::bindMap(AdventureMapLayer* map)
 {
 	m_map = map;
+
 }
 
 void Monster::bindMonsMgr(MonsterManager* monsMgr)
@@ -137,8 +138,11 @@ void Monster::hit(int damage, float flyingDegree, bool isCriticalStrike)
 	setMonsTaunted();
 	this->stopAllActions();
 	auto curPos = getPosition();
-	auto vecToMove = Vec2( 3* cos(flyingDegree / 180 * 3.14), 3* sin(flyingDegree / 180 * 3.14));
+	auto vecToMove = Vec2( 5* cos(flyingDegree / 180 * 3.14), 5* sin(flyingDegree / 180 * 3.14));
+	if (m_isBulkUp)
+		vecToMove *= 3;
 	auto targetPos = curPos + vecToMove;
+	
 	this->mySetPosition(targetPos);
 	/*if (!m_map->isBarrier(m_map->convertToMapSpace(convertToWorldSpace(targetPos))))
 	{
@@ -165,14 +169,23 @@ void Monster::die()
 	this->getSprite()->runAction(fade);
 	auto coin = Coin::create();
 	//this->getSprite()->setVisible(false);//นึฮ๏ฯ๛สง
-	auto ranF = CCRANDOM_0_1();
-	if (ranF < BLUERATE)
+	auto ranF1 = CCRANDOM_0_1();
+	if (ranF1 < BLUERATE)
 	{
 		auto blue = Blue::create();
 		blue->setPosition(this->getPosition() + m_monsMgr->getPosition());
 		m_map->addChild(blue,2);
 		blue->setRandomPosition();
 		m_map->addBlue(blue);
+	}
+	auto ranF2 = CCRANDOM_0_1();
+	if (ranF2 < REDRATE)
+	{
+		auto red = Red::create();
+		red->setPosition(this->getPosition() + m_monsMgr->getPosition());
+		m_map->addChild(red, 2);
+		red->setRandomPosition();
+		m_map->addRed(red);
 	}
 	coin->setPosition(this->getPosition() + m_monsMgr->getPosition());
 	

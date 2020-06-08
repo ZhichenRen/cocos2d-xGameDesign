@@ -42,6 +42,8 @@ public:
 	void markRoomVisited(Vec2 room);
 	bool isRoomVisited(Vec2 room);
 	void setBulkMonsterNum(int giantNum);
+	void setInited() ;
+	bool getInited();
 private:
 
 	void showPreRec();
@@ -68,7 +70,7 @@ private:
 	int m_deathMonsNum;
 	bool m_fGameOver = false;
 	Vec2 m_curRoom;
-
 	int m_bulkMonsterNum;
+	bool m_fIsInited = false;
 };
 #endif

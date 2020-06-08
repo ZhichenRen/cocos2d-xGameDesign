@@ -103,8 +103,9 @@ const int coord[25][2] = {
 		{11,134},{52,134},{93,134},{134,134},{175,134},
 		{11,175},{52,175},{93,175},{134,175},{175,175} };//25个房间的中心坐标
 
-void TollgateScene::loadMonstersInNewRoom(int giantNum = 0)
+void TollgateScene::loadMonstersInNewRoom(int giantNum = -1)
 {
+	
 	auto roomCoord = m_monsterMgr->getCurRoom();
 	m_monsterMgr->markRoomVisited(roomCoord);
 	auto midPoint = ccp(coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][0],
@@ -112,7 +113,16 @@ void TollgateScene::loadMonstersInNewRoom(int giantNum = 0)
 	midPoint.y = 186 - midPoint.y;
 	auto LUPoint = (midPoint + ccp(-10,- 10)) * 32;
 	m_monsterMgr->setPosition(LUPoint);
-	m_monsterMgr->setBulkMonsterNum(giantNum);
+
+	if (giantNum != -1)
+		m_monsterMgr->setBulkMonsterNum(giantNum);
+	if (!m_monsterMgr->getInited())
+	{
+		m_monsterMgr->createMonstersWithGiantNum();
+		m_monsterMgr->createMonsterPos();
+		m_monsterMgr->setInited();
+		return;
+	}
 	m_monsterMgr->reviveAllMonsters();
 }
 
@@ -123,9 +133,9 @@ void TollgateScene::loadMonsters()
 	auto roomCoord = m_map->roomCoordFromPosition(playerPos);
 	//绑定房间
 	m_monsterMgr = MonsterManager::create();
-	m_monsterMgr->markRoomVisited(roomCoord);
+	/*m_monsterMgr->markRoomVisited(roomCoord);
 	m_monsterMgr->setCurRoom(roomCoord);
-	
+	*/
 	//设置位置
 	auto midPoint = ccp( coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][0] ,
 		coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][1]);
@@ -135,9 +145,9 @@ void TollgateScene::loadMonsters()
 
 	//初始化工作
 	m_monsterMgr->bindMap(m_map);
-	m_monsterMgr->createMonstersWithGiantNum(3, 10);
-	m_monsterMgr->bindMapForWeapon();
-	m_monsterMgr->createMonsterPos();
+	//m_monsterMgr->createMonstersWithGiantNum(3, 10);
+	//m_monsterMgr->bindMapForWeapon();
+	//m_monsterMgr->createMonsterPos();
 	m_monsterMgr->bindPlayer(static_cast<Entity*>(this->m_player));
 	m_map->addChild(m_monsterMgr, 2);
 }
@@ -252,6 +262,7 @@ void TollgateScene::update(float dt)
 
 	auto roomCoord = m_map->roomCoordFromPosition(playerPos);//鎴块棿鍧愭爣
 	auto roomNum = roomCoord.x * 5 + roomCoord.y;//鎴块棿搴忓彿
+
 	if (m_map->isMonsterRoom(roomCoord)	//首先它得是个怪物房间
 		&&!m_monsterMgr->isRoomVisited(roomCoord))//其次它没有被到访过
 	{

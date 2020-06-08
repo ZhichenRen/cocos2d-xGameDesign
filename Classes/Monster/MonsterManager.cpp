@@ -124,6 +124,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum , int totalNum )
 	//giantNum为0：没有巨大化的怪物
 	//giantNum为1以上：有giantNum个巨大化的怪物
 	auto randVec = createRandomNums(4, totalNum - 4);
+	this->m_bulkMonsterNum = giantNum;
 	if (giantNum > totalNum - 4)
 	{
 		assert("too much giant monsters");
@@ -138,6 +139,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum , int totalNum )
 	{
 		pig = Pig::create();
 		pig->bindMap(m_map);
+		pig->getMonsterWeapon()->bindMap(m_map);
 		pig->bindMonsMgr(this);
 		this->addChild(pig);
 		m_monsterList.push_back(pig);
@@ -148,6 +150,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum , int totalNum )
 	{
 		duck = Duck::create();
 		duck->bindMap(m_map);
+		duck->getMonsterWeapon()->bindMap(m_map);
 		duck->bindMonsMgr(this);
 		this->addChild(duck);
 		m_monsterList.push_back(duck);
@@ -159,6 +162,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum , int totalNum )
 		slime = Slime::create();
 		this->addChild(slime);
 		slime->bindMap(m_map);
+		slime->getMonsterWeapon()->bindMap(m_map);
 		slime->bindMonsMgr(this);
 		m_monsterList.push_back(slime);
 		m_longMonsterList.push_back(slime);
@@ -169,6 +173,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum , int totalNum )
 		chiefOfTribe = ChiefOfTribe::create();
 		this->addChild(chiefOfTribe);
 		chiefOfTribe->bindMap(m_map);
+		chiefOfTribe->getMonsterWeapon()->bindMap(m_map);
 		chiefOfTribe->bindMonsMgr(this);
 		m_monsterList.push_back(chiefOfTribe);
 		m_longMonsterList.push_back(chiefOfTribe);
@@ -234,12 +239,22 @@ bool MonsterManager::resetAllMons()
 
 bool MonsterManager::isGameOver()
 {
+	if (!m_fIsInited)
+		return true;
 	return m_fGameOver;
 }
-
-
+void MonsterManager::setInited()
+{
+	m_fIsInited = 1;
+}
+bool MonsterManager::getInited()
+{
+	return m_fIsInited;
+}
 void MonsterManager::update(float dt)
 {
+	if (!m_fIsInited)
+		return;
 	Point playerPosition = m_player->getPosition() - getPosition();
 	//相对坐标的转化
 	//playerPosition = convertToNodeSpace(playerPosition);
@@ -286,7 +301,6 @@ void MonsterManager::update(float dt)
 				monsWeapon->attack(m_map->convertToWorldSpace(m_player->getPosition()));
 
 			
-
 			m_monsPosMap[blockOccupied] = 0;
 			//建立走位后的信息
 			

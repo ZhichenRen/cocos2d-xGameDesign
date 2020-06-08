@@ -393,3 +393,8 @@ void AdventureMapLayer::addBlue(Blue* blue)
 {
 	m_blueList.push_back(blue);
 }
+
+void AdventureMapLayer::addRed(Red* red)
+{
+	m_redList.push_back(red);
+}
