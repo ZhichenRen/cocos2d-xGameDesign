@@ -129,6 +129,7 @@ Bullet* LongRange::generateBullet(float degree, float scale_x, float scale_y)
 	Bullet* new_bullet = Bullet::create();
 	new_bullet->bindSprite(Sprite::create(m_bullet_picture.c_str()), scale_x, scale_y);
 	new_bullet->setInfo(m_range, m_bullet_damage);
+	new_bullet->setCritRate(m_crit_rate);
 	Point origin_pos = Point(getSprite()->getPositionX() + getSprite()->getBoundingBox().size.width * cos(degree / 180 * PI)
 		, getSprite()->getPositionY() + getSprite()->getBoundingBox().size.width * sin(degree / 180 * PI));
 	origin_pos = m_map->convertToMapSpace(convertToWorldSpace(origin_pos));

@@ -6,7 +6,7 @@
 
 USING_NS_CC;
 
-extern int coinNum;
+extern int coinNum = 0;
 
 Scene* TollgateScene::createScene()
 {
@@ -40,7 +40,7 @@ void TollgateScene::addPlayer()
 
 void TollgateScene::addLongRangeWeapon()
 {
-	m_player->setLongRange(RPG::create());
+	m_player->setLongRange(CandyGun::create());
 }
 
 void TollgateScene::loadController()
@@ -291,6 +291,10 @@ void TollgateScene::update(float dt)
 	//player bullet
 	for (auto bullet : player_bullet)
 	{
+		if (bullet->isUsed())
+		{
+			continue;
+		}
 		cocos2d::Point bullet_pos = bullet->getPosition();
 		if (m_map->isBarrier(bullet_pos))
 		{
@@ -321,7 +325,12 @@ void TollgateScene::update(float dt)
 			{
 				if (bullet->isCollideWith(monster))
 				{
-					monster->hit(bullet->getDamage(), bullet->getDegree());
+					int damage = bullet->getDamage();
+					if (CCRANDOM_0_1() < bullet->getCritRate())
+					{
+						damage *= 2;
+					}
+					monster->hit(damage, bullet->getDegree());
 					
 					if (typeid(*bullet) == typeid(ExplosiveBullet))
 					{

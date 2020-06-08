@@ -12,6 +12,7 @@ bool Shotgun::init()
 	m_attack_speed = 0.25f;
 	m_degree = 15.0f;
 	m_bullet_num_at_once = 4;
+	m_crit_rate = 0.1f;
 	m_bullet_picture = std::string("BasicBullet.png");
 	bindSprite(Sprite::create("Rifle&Shotgun.png"), 0.15f, 0.15f);
 	m_sprite->setAnchorPoint(Vec2(0.0f, 0.5f));
