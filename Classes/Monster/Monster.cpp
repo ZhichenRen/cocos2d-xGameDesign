@@ -121,7 +121,7 @@ void Monster::hit(int damage)
 	m_damageMsg->showWord(msg.c_str(), getPosition());
 }
 
-void Monster::hit(int damage, float flyingDegree)
+void Monster::hit(int damage, float flyingDegree, bool isCriticalStrike)
 {
 	this->m_Hp -= damage;
 	setMonsTaunted();
@@ -136,7 +136,13 @@ void Monster::hit(int damage, float flyingDegree)
 		
 		this->runAction(move_action);
 	}*/
-	std::string msg = '-' + std::to_string(damage);
+	if (isCriticalStrike)
+	{
+		std::string msg = std::to_string(damage) + '!';
+		m_damageMsg->showCritDmg(msg.c_str());
+		return;
+	}
+	std::string msg = std::to_string(damage);
 	m_damageMsg->showMonsDmg(msg.c_str());
 }
 

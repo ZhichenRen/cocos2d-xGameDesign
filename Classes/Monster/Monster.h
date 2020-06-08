@@ -24,7 +24,7 @@ public:
 	void hit(int damage);
 	void bindMap(AdventureMapLayer* map);
 	void bindMonsMgr(MonsterManager* monsMgr);
-	void hit(int damage, float flyingDegree);
+	void hit(int damage, float flyingDegree, bool isCriticalStrike);
 	void die();
 	void wander();
 	//void showWords();
@@ -40,13 +40,14 @@ public:
 	CC_SYNTHESIZE(float, m_fSpeed, MonsterSpeed);
 	CC_SYNTHESIZE(int, m_Hp, Hp);
 	CC_SYNTHESIZE(std::string, m_resTrack, ResTrack);
-	CC_SYNTHESIZE(bool, m_isAlive);
+	
 	CC_SYNTHESIZE(Weapon*, m_weapon, MonsterWeapon);
 protected:
 	AdventureMapLayer* m_map;
 	MonsterManager* m_monsMgr;
 	bool m_fIsFacingRight = false;
 	bool m_fIsTaunted = false;
+	bool m_isAlive = false;
 	FlowWord* m_damageMsg;
 	Sprite* m_preRec;
 };

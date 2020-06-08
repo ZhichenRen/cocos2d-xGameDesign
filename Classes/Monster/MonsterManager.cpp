@@ -99,7 +99,7 @@ void MonsterManager::createMonsterPos()
 		hidePreRec();
 	}
 	);
-	auto createAction = Sequence::create(DelayTime::create(2.0f), callback2,NULL);
+	auto createAction = Sequence::create(DelayTime::create(2.0f), callback2, NULL);
 	runAction(createAction);
 }
 
@@ -287,7 +287,7 @@ void MonsterManager::setPosMap(Vec2 pos, bool flag)
 	m_monsPosMap[pos] = flag;
 }
 
-bool MonsterManager::isPosOccupied(Vec2 pos)
+bool MonsterManager::isPosOccupied(Vec2 pos) 
 {
 	return m_monsPosMap[pos];
 }

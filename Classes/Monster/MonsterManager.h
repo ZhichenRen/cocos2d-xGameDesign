@@ -20,8 +20,7 @@ public:
 	void bindMap(AdventureMapLayer* map);
 	void bindPlayer(Entity* player);
 	void createRandomPos();
-	void showPreRec();
-	void hidePreRec();
+	
 	void reviveAllMonsters();
 	virtual bool init();
 	virtual void update(float dt);
@@ -34,14 +33,18 @@ public:
 	std::vector<Monster*> getMonster()const;
 	std::map<Vec2, bool> getMonsPosMap()const { return m_monsPosMap; }
 	void setPosMap(Vec2 pos, bool flag);
-	bool isPosOccupied(Vec2 pos);
+	
 
 	void setCurRoom(Vec2 curRoom);
 	Vec2 getCurRoom();
-
+	bool isPosOccupied(Vec2 pos) ;
 	void markRoomVisited(Vec2 room);
 	bool isRoomVisited(Vec2 room);
 private:
+
+	void showPreRec();
+	void hidePreRec();
+	
 	std::vector<Monster*> m_monsterList;
 	std::vector<Bullet*> m_monsterBullet;
 	std::vector<Monster*> m_shortMonsterList;

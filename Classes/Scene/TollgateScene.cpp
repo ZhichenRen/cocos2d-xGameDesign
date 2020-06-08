@@ -320,7 +320,7 @@ void TollgateScene::update(float dt)
 			{
 				if (bullet->isCollideWith(monster))
 				{
-					monster->hit(bullet->getDamage(), bullet->getDegree());
+					monster->hit(bullet->getDamage(), bullet->getDegree(), 1);
 					
 					if (typeid(*bullet) == typeid(ExplosiveBullet))
 					{
@@ -333,7 +333,7 @@ void TollgateScene::update(float dt)
 								cocos2d::Point explosive_origin_point = m_map->convertToWorldSpace(explosive_bullet->getPosition());
 								if (unlucky_monster->getBoundingBox().intersectsCircle(explosive_origin_point, explosive_bullet->getExplosionRange()))
 								{
-									unlucky_monster->hit(explosive_bullet->getExplosionDamage(), explosive_bullet->getDegree());
+									unlucky_monster->hit(explosive_bullet->getExplosionDamage(), explosive_bullet->getDegree(), 1);
 								}
 							}
 						}
