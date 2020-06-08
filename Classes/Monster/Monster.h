@@ -1,9 +1,9 @@
 #pragma once
 #ifndef __Monster_H__
 #define __Monster_H__
-#define BLUERATE 0.3
-#define REDRATE 0.05
-#define BLUEMEDICINERATE 0.05
+#define BLUERATE 0.3f
+#define REDRATE 0.05f
+#define BLUEMEDICINERATE 1.0f
 #include "Entity/Entity.h"
 #include "cocos2d.h"
 #include "Entity\Coin\Coin.h"
