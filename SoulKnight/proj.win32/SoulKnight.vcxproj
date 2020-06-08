@@ -172,6 +172,9 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClCompile Include="..\..\Classes\Entity\Weapons\RPG.cpp" />
     <ClCompile Include="..\..\Classes\Entity\Weapons\Shotgun.cpp" />
     <ClCompile Include="..\..\Classes\Entity\Weapons\Weapon.cpp" />
+    <ClCompile Include="..\..\Classes\FlowWord\FlowWord.cpp" />
+    <ClCompile Include="..\..\Classes\Monster\ChiefOfTribe.cpp" />
+    <ClCompile Include="..\..\Classes\Monster\Duck.cpp" />
     <ClCompile Include="..\..\Classes\Monster\Monster.cpp" />
     <ClCompile Include="..\..\Classes\Monster\MonsterManager.cpp" />
     <ClCompile Include="..\..\Classes\Monster\Pig.cpp" />
@@ -208,6 +211,9 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\..\Classes\Entity\Weapons\RPG.h" />
     <ClInclude Include="..\..\Classes\Entity\Weapons\Shotgun.h" />
     <ClInclude Include="..\..\Classes\Entity\Weapons\Weapon.h" />
+    <ClInclude Include="..\..\Classes\FlowWord\FlowWord.h" />
+    <ClInclude Include="..\..\Classes\Monster\ChiefOfTribe.h" />
+    <ClInclude Include="..\..\Classes\Monster\Duck.h" />
     <ClInclude Include="..\..\Classes\Monster\Monster.h" />
     <ClInclude Include="..\..\Classes\Monster\MonsterManager.h" />
     <ClInclude Include="..\..\Classes\Monster\Pig.h" />

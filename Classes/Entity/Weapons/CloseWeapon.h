@@ -14,6 +14,7 @@ public:
 	virtual void attack(Point pos);
 	bool isCollideWith(Entity* entity);
 	bool isAttack()const;
+	float getCritRate()const;
 protected:
 	float m_attack_speed;
 	int m_damage;

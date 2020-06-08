@@ -36,6 +36,11 @@ void Weapon::bindMap(AdventureMapLayer* map)
 	m_map = map;
 }
 
+void Weapon::setCritRate(float crit_rate)
+{
+	m_crit_rate = crit_rate;
+}
+
 Weapon::~Weapon()
 {
 
