@@ -16,7 +16,7 @@ bool RPG::init()
 	m_bullet_speed = 300;
 	m_attack_speed = 0.3f;
 	m_explosion_damage = 30;
-	m_explosion_range = 40;
+	m_explosion_range = 30;
 	m_bullet_picture = std::string("RPG.png");
 	bindSprite(Sprite::create("Fist_of_Heaven.png"), 0.15f, 0.15f);
 	m_sprite->setAnchorPoint(Vec2(0.0f, 0.5f));
