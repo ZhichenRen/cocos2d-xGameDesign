@@ -20,7 +20,7 @@ public:
 	void bindMap(AdventureMapLayer* map);
 	void bindPlayer(Entity* player);
 	void createRandomPos();
-	
+	void createMonstersWithGiantNum(int giantNum);
 	void reviveAllMonsters();
 	virtual bool init();
 	virtual void update(float dt);
@@ -37,14 +37,15 @@ public:
 
 	void setCurRoom(Vec2 curRoom);
 	Vec2 getCurRoom();
-	bool isPosOccupied(Vec2 pos) ;
+	bool isPosOccupied(Vec2 pos);
 	void markRoomVisited(Vec2 room);
 	bool isRoomVisited(Vec2 room);
+
 private:
 
 	void showPreRec();
 	void hidePreRec();
-	
+	std::vector<int> createRandomNums(int numCnt, int sum);
 	std::vector<Monster*> m_monsterList;
 	std::vector<Bullet*> m_monsterBullet;
 	std::vector<Monster*> m_shortMonsterList;
@@ -60,7 +61,7 @@ private:
 	const int chiefOfTribeNum = 2;
 	const int duckNum = 2;
 	const int m_allCheckPoint = 3;
-
+	const int totalMonsterNum = 10;
 	int m_curCheckPoint;
 	int m_dirs[4][2] = { {0,1}, {1,0}, {0,-1},{-1,0} };
 	int m_deathMonsNum;

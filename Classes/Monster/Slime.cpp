@@ -19,9 +19,16 @@ bool Slime::init()
 
 void Slime::resetPropoties()
 {
+	m_isAlive = true;
 	show();
 	setHp(this->m_initHp);
 	m_fIsTaunted = 0;
-	m_isAlive = true;
+	if (m_isBulkUp)
+	{
+		setContentSize(Size(getContentSize().width / 2, getContentSize().height / 2));
+		getSprite()->setContentSize(Size(getSprite()->getContentSize().width / 2, getSprite()->getContentSize().height / 2));
+		m_isBulkUp = 0;
+		m_fSpeed /= 1.3;
+	}
 }
 

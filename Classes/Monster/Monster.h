@@ -34,7 +34,7 @@ public:
 	bool isTaunted();
 	bool setTaunted(bool flag);
 	bool mySetPosition(Vec2 target);
-
+	void bulkUp();
 	virtual void resetPropoties();
 	
 	CC_SYNTHESIZE(float, m_fSpeed, MonsterSpeed);
@@ -48,7 +48,10 @@ protected:
 	bool m_fIsFacingRight = false;
 	bool m_fIsTaunted = false;
 	bool m_isAlive = false;
+	bool m_isBulkUp = false;
 	FlowWord* m_damageMsg;
-	Sprite* m_preRec;
+	Sprite* m_preRec; 
+private:
+	int m_initHp;
 };
 #endif // !__Monster_H__

@@ -5,7 +5,7 @@
 void MonsterManager::bindMap(AdventureMapLayer* map)
 {
 	m_map = map;
-	createMonsters();
+	createMonstersWithGiantNum(1);
 	createMonsterPos();
 	for (auto monster : m_monsterList)
 		monster->getMonsterWeapon()->bindMap(map);
@@ -139,6 +139,87 @@ void MonsterManager::createRandomPos() {
 	}
 }
 
+void MonsterManager::createMonstersWithGiantNum(int gialtNum)
+{
+	//gialtNum为0：没有巨大化的怪物
+	//gialtNum为1以上：有gialtNum个巨大化的怪物
+	auto randVec = createRandomNums(4, 10);
+	if (gialtNum > 10)
+	{
+		assert("too much giant monsters");
+	}
+	Pig* pig = NULL;
+	Slime* slime = NULL;
+	Sprite* sprite = NULL;
+	ChiefOfTribe* chiefOfTribe = NULL;
+	Duck* duck = NULL;
+	//int k = 0;
+	for (int i = 0; i < randVec[0]; i++)
+	{
+		pig = Pig::create();
+		pig->bindMap(m_map);
+		pig->bindMonsMgr(this);
+		this->addChild(pig);
+		m_monsterList.push_back(pig);
+		m_shortMonsterList.push_back(pig);
+	}
+
+	for (int i = 0; i < randVec[1]; i++)
+	{
+		duck = Duck::create();
+		duck->bindMap(m_map);
+		duck->bindMonsMgr(this);
+		this->addChild(duck);
+		m_monsterList.push_back(duck);
+		m_shortMonsterList.push_back(duck);
+	}
+
+	for (int i = 0; i < randVec[2]; i++)
+	{
+		slime = Slime::create();
+		this->addChild(slime);
+		slime->bindMap(m_map);
+		slime->bindMonsMgr(this);
+		m_monsterList.push_back(slime);
+		m_longMonsterList.push_back(slime);
+	}
+
+	for (int i = 0; i < randVec[3]; i++)
+	{
+		chiefOfTribe = ChiefOfTribe::create();
+		this->addChild(chiefOfTribe);
+		chiefOfTribe->bindMap(m_map);
+		chiefOfTribe->bindMonsMgr(this);
+		m_monsterList.push_back(chiefOfTribe);
+		m_longMonsterList.push_back(chiefOfTribe);
+	}
+
+	if (gialtNum >= 1)
+	{
+		int totalBulkMonster = gialtNum;
+		std::set<int> bulkMap;
+		int randMons;
+		int monsNum = m_monsterList.size();
+		while (1)
+		{
+			randMons = rand() % monsNum;
+			if (bulkMap.count(randMons))
+			{
+				continue;
+			}
+			bulkMap.insert(randMons);
+			
+			m_monsterList[randMons]->bulkUp();
+
+			gialtNum--;
+			if (gialtNum == 0)
+			{
+				break;
+			}
+		}
+	}
+}
+
 void MonsterManager::showPreRec()
 {
 	//auto fadein = FadeIn::create(0.5f);
@@ -161,6 +242,21 @@ void MonsterManager::hidePreRec()
 		monster->getSprite()->setVisible(true);
 		monster->show();
 	}
+}
+
+std::vector<int> MonsterManager::createRandomNums(int numCnt, int sum)
+{
+	std::vector<int> randomVec;
+	int randNum;
+	numCnt -= 1;
+	while (numCnt--)
+	{
+		randNum = rand() % sum;
+		randomVec.push_back(randNum);
+		sum -= randNum;
+	}
+	randomVec.push_back(sum);
+	return randomVec;
 }
 
 bool MonsterManager::resetAllMons()

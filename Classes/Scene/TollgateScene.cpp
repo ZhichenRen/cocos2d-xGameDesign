@@ -6,7 +6,7 @@
 
 USING_NS_CC;
 
-extern int coinNum = 0;
+extern int coinNum;
 
 Scene* TollgateScene::createScene()
 {
@@ -327,16 +327,16 @@ void TollgateScene::update(float dt)
 			{
 				if (bullet->isCollideWith(monster))
 				{
-<<<<<<< HEAD
-					monster->hit(bullet->getDamage(), bullet->getDegree(), 1);
-=======
+
 					int damage = bullet->getDamage();
 					if (CCRANDOM_0_1() < bullet->getCritRate())
 					{
 						damage *= 2;
+						monster->hit(damage, bullet->getDegree(), 1);
 					}
-					monster->hit(damage, bullet->getDegree());
->>>>>>> 50a315460dff5642e70dcd8e21cdcd60fa16ec12
+					else
+						monster->hit(damage, bullet->getDegree(), 0);
+
 					
 					if (typeid(*bullet) == typeid(ExplosiveBullet))
 					{

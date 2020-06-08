@@ -92,10 +92,20 @@ bool Monster::mySetPosition(Vec2 target)
 	return true;
 }
 
+void Monster::bulkUp()
+{
+	m_fSpeed *= 1.3;
+	setContentSize(Size(getContentSize().width * 2, getContentSize().height * 2));
+	getSprite()->setContentSize(Size( getSprite()->getContentSize().width * 2, getSprite()->getContentSize().height * 2));
+	m_Hp *= 2.0;
+	m_isBulkUp = true;
+}
+
 void Monster::resetPropoties()
 {
-	m_isAlive = true;
 }
+
+
 
 
 

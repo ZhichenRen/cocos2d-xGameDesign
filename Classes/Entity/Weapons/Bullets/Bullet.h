@@ -31,11 +31,9 @@ protected:
 	int m_bullet_range;
 	int m_bullet_damage;
 	bool m_is_used;
-<<<<<<< HEAD
-	//float m_degree;
-=======
+
 	float m_crit_rate;
->>>>>>> 50a315460dff5642e70dcd8e21cdcd60fa16ec12
+
 	Point m_origin_pos;//in map coordinate
 };
 #endif
