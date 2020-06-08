@@ -118,7 +118,7 @@ void Monster::hit(int damage)
 	setMonsTaunted();
 	this->m_Hp -= damage;
 	std::string msg = '-' + std::to_string(damage) + "hp";
-	m_damageMsg->showWord(msg.c_str(), getPosition());
+	m_damageMsg->showMonsDmg(msg.c_str());
 }
 
 void Monster::hit(int damage, float flyingDegree, bool isCriticalStrike)

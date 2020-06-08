@@ -37,6 +37,7 @@ void FlowWord::showMonsDmg(const char* text)
 	m_message->setString(text);
 	m_message->setPosition(getPosition()+ccp(0,40));
 	m_message->setVisible(true);
+	m_message->stopAllActions();
 	auto scaleUp = ScaleBy::create(0.2f, 1.2);
 	auto scaleDown = ScaleTo::create(0.2f, 1);
 
@@ -58,8 +59,9 @@ void FlowWord::showCritDmg(const char* text)
 	m_message->setString(text);
 	m_message->setPosition(getPosition() + ccp(0, 40));
 	m_message->setVisible(true);
+	//auto rewindToStdSize = ScaleTo::create(0.2f, 1);
 	auto scaleUp = ScaleBy::create(0.2f, 2.0);
-	auto scaleDown = ScaleTo::create(0.5f, 1);
+	auto scaleDown = ScaleTo::create(0.3f, 1);
 
 	auto callBack = CallFunc::create
 	(
