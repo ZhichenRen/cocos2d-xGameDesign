@@ -1,7 +1,11 @@
 #include "Monster\Monster.h"
 #include "Monster/MonsterManager.h"
+#include <string>
 Monster::Monster() 
 {
+	m_preRec = Sprite::create("PreRect.png");
+	this->addChild(m_preRec, 1, "preRect");
+	//this->getChildByName("preRect")->setVisible(false);
 	m_isAlive = false;
 }
 
@@ -19,7 +23,11 @@ bool Monster::init()
 void Monster::show()
 {
 	if (getSprite())
-		setVisible(true);
+	{
+		m_sprite->setVisible(true);
+		m_sprite->setOpacity(255);
+		//m_weapon->setVisible(false);
+	}
 	m_isAlive = true;
 }
 
@@ -27,7 +35,8 @@ void Monster::hide()
 {
 	if (getSprite() != NULL)
 	{
-		setVisible(false);
+		m_sprite->setVisible(false);
+		m_weapon->setVisible(false);
 		m_isAlive = false;
 	}
 }
@@ -83,23 +92,31 @@ bool Monster::mySetPosition(Vec2 target)
 	return true;
 }
 
+void Monster::bulkUp()
+{
+	m_fSpeed *= 1.3;
+	setContentSize(Size(getContentSize().width * 2, getContentSize().height * 2));
+	getSprite()->setContentSize(Size( getSprite()->getContentSize().width * 2, getSprite()->getContentSize().height * 2));
+	m_Hp *= 2.0;
+	m_isBulkUp = true;
+}
+
 void Monster::resetPropoties()
 {
-	m_isAlive = true;
 }
 
 
 
 
 
-void Monster::hit(int damage)
-{
-	this->m_Hp -= damage;
-}
+
+
+
 
 void Monster::bindMap(AdventureMapLayer* map)
 {
 	m_map = map;
+
 }
 
 void Monster::bindMonsMgr(MonsterManager* monsMgr)
@@ -107,14 +124,25 @@ void Monster::bindMonsMgr(MonsterManager* monsMgr)
 	m_monsMgr = monsMgr; 
 }
 
-void Monster::hit(int damage, float flyingDegree)
+void Monster::hit(int damage)
+{
+	setMonsTaunted();
+	this->m_Hp -= damage;
+	std::string msg = '-' + std::to_string(damage) + "hp";
+	m_damageMsg->showMonsDmg(msg.c_str(), this->getContentSize().height / 2);
+}
+
+void Monster::hit(int damage, float flyingDegree, bool isCriticalStrike)
 {
 	this->m_Hp -= damage;
-	this->m_fIsTaunted = 1;
+	setMonsTaunted();
 	this->stopAllActions();
 	auto curPos = getPosition();
-	auto vecToMove = Vec2( 3* cos(flyingDegree / 180 * 3.14), 3* sin(flyingDegree / 180 * 3.14));
+	auto vecToMove = Vec2( 5* cos(flyingDegree / 180 * 3.14), 5* sin(flyingDegree / 180 * 3.14));
+	if (m_isBulkUp)
+		vecToMove *= 3;
 	auto targetPos = curPos + vecToMove;
+	
 	this->mySetPosition(targetPos);
 	/*if (!m_map->isBarrier(m_map->convertToMapSpace(convertToWorldSpace(targetPos))))
 	{
@@ -122,23 +150,52 @@ void Monster::hit(int damage, float flyingDegree)
 		
 		this->runAction(move_action);
 	}*/
-	
+	if (isCriticalStrike)
+	{
+		std::string msg = std::to_string(damage) + '!';
+		m_damageMsg->showCritDmg(msg.c_str(), this->getContentSize().height / 2);
+		return;
+	}
+	std::string msg = std::to_string(damage);
+	m_damageMsg->showMonsDmg(msg.c_str(), this->getContentSize().height / 2);
 }
+
 
 
 void Monster::die()
 {
-	hide();
+	m_isAlive = false;
+	auto fade = FadeTo::create(0.5f, 30);//消失至某一透明度
+	this->getSprite()->runAction(fade);
 	auto coin = Coin::create();
 	//this->getSprite()->setVisible(false);//怪物消失
-	auto ranF = CCRANDOM_0_1();
-	if (ranF < BLUERATE)
+	auto ranF1 = CCRANDOM_0_1();
+	if (ranF1 < BLUERATE)
 	{
 		auto blue = Blue::create();
 		blue->setPosition(this->getPosition() + m_monsMgr->getPosition());
 		m_map->addChild(blue,2);
 		blue->setRandomPosition();
 		m_map->addBlue(blue);
+	}
+	auto ranF2 = CCRANDOM_0_1();
+	if (ranF2 < REDRATE)
+	{
+		auto red = Red::create();
+		red->setPosition(this->getPosition() + m_monsMgr->getPosition());
+		m_map->addChild(red, 2);
+		red->setRandomPosition();
+		m_map->addRed(red);
+	}
+	coin->setPosition(this->getPosition() + m_monsMgr->getPosition());
+	auto ranF3 = CCRANDOM_0_1();
+	if (ranF2 < BLUEMEDICINERATE)
+	{
+		auto blueMedicine = BlueMedicine::create();
+		blueMedicine->setPosition(this->getPosition() + m_monsMgr->getPosition());
+		m_map->addChild(blueMedicine, 2);
+		blueMedicine->setRandomPosition();
+		m_map->addBlueMedicine(blueMedicine);
 	}
 	coin->setPosition(this->getPosition() + m_monsMgr->getPosition());
 	m_map->addChild(coin,1);
@@ -151,6 +208,16 @@ void Monster::wander()
 	auto tarPos = m_fIsFacingRight ? ccp(this->getMonsterSpeed(), 0) + curPos : -ccp(this->getMonsterSpeed(), 0) + curPos;
 	
 	mySetPosition(tarPos);
+}
+
+
+
+void Monster::setMonsTaunted()
+{
+	if (isTaunted())
+		return;
+	m_fIsTaunted = 1;
+	m_damageMsg->showMonsTaunted();
 }
 
 

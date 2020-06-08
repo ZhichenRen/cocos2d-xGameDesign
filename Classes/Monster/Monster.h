@@ -1,13 +1,19 @@
 #pragma once
 #ifndef __Monster_H__
 #define __Monster_H__
-#define BLUERATE 0.3
-
+#define BLUERATE 0.3f
+#define REDRATE 0.05f
+#define BLUEMEDICINERATE 1.0f
 #include "Entity/Entity.h"
 #include "cocos2d.h"
 #include "Entity\Coin\Coin.h"
 #include "Entity\Weapons\MonsterGun.h"
 #include "Entity/Blue/Blue.h"
+#include "Entity/Red/Red.h"
+#include "FlowWord/FlowWord.h"
+#include "Entity/BlueMedicine/BlueMedicine.h"
+
+
 USING_NS_CC;
 class MonsterManager;
 class Monster :public Entity {
@@ -22,26 +28,33 @@ public:
 	void hit(int damage);
 	void bindMap(AdventureMapLayer* map);
 	void bindMonsMgr(MonsterManager* monsMgr);
-	void hit(int damage, float flyingDegree);
+	void hit(int damage, float flyingDegree, bool isCriticalStrike);
 	void die();
 	void wander();
-
+	//void showWords();
+	//void dieWithNothing();
+	void setMonsTaunted();
 	bool isAlive();
 	bool isTaunted();
 	bool setTaunted(bool flag);
 	bool mySetPosition(Vec2 target);
-
+	void bulkUp();
 	virtual void resetPropoties();
-	
+
 	CC_SYNTHESIZE(float, m_fSpeed, MonsterSpeed);
 	CC_SYNTHESIZE(int, m_Hp, Hp);
 	CC_SYNTHESIZE(std::string, m_resTrack, ResTrack);
-	CC_SYNTHESIZE(bool, m_isAlive);
+	
 	CC_SYNTHESIZE(Weapon*, m_weapon, MonsterWeapon);
 protected:
 	AdventureMapLayer* m_map;
 	MonsterManager* m_monsMgr;
 	bool m_fIsFacingRight = false;
 	bool m_fIsTaunted = false;
+	bool m_isAlive = false;
+	bool m_isBulkUp = false;
+	FlowWord* m_damageMsg;
+	Sprite* m_preRec; 
+
 };
 #endif // !__Monster_H__

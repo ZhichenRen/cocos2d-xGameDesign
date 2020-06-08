@@ -16,6 +16,8 @@
 
 #include "Entity/Coin/Coin.h"
 #include "Entity/Blue/Blue.h"
+#include "Entity/Red/Red.h"
+#include "Entity/BlueMedicine/BlueMedicine.h"
 
 class AdventureMapLayer : public cocos2d::Layer
 {
@@ -38,6 +40,8 @@ private:
 	std::vector<std::pair<cocos2d::Vec2, cocos2d::Vec2>>m_roadPairs;
 	std::vector<Coin*> m_coinList;
 	std::vector<Blue*> m_blueList;
+	std::vector<Red*> m_redList;
+	std::vector<BlueMedicine*> m_blueMedicineList;
 public:
 	inline cocos2d::TMXTiledMap* getMap() { return m_tileMap; }
 	inline cocos2d::TMXTiledMap* getMiniMap() { return m_miniMap; }
@@ -61,7 +65,8 @@ public:
 	static void switchGate(cocos2d::TMXLayer* wall, cocos2d::TMXLayer* barrier, int roomNum, int dir, bool isClosed);
 	void addCoin(Coin* coin);
 	void addBlue(Blue* blue);
-
+	void addRed(Red* red); 
+	void addBlueMedicine(BlueMedicine* blueMedicine);
 	cocos2d::Vec2 tileCoordFromPosition(cocos2d::Vec2 position);
 	cocos2d::Vec2 roomCoordFromPosition(cocos2d::Vec2 position);
 

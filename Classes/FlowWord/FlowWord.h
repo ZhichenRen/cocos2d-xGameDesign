@@ -10,6 +10,9 @@ public:
 	CREATE_FUNC(FlowWord);
 	virtual bool init();
 	void showWord(const char* text, Point pos);
+	void showMonsDmg(const char* text, float ySize);
+	void showCritDmg(const char* text, float ySize);
+	void showMonsTaunted();
 private:
 	Label* m_message;
 };

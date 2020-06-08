@@ -6,7 +6,7 @@
 
 USING_NS_CC;
 
-extern int coinNum = 0;
+extern int coinNum;
 
 Scene* TollgateScene::createScene()
 {
@@ -103,33 +103,44 @@ const int coord[25][2] = {
 		{11,134},{52,134},{93,134},{134,134},{175,134},
 		{11,175},{52,175},{93,175},{134,175},{175,175} };//25个房间的中心坐标
 
-void TollgateScene::loadMonstersInNewRoom()
+void TollgateScene::loadMonstersInNewRoom(int giantNum = -1)
 {
+	
 	auto roomCoord = m_monsterMgr->getCurRoom();
 	m_monsterMgr->markRoomVisited(roomCoord);
 	auto midPoint = ccp(coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][0],
 		coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][1]);
 	midPoint.y = 186 - midPoint.y;
 	auto LUPoint = (midPoint + ccp(-10,- 10)) * 32;
-	log("current room is%f, %f\n", roomCoord.x, roomCoord.y);
-	log("LUPoint  is%f, %f\n", LUPoint.x, LUPoint.y);
 	m_monsterMgr->setPosition(LUPoint);
-	
+
+	if (giantNum != -1)
+		m_monsterMgr->setBulkMonsterNum(giantNum);
+	if (!m_monsterMgr->getInited())
+	{
+		m_monsterMgr->createMonstersWithGiantNum();
+		m_monsterMgr->createMonsterPos();
+		m_monsterMgr->setInited();
+		return;
+	}
 	m_monsterMgr->reviveAllMonsters();
 }
+
+
 void TollgateScene::loadMonsters()
 {
 	auto playerPos = m_player->getPosition();
 	auto roomCoord = m_map->roomCoordFromPosition(playerPos);
-	
+	//绑定房间
 	m_monsterMgr = MonsterManager::create();
-	m_monsterMgr->markRoomVisited(roomCoord);
-	m_monsterMgr->setCurRoom(roomCoord);
+	//设置位置
 	auto midPoint = ccp( coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][0] ,
 		coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][1]);
 	midPoint.y = 186 - midPoint.y;
 	auto LUPoint = (midPoint + ccp(-10, -10)) * 32;
 	m_monsterMgr->setPosition(LUPoint);
+
+	//初始化工作
 	m_monsterMgr->bindMap(m_map);
 	m_monsterMgr->bindPlayer(static_cast<Entity*>(this->m_player));
 	m_map->addChild(m_monsterMgr, 2);
@@ -245,11 +256,12 @@ void TollgateScene::update(float dt)
 
 	auto roomCoord = m_map->roomCoordFromPosition(playerPos);//鎴块棿鍧愭爣
 	auto roomNum = roomCoord.x * 5 + roomCoord.y;//鎴块棿搴忓彿
+
 	if (m_map->isMonsterRoom(roomCoord)	//首先它得是个怪物房间
 		&&!m_monsterMgr->isRoomVisited(roomCoord))//其次它没有被到访过
 	{
 		m_monsterMgr->setCurRoom(roomCoord);
-		loadMonstersInNewRoom();
+		loadMonstersInNewRoom(2);
 	}
 	Vec2 dir[4] = { {0,1},{0,-1},{1,0},{-1,0} };//鍥涗釜鏂瑰悜
 
@@ -325,12 +337,16 @@ void TollgateScene::update(float dt)
 			{
 				if (bullet->isCollideWith(monster))
 				{
+
 					int damage = bullet->getDamage();
 					if (CCRANDOM_0_1() < bullet->getCritRate())
 					{
 						damage *= 2;
+						monster->hit(damage, bullet->getDegree(), 1);
 					}
-					monster->hit(damage, bullet->getDegree());
+					else
+						monster->hit(damage, bullet->getDegree(), 0);
+
 					
 					if (typeid(*bullet) == typeid(ExplosiveBullet))
 					{
@@ -346,7 +362,7 @@ void TollgateScene::update(float dt)
 								cocos2d::Point explosive_origin_point = m_map->convertToWorldSpace(explosive_bullet->getPosition());
 								if (unlucky_monster->getBoundingBox().intersectsCircle(explosive_origin_point, explosive_bullet->getExplosionRange()))
 								{
-									unlucky_monster->hit(explosive_bullet->getExplosionDamage(), explosive_bullet->getDegree());
+									unlucky_monster->hit(explosive_bullet->getExplosionDamage(), explosive_bullet->getDegree(), 1);
 								}
 							}
 						}

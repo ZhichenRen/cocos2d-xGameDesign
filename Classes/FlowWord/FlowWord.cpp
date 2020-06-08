@@ -31,3 +31,67 @@ void FlowWord::showWord(const char* text, Point pos)
 
 	this->runAction(actions);
 }
+
+void FlowWord::showMonsDmg(const char* text, float ySize)
+{
+	m_message->setString(text);
+	m_message->setPosition(getPosition()+ccp(0, 5 + ySize));
+	m_message->setVisible(true);
+	m_message->stopAllActions();
+	auto scaleUp = ScaleBy::create(0.2f, 1.2);
+	auto scaleDown = ScaleTo::create(0.2f, 1);
+
+	auto callBack = CallFunc::create
+	(
+		[&]()
+	{
+		m_message->setVisible(false);
+		//m_message->removeFromParentAndCleanup(true);
+	}
+	);
+	auto actions = Sequence::create(scaleUp, scaleDown, callBack, NULL);
+
+	this->runAction(actions);
+}
+
+void FlowWord::showCritDmg(const char* text, float ySize)
+{
+	m_message->setString(text);
+	m_message->setPosition(getPosition() + ccp(0, 5 + ySize));
+	m_message->setVisible(true);
+	//auto rewindToStdSize = ScaleTo::create(0.2f, 1);
+	auto scaleUp = ScaleBy::create(0.2f, 2.0);
+	auto scaleDown = ScaleTo::create(0.3f, 1);
+
+	auto callBack = CallFunc::create
+	(
+		[&]()
+	{
+		m_message->setVisible(false);
+		//m_message->removeFromParentAndCleanup(true);
+	}
+	);
+	auto actions = Sequence::create(scaleUp, scaleDown, callBack, NULL);
+
+	this->runAction(actions);
+}
+
+void FlowWord::showMonsTaunted()
+{
+	m_message->setString("!!");
+	m_message->setPosition(getPosition() + ccp(0, 40 ));
+	m_message->setVisible(true);
+	auto scaleUp = ScaleBy::create(0.2f, 2.0);
+	auto scaleDown = ScaleTo::create(0.6f, 1);
+	auto callBack = CallFunc::create
+	(
+		[&]()
+	{
+		m_message->setVisible(false);
+		//m_message->removeFromParentAndCleanup(true);
+	}
+	);
+	auto actions = Sequence::create(scaleUp, scaleDown, callBack, NULL);
+	this->runAction(actions);
+}
+
