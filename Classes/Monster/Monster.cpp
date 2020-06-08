@@ -188,7 +188,16 @@ void Monster::die()
 		m_map->addRed(red);
 	}
 	coin->setPosition(this->getPosition() + m_monsMgr->getPosition());
-	
+	auto ranF3 = CCRANDOM_0_1();
+	if (ranF2 < BLUEMEDICINERATE)
+	{
+		auto blueMedicine = BlueMedicine::create();
+		blueMedicine->setPosition(this->getPosition() + m_monsMgr->getPosition());
+		m_map->addChild(blueMedicine, 2);
+		blueMedicine->setRandomPosition();
+		m_map->addBlueMedicine(blueMedicine);
+	}
+	coin->setPosition(this->getPosition() + m_monsMgr->getPosition());
 	m_map->addChild(coin,1);
 	m_map->addCoin(coin);
 }
