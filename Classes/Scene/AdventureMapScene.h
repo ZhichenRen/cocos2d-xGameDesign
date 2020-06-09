@@ -70,7 +70,6 @@ public:
 	void addCoin(Coin* coin);
 	void addBlue(Blue* blue);
 	void addRed(Red* red);
-	void addRed(Red* red); 
 	void addBlueMedicine(BlueMedicine* blueMedicine);
 	cocos2d::Vec2 tileCoordFromPosition(cocos2d::Vec2 position);
 	cocos2d::Vec2 roomCoordFromPosition(cocos2d::Vec2 position);
