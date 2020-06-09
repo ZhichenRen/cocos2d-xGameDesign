@@ -1,6 +1,7 @@
 #include "Scene/AdventureMapScene.h"
 #include "Bonus/Shop.h"
 #include "Bonus/Chest.h"
+#include "GameData.h"
 
 #define EMPTY_TILE 0
 
@@ -14,15 +15,6 @@
 #define ROAD_TILE 56
 
 USING_NS_CC;
-
-
-
-const int coord[25][2] = {
-		{11,11},{52,11},{93,11},{134,11},{175,11},
-		{11,52},{52,52},{93,52},{134,52},{175,52},
-		{11,93},{52,93},{93,93},{134,93},{175,93},
-		{11,134},{52,134},{93,134},{134,134},{175,134},
-		{11,175},{52,175},{93,175},{134,175},{175,175} };//25个房间的中心坐标
 
 
 bool onMap(int x, int y)
@@ -138,11 +130,11 @@ void AdventureMapLayer::createRandomMap()
 		int z = 5 * x + y;
 		if (m_rooms[Vec2(x, y)] == ENEMY)
 		{
-			buildRoom(Vec2(coord[z][0], coord[z][1]),true);
+			buildRoom(GameData::getCoord()[z], true);
 		}
 		else
 		{
-			buildRoom(Vec2(coord[z][0], coord[z][1]),false);
+			buildRoom(GameData::getCoord()[z],false);
 		}
 	}
 	m_roadPairs = roadPairs;
@@ -196,8 +188,9 @@ void AdventureMapLayer::buildRoad(std::pair<cocos2d::Vec2, cocos2d::Vec2> roadPa
 	int roomCoord2 = 5 * room2.x + room2.y;
 	if (room1.x == room2.x)//房间左右相连
 	{
-		int midTileCoordX = (coord[roomCoord1][0] + coord[roomCoord2][0]) / 2;//房间坐标转换为瓦片坐标
-		int tileCoordY = coord[roomCoord1][1];
+		
+		int midTileCoordX = (GameData::getCoord()[roomCoord1].x + GameData::getCoord()[roomCoord2].x) / 2;
+		int tileCoordY = GameData::getCoord()[roomCoord1].y;
 		for (int i = midTileCoordX - 9; i <= midTileCoordX + 10; i++)//修路 修墙
 		{
 			m_wall->setTileGID(WALL_TILE_UP, Vec2(i, tileCoordY + 3));//修上墙
@@ -233,8 +226,8 @@ void AdventureMapLayer::buildRoad(std::pair<cocos2d::Vec2, cocos2d::Vec2> roadPa
 	}
 	else//房间上下相连
 	{
-		int tileCoordX = coord[roomCoord1][0];//房间坐标转换为瓦片坐标
-		int midTileCoordY = (coord[roomCoord1][1] + coord[roomCoord2][1]) / 2;
+		int tileCoordX = GameData::getCoord()[roomCoord1].x;
+		int midTileCoordY = (GameData::getCoord()[roomCoord1].y + GameData::getCoord()[roomCoord2].y) / 2;
 		for (int i = midTileCoordY - 9; i <= midTileCoordY + 10; i++)
 		{
 			m_wall->setTileGID(WALL_TILE_LEFT, Vec2(tileCoordX - 3,i));
@@ -275,19 +268,22 @@ void AdventureMapLayer::buildBonus()
 			if (m_rooms[Vec2(i, j)] == BONUS)
 			{
 				m_chest = Chest::create();
-				m_chest->setPosition(m_ground->getPositionAt(Vec2(coord[5 * i + j][0], coord[5 * i + j][1])));
+				//m_chest->setPosition(m_ground->getPositionAt(Vec2(coord[5 * i + j][0], coord[5 * i + j][1])));
+				m_chest->setPosition(m_ground->getPositionAt(GameData::getCoord()[5 * i + j]));
 				this->addChild(m_chest);
 			}
 			else if (m_rooms[Vec2(i, j)] == SHOP)
 			{
 				m_shop = Shop::create();
-				m_shop->setPosition(m_ground->getPositionAt(Vec2(coord[5 * i + j][0], coord[5 * i + j][1])));
+				//m_shop->setPosition(m_ground->getPositionAt(Vec2(coord[5 * i + j][0], coord[5 * i + j][1])));
+				m_shop->setPosition(m_ground->getPositionAt(GameData::getCoord()[5 * i + j]));
 				this->addChild(m_shop);
 			}
 			else if (m_rooms[Vec2(i, j)] == END)
 			{
 				m_portal = Sprite::create("portal.png");
-				m_portal->setPosition(m_ground->getPositionAt(Vec2(coord[5 * i + j][0], coord[5 * i + j][1])));
+				//m_portal->setPosition(m_ground->getPositionAt(Vec2(coord[5 * i + j][0], coord[5 * i + j][1])));
+				m_portal->setPosition(m_ground->getPositionAt(GameData::getCoord()[5 * i + j]));
 				this->addChild(m_portal);
 			}
 		}
@@ -313,80 +309,80 @@ void AdventureMapLayer::switchGate(TMXLayer* wall, TMXLayer* barrier, int roomNu
 	switch (dir)
 	{
 	case 0://右
-		for (int i = coord[roomNum][1] - 2; i <= coord[roomNum][1] + 2; i++)
+		for (int i = GameData::getCoord()[roomNum].y - 2; i <= GameData::getCoord()[roomNum].y + 2; i++)
 		{
 			if (isClosed)
 			{
-				wall->setTileGID(89, Vec2(coord[roomNum][0] + 11, i));
-				barrier->setTileGID(89, Vec2(coord[roomNum][0] + 11, i));
+				wall->setTileGID(89, Vec2(GameData::getCoord()[roomNum].x + 11, i));
+				barrier->setTileGID(89, Vec2(GameData::getCoord()[roomNum].x + 11, i));
 			}
 			else
 			{
-				if (i == coord[roomNum][1] - 2)
+				if (i == GameData::getCoord()[roomNum].y - 2)
 				{
-					wall->setTileGID(34, Vec2(coord[roomNum][0] + 11, i));
+					wall->setTileGID(34, Vec2(GameData::getCoord()[roomNum].x + 11, i));
 				}
 				else
 				{
-					wall->setTileGID(56, Vec2(coord[roomNum][0] + 11, i));
+					wall->setTileGID(56, Vec2(GameData::getCoord()[roomNum].x + 11, i));
 				}
-				barrier->setTileGID(2, Vec2(coord[roomNum][0] + 11, i));
+				barrier->setTileGID(2, Vec2(GameData::getCoord()[roomNum].x + 11, i));
 			}
 		}
 		break;
 	case 1://左
-		for (int i = coord[roomNum][1] - 2; i <= coord[roomNum][1] + 2; i++)
+		for (int i = GameData::getCoord()[roomNum].y - 2; i <= GameData::getCoord()[roomNum].y + 2; i++)
 		{
 			if (isClosed)
 			{
-				wall->setTileGID(89, Vec2(coord[roomNum][0] - 11, i));
-				barrier->setTileGID(89, Vec2(coord[roomNum][0] - 11, i));
+				wall->setTileGID(89, Vec2(GameData::getCoord()[roomNum].x - 11, i));
+				barrier->setTileGID(89, Vec2(GameData::getCoord()[roomNum].x - 11, i));
 			}
 			else
 			{
-				if (i == coord[roomNum][1] - 2)
+				if (i == GameData::getCoord()[roomNum].y - 2)
 				{
-					wall->setTileGID(34, Vec2(coord[roomNum][0] - 11, i));
+					wall->setTileGID(34, Vec2(GameData::getCoord()[roomNum].x - 11, i));
 				}
 				else
 				{
-					wall->setTileGID(56, Vec2(coord[roomNum][0] - 11, i));
+					wall->setTileGID(56, Vec2(GameData::getCoord()[roomNum].x - 11, i));
 				}
-				barrier->setTileGID(2, Vec2(coord[roomNum][0] - 11, i));
+				barrier->setTileGID(2, Vec2(GameData::getCoord()[roomNum].x - 11, i));
 			}
 		}
 		break;
 	case 2://下
-		for (int i = coord[roomNum][0] - 2; i <= coord[roomNum][0] + 2; i++)
+		for (int i = GameData::getCoord()[roomNum].x - 2; i <= GameData::getCoord()[roomNum].x + 2; i++)
 		{
 			if (isClosed)
 			{
-				wall->setTileGID(89, Vec2(i, coord[roomNum][1] + 11));
-				wall->setTileGID(111, Vec2(i, coord[roomNum][1] + 12));
-				barrier->setTileGID(89, Vec2(i, coord[roomNum][1] + 11));
+				wall->setTileGID(89, Vec2(i, GameData::getCoord()[roomNum].y + 11));
+				wall->setTileGID(111, Vec2(i, GameData::getCoord()[roomNum].y + 12));
+				barrier->setTileGID(89, Vec2(i, GameData::getCoord()[roomNum].y + 11));
 			}
 			else
 			{
-				wall->setTileGID(56, Vec2(i, coord[roomNum][1] + 11));
-				wall->setTileGID(56, Vec2(i, coord[roomNum][1] + 12));
-				barrier->setTileGID(2, Vec2(i, coord[roomNum][1] + 11));
+				wall->setTileGID(56, Vec2(i, GameData::getCoord()[roomNum].y + 11));
+				wall->setTileGID(56, Vec2(i, GameData::getCoord()[roomNum].y + 12));
+				barrier->setTileGID(2, Vec2(i, GameData::getCoord()[roomNum].y + 11));
 			}
 		}
 		break;
 	default://上
-		for (int i = coord[roomNum][0] - 2; i <= coord[roomNum][0] + 2; i++)
+		for (int i = GameData::getCoord()[roomNum].x - 2; i <= GameData::getCoord()[roomNum].x + 2; i++)
 		{
 			if (isClosed)
 			{
-				wall->setTileGID(89, Vec2(i, coord[roomNum][1] - 11));
-				wall->setTileGID(111, Vec2(i, coord[roomNum][1] - 10));
-				barrier->setTileGID(89, Vec2(i, coord[roomNum][1] - 11));
+				wall->setTileGID(89, Vec2(i, GameData::getCoord()[roomNum].y - 11));
+				wall->setTileGID(111, Vec2(i, GameData::getCoord()[roomNum].y - 10));
+				barrier->setTileGID(89, Vec2(i, GameData::getCoord()[roomNum].y - 11));
 			}
 			else
 			{
-				wall->setTileGID(56, Vec2(i, coord[roomNum][1] - 11));
-				wall->setTileGID(56, Vec2(i, coord[roomNum][1] - 10));
-				barrier->setTileGID(2, Vec2(i, coord[roomNum][1] - 11));
+				wall->setTileGID(56, Vec2(i, GameData::getCoord()[roomNum].y - 11));
+				wall->setTileGID(56, Vec2(i, GameData::getCoord()[roomNum].y - 10));
+				barrier->setTileGID(2, Vec2(i, GameData::getCoord()[roomNum].y - 11));
 			}
 		}
 	}
