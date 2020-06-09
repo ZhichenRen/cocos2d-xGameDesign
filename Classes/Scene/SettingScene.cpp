@@ -110,6 +110,5 @@ void SettingLayer::menuMusicToggleCallback(cocos2d::Ref* pSender)
 
 void SettingLayer::menuOkCallback(cocos2d::Ref* pSender)
 {
-	auto scene = HomeMenuLayer::createScene();
-	Director::getInstance()->replaceScene(scene);
+	Director::getInstance()->popScene();
 }

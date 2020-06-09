@@ -1,4 +1,6 @@
 #include "Scene/AdventureMapScene.h"
+#include "Bonus/Shop.h"
+#include "Bonus/Chest.h"
 
 #define EMPTY_TILE 0
 
@@ -134,7 +136,14 @@ void AdventureMapLayer::createRandomMap()
 		int x = elem.x;
 		int y = elem.y;
 		int z = 5 * x + y;
-		buildRoom(Vec2(coord[z][0],coord[z][1]));
+		if (m_rooms[Vec2(x, y)] == ENEMY)
+		{
+			buildRoom(Vec2(coord[z][0], coord[z][1]),true);
+		}
+		else
+		{
+			buildRoom(Vec2(coord[z][0], coord[z][1]),false);
+		}
 	}
 	m_roadPairs = roadPairs;
 	for (auto elem : roadPairs)
@@ -146,7 +155,7 @@ void AdventureMapLayer::createRandomMap()
 	buildBonus();
 }
 
-void AdventureMapLayer::buildRoom(Vec2 roomCoord)
+void AdventureMapLayer::buildRoom(Vec2 roomCoord, bool buildBarrer)
 {
 	std::map<Vec2, bool> barrierMap;
 	srand(time(nullptr));
@@ -165,7 +174,7 @@ void AdventureMapLayer::buildRoom(Vec2 roomCoord)
 			int relativeCoordX = roomX + 10 - i;
 			int relativeCoordY = roomY + 10 - j;
 
-			if (barrierMap.find(Vec2(relativeCoordX,relativeCoordY)) != barrierMap.end())
+			if (barrierMap.find(Vec2(relativeCoordX, relativeCoordY)) != barrierMap.end() && buildBarrer)
 			{
 				m_ground->setTileGID(89, Vec2(i, j));
 			}
@@ -263,15 +272,15 @@ void AdventureMapLayer::buildBonus()
 	{
 		for (int j = 0; j < 5; j++)
 		{
-			if (m_rooms[Vec2(i,j)] == BONUS)
+			if (m_rooms[Vec2(i, j)] == BONUS)
 			{
-				m_chest = Sprite::create("chest.png");
+				m_chest = Chest::create();
 				m_chest->setPosition(m_ground->getPositionAt(Vec2(coord[5 * i + j][0], coord[5 * i + j][1])));
 				this->addChild(m_chest);
 			}
 			else if (m_rooms[Vec2(i, j)] == SHOP)
 			{
-				m_shop = Sprite::create("cat.png");
+				m_shop = Shop::create();
 				m_shop->setPosition(m_ground->getPositionAt(Vec2(coord[5 * i + j][0], coord[5 * i + j][1])));
 				this->addChild(m_shop);
 			}
@@ -283,7 +292,6 @@ void AdventureMapLayer::buildBonus()
 			}
 		}
 	}
-	
 }
 
 Vec2 AdventureMapLayer::roomCoordFromPosition(Vec2 position)

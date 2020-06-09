@@ -9,6 +9,8 @@
 #include "Scene/PauseScene.h"
 #include "Scene/AdventureMapScene.h"
 #include "Monster/MonsterManager.h"
+#include "Bonus/Shop.h"
+#include "Bonus/Chest.h"
 
 #include "editor-support/cocostudio/CCSGUIReader.h"
 #include "ui/CocosGUI.h"
@@ -29,6 +31,7 @@ public:
 	void loadController();
 	void loadMonsters();
 	void loadListeners();
+	void pauseEvent(Ref*, TouchEventType type);
 
 	void updateMiniMap(TMXTiledMap* miniMap);
 	void updateCoinNum();
