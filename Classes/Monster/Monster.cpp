@@ -165,11 +165,11 @@ void Monster::hit(int damage, float flyingDegree, bool isCriticalStrike)
 void Monster::die()
 {
 	m_isAlive = false;
-	auto fade = FadeTo::create(0.5f, 30);//消失至某一透明度
-	auto disappear_delay = DelayTime::create(2.0f);
+	auto fade = FadeTo::create(2.0f, 0);//消失至某一透明度
+	/*auto disappear_delay = DelayTime::create(2.0f);
 	auto disappear = FadeTo::create(0.5f, 0);
-	auto disappear_action = Sequence::create(fade, disappear_delay, disappear, NULL);
-	this->getSprite()->runAction(disappear_action);
+	auto disappear_action = Sequence::create(fade, disappear_delay, disappear, NULL);*/
+	this->getSprite()->runAction(fade);
 	auto coin = Coin::create();
 	//this->getSprite()->setVisible(false);//怪物消失
 	auto ranF1 = CCRANDOM_0_1();
