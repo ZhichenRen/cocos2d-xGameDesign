@@ -64,7 +64,8 @@ bool Monster::mySetPosition(Vec2 target)
 	Vec2 tarBlock = ccp(static_cast<int>(target.x) / 21, static_cast<int>(target.y) / 21);
 	auto curBlock = ccp(static_cast<int>(curPos.x) / 21, static_cast<int>(curPos.y) / 21);
 	m_monsMgr->setPosMap(curBlock, 0);
-	if (m_map->isBarrier(worldTar))
+	if (m_map->isBarrier(worldTar)
+		|| m_monsMgr->isPosOccupied(tarBlock))
 	{
 		if (!this->isTaunted())
 		{
@@ -209,9 +210,14 @@ void Monster::die()
 void Monster::wander()
 {
 	auto curPos = getPosition();
-	auto tarPos = m_fIsFacingRight ? ccp(this->getMonsterSpeed(), 0) + curPos : -ccp(this->getMonsterSpeed(), 0) + curPos;
-	
+	auto tarPos = m_fIsFacingRight ? ccp(this->getMonsterSpeed(), 0) +
+		curPos : -ccp(this->getMonsterSpeed(), 0) + curPos;
 	mySetPosition(tarPos);
+	/*if (!)
+	{
+		tarPos = m_fIsFacingRight ? -ccp(this->getMonsterSpeed(), 0) +
+			curPos : ccp(this->getMonsterSpeed(), 0) + curPos;
+	}*/
 }
 
 

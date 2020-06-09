@@ -61,10 +61,10 @@ void MonsterManager::createRandomPos() {
 	//生成随机野怪
 	for (int i = 0; i < m_monsterList.size(); i++)
 	{
-		auto randInt1 = rand() % (21 * 32);
-		auto randInt2 = rand() % (21 * 32);
+		auto randInt1 = rand() % 21;
+		auto randInt2 = rand() % 21;
 
-		auto monsterPos = ccp(randInt1, randInt2);
+		auto monsterPos = 32 * ccp(randInt1, randInt2) + ccp(16.5, 0);
 
 		auto worldTar = monsterPos + getPosition();
 		Vec2 tarBlock = ccp(static_cast<int>(monsterPos.x) / 21, static_cast<int>(monsterPos.y) / 21);
@@ -185,10 +185,10 @@ void MonsterManager::createWoodWalls(int woodWallsNum)
 	//生成随机野怪
 	for (int i = 0; i < woodWallsNum; i++)
 	{
-		auto randInt1 = rand() % (21 * 32);
-		auto randInt2 = rand() % (21 * 32);
+		auto randInt1 = rand() % 21 ;
+		auto randInt2 = rand() % 21 ;
 
-		auto monsterPos = ccp(randInt1, randInt2);
+		auto monsterPos = 32 * ccp(randInt1, randInt2) + ccp(16.5, 0);
 
 		auto worldTar = monsterPos + getPosition();
 		Vec2 tarBlock = ccp(static_cast<int>(monsterPos.x) / 21, static_cast<int>(monsterPos.y) / 21);
@@ -286,6 +286,8 @@ bool MonsterManager::getInited()
 {
 	return m_fIsInited;
 }
+
+
 void MonsterManager::update(float dt)
 {
 	if (!m_fIsInited)
