@@ -128,7 +128,7 @@ void Monster::hit(int damage)
 {
 	setMonsTaunted();
 	this->m_Hp -= damage;
-	std::string msg = '-' + std::to_string(damage) + "hp";
+	std::string msg = '-' + std::to_string(damage);
 	m_damageMsg->showMonsDmg(msg.c_str(), this->getContentSize().height / 2);
 }
 
@@ -164,6 +164,7 @@ void Monster::hit(int damage, float flyingDegree, bool isCriticalStrike)
 
 void Monster::die()
 {
+	
 	m_isAlive = false;
 	auto fade = FadeTo::create(2.0f, 0);//消失至某一透明度
 	/*auto disappear_delay = DelayTime::create(2.0f);
@@ -192,7 +193,7 @@ void Monster::die()
 	}
 	coin->setPosition(this->getPosition() + m_monsMgr->getPosition());
 	auto ranF3 = CCRANDOM_0_1();
-	if (ranF2 < BLUEMEDICINERATE)
+	if (ranF3 < BLUEMEDICINERATE)
 	{
 		auto blueMedicine = BlueMedicine::create();
 		blueMedicine->setPosition(this->getPosition() + m_monsMgr->getPosition());

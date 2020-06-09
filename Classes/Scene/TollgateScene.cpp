@@ -136,6 +136,7 @@ void TollgateScene::loadMonstersInNewRoom(int giantNum = -1)
 	{
 		m_monsterMgr->createMonstersWithGiantNum();
 		m_monsterMgr->createMonsterPos();
+		m_monsterMgr->createWoodWalls();
 		m_monsterMgr->setInited();
 		return;
 	}
@@ -342,7 +343,11 @@ void TollgateScene::update(float dt)
 	auto player_bullet = m_player->getBullet();
 	auto monsters_bullet = m_monsterMgr->getMonsterBullets();
 	auto monsters = m_monsterMgr->getMonster();
-
+	auto woodWalls = m_monsterMgr->getWoodWall();
+	for (auto woodWall : woodWalls)
+	{
+		monsters.push_back(woodWall);
+	}
 	//player bullet
 	for (auto bullet : player_bullet)
 	{
@@ -371,6 +376,7 @@ void TollgateScene::update(float dt)
 						}
 					}
 				}
+				
 			}
 			else bullet->setIsUsed(true);
 		}
