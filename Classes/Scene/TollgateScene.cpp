@@ -1,5 +1,6 @@
 #include "Scene/TollgateScene.h"
 #include "Scene/PauseScene.h"
+#include "Scene/HomeScene.h"
 #include "Entity/Weapons/Bullets/ExplosiveBullet.h"
 #include "Entity/Weapons/RPG.h"
 #include "Entity/Weapons/Shotgun.h"
@@ -7,6 +8,8 @@
 USING_NS_CC;
 
 extern int coinNum;
+extern int level;
+extern Vec2 lastRoomCoord;
 
 Scene* TollgateScene::createScene()
 {
@@ -164,25 +167,52 @@ void TollgateScene::loadListeners()
 		switch (key)
 		{
 		case EventKeyboard::KeyCode::KEY_E:
-			if (m_player->getPosition() < m_map->getChest()->getPosition() + Vec2(50, 50) &&
-				m_player->getPosition() > m_map->getChest()->getPosition() - Vec2(50, 50))
+			if (ccpDistance(m_player->getPosition(), m_map->getChest()->getPosition()) < 20.0f && m_map->getChest()->isVisible())
 			{
 				m_map->getChest()->setVisible(false);
-				m_player->setLongRange(RPG::create());
+				m_map->getChest()->setWeapon(rand() % 3 + 1);
+				m_player->setLongRange(m_map->getChest()->getWeapon());
 			}
-			else if (m_player->getPosition() < m_map->getShop()->getPosition() + Vec2(50, 50) &&
-				m_player->getPosition() > m_map->getShop()->getPosition() - Vec2(50, 50))
+			else if (ccpDistance(m_player->getPosition(), m_map->getShop()->getPosition()) < 20.0f)
 			{
-				coinNum -= 20;
-				m_player->setLongRange(RPG::create());
+				if (m_map->getShop()->getInteractionNum() == 1)//第一次互动
+				{
+					m_map->getShop()->setInteractionNum(2);
+					m_map->getShop()->showFlowWordFirstMeet();
+				}
+				else
+				{
+					if (coinNum >= m_map->getShop()->getPrice())
+					{
+						coinNum -= 20;
+						m_map->getShop()->setWeapon(rand() % 3 + 1);
+						m_player->setLongRange(m_map->getShop()->getWeapon());
+						m_map->getShop()->showFlowWordEnoughMoney();
+					}
+					else
+					{
+						m_map->getShop()->showFlowWordLackMoney();
+					}
+					m_map->getShop()->setInteractionNum(1);
+				}
 			}
-			else if (m_player->getPosition() < m_map->getPortal()->getPosition() + Vec2(50, 50) &&
-				m_player->getPosition() > m_map->getPortal()->getPosition() - Vec2(50, 50))
+			if (ccpDistance(m_player->getPosition(), m_map->getPortal()->getPosition()) < 20.0f)
 			{
-				//auto layer = TollgateScene::create();
-				//this->addChild(layer);
-				auto scene = TollgateScene::createScene();
-				Director::getInstance()->replaceScene(scene);
+				this->unscheduleUpdate();
+				if (level != 2)
+				{
+					lastRoomCoord = Vec2(2, 2);
+					level++;
+					auto scene = TollgateScene::createScene();
+					Director::getInstance()->replaceScene(scene);
+				}
+				else
+				{
+					lastRoomCoord = Vec2(2, 2);
+					level = 1;
+					auto scene = HomeMenuLayer::createScene();
+					Director::getInstance()->replaceScene(scene);
+				}
 			}
 			break;
 		case EventKeyboard::KeyCode::KEY_ESCAPE:
@@ -198,7 +228,7 @@ void TollgateScene::loadListeners()
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(pause_listener, this);
 }
 
-Vec2 lastRoomCoord(2, 2);
+
 
 void TollgateScene::updateMiniMap(TMXTiledMap* miniMap)
 {
@@ -216,16 +246,16 @@ void TollgateScene::updateMiniMap(TMXTiledMap* miniMap)
 		return;
 	}
 
-	miniMapLayer->setTileGID(2, 2 * lastRoomCoord);//鍘熸埧闂存祬鐏?
-	miniMapLayer->setTileGID(1, 2 * Vec2(roomCoord.y, roomCoord.x));//鐜版埧闂存繁鐏?
+	miniMapLayer->setTileGID(2, 2 * lastRoomCoord);//浅灰
+	miniMapLayer->setTileGID(1, 2 * Vec2(roomCoord.y, roomCoord.x));//深灰
 
 	if (lastRoomCoord != Vec2(roomCoord.y, roomCoord.x))
 	{
-		if (lastRoomCoord.x == roomCoord.y)//涓婁笅鐩歌繛
+		if (lastRoomCoord.x == roomCoord.y)//上下相连
 		{
 			miniMapLayer->setTileGID(4, lastRoomCoord + Vec2(roomCoord.y, roomCoord.x));
 		}
-		else//宸﹀彸鐩歌繛
+		else//左右相连
 		{
 			miniMapLayer->setTileGID(3, lastRoomCoord + Vec2(roomCoord.y, roomCoord.x));
 		}
@@ -396,9 +426,7 @@ void TollgateScene::update(float dt)
 
 	for (auto coin : m_map->getCoinList())
 	{
-		if (coin->getPosition() > m_player->getPosition() - Vec2(10, 10) &&
-			coin->getPosition() < m_player->getPosition() + Vec2(10, 10) && 
-			coin->isVisible())
+		if (ccpDistance(coin->getPosition(), m_player->getPosition()) < 20.0f && coin->isVisible())
 		{
 			coin->setVisible(false);
 			coinNum++;
