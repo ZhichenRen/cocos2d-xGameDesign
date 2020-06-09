@@ -16,6 +16,7 @@
 #include "Entity/Coin/Coin.h"
 #include "Entity/Blue/Blue.h"
 #include "Entity/Red/Red.h"
+#include "Entity/BlueMedicine/BlueMedicine.h"
 
 class Shop;
 class Chest;
