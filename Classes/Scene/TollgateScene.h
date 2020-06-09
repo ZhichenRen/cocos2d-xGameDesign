@@ -31,6 +31,7 @@ public:
 	void loadController();
 	void loadMonsters();
 	void loadListeners();
+	void pauseEvent(Ref*, TouchEventType type);
 
 	void updateMiniMap(TMXTiledMap* miniMap);
 	void updateCoinNum();
