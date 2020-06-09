@@ -20,7 +20,6 @@
 class Shop;
 class Chest;
 
-
 #include "Entity/BlueMedicine/BlueMedicine.h"
 
 class AdventureMapLayer : public cocos2d::Layer
@@ -69,11 +68,8 @@ public:
 	static void switchGate(cocos2d::TMXLayer* wall, cocos2d::TMXLayer* barrier, int roomNum, int dir, bool isClosed);
 	void addCoin(Coin* coin);
 	void addBlue(Blue* blue);
-<<<<<<< HEAD
 	void addRed(Red* red);
-=======
 	void addRed(Red* red); 
->>>>>>> 79cf741c282748cbe0f13a18079f56ad21f07e7a
 	void addBlueMedicine(BlueMedicine* blueMedicine);
 	cocos2d::Vec2 tileCoordFromPosition(cocos2d::Vec2 position);
 	cocos2d::Vec2 roomCoordFromPosition(cocos2d::Vec2 position);
