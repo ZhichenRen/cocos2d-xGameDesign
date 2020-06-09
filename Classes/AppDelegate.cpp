@@ -4,7 +4,8 @@
 #include "Scene/HomeScene.h"
 
 int coinNum = 0;
-
+int level = 1;
+Vec2 lastRoomCoord(2, 2);
 
 // #define USE_AUDIO_ENGINE 1
 // #define USE_SIMPLE_AUDIO_ENGINE 1
