@@ -19,6 +19,8 @@
 class Shop;
 class Chest;
 
+#include "Entity/BlueMedicine/BlueMedicine.h"
+
 class AdventureMapLayer : public cocos2d::Layer
 {
 private:
@@ -32,7 +34,7 @@ private:
 	Chest* m_chest;
 	Shop* m_shop;
 	cocos2d::Sprite* m_portal;
-	
+
 	std::map<cocos2d::Vec2, int>m_rooms;
 
 	std::map<cocos2d::EventKeyboard::KeyCode, bool> m_keyMap;
@@ -41,6 +43,7 @@ private:
 	std::vector<Coin*> m_coinList;
 	std::vector<Blue*> m_blueList;
 	std::vector<Red*> m_redList;
+	std::vector<BlueMedicine*> m_blueMedicineList;
 public:
 	inline cocos2d::TMXTiledMap* getMap() { return m_tileMap; }
 	inline cocos2d::TMXTiledMap* getMiniMap() { return m_miniMap; }
@@ -65,6 +68,7 @@ public:
 	void addCoin(Coin* coin);
 	void addBlue(Blue* blue);
 	void addRed(Red* red);
+	void addBlueMedicine(BlueMedicine* blueMedicine);
 	cocos2d::Vec2 tileCoordFromPosition(cocos2d::Vec2 position);
 	cocos2d::Vec2 roomCoordFromPosition(cocos2d::Vec2 position);
 
@@ -77,4 +81,3 @@ public:
 	// implement the "static create()" method manually
 	CREATE_FUNC(AdventureMapLayer);
 };
-
