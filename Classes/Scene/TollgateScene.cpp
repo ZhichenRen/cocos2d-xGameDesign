@@ -80,7 +80,7 @@ void TollgateScene::onEnter()
 	Layer::onEnter();
 	loadUI();
 	addLongRangeWeapon();
-	//loadListeners();
+	loadListeners();
 }
 
 void TollgateScene::loadUI()
@@ -89,11 +89,24 @@ void TollgateScene::loadUI()
 	this->addChild(UI, 0, 0);
 	m_cdBar = (LoadingBar*)Helper::seekWidgetByName(UI, "ability_loading_bar");
 
-	/*auto pause_button = (Button*)Helper::seekWidgetByName(UI, "pause_button");
-	pause_button->addTouchEventListener(this, toucheventselector(HelloWorld::pauseEvent));*/
+	auto pause_button = (Button*)Helper::seekWidgetByName(UI, "pause_button");
+	pause_button->addTouchEventListener(this, toucheventselector(TollgateScene::pauseEvent));
 }
 
-
+void TollgateScene::pauseEvent(Ref*, TouchEventType type)
+{
+	switch (type)
+	{
+	case TOUCH_EVENT_ENDED:
+		Size visible_size = Director::getInstance()->getVisibleSize();
+		CCRenderTexture* background = CCRenderTexture::create(visible_size.width, visible_size.height);
+		background->begin();
+		this->visit();
+		background->end();
+		Director::getInstance()->pushScene(PauseScene::createScene(background));
+		break;
+	}
+}
 
 
 const int coord[25][2] = {
