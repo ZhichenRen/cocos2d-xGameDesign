@@ -136,9 +136,6 @@ void TollgateScene::loadMonsters()
 	auto roomCoord = m_map->roomCoordFromPosition(playerPos);
 	//绑定房间
 	m_monsterMgr = MonsterManager::create();
-	/*m_monsterMgr->markRoomVisited(roomCoord);
-	m_monsterMgr->setCurRoom(roomCoord);
-	*/
 	//设置位置
 	auto midPoint = ccp( coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][0] ,
 		coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][1]);
@@ -148,9 +145,6 @@ void TollgateScene::loadMonsters()
 
 	//初始化工作
 	m_monsterMgr->bindMap(m_map);
-	//m_monsterMgr->createMonstersWithGiantNum(3, 10);
-	//m_monsterMgr->bindMapForWeapon();
-	//m_monsterMgr->createMonsterPos();
 	m_monsterMgr->bindPlayer(static_cast<Entity*>(this->m_player));
 	m_map->addChild(m_monsterMgr, 2);
 }
