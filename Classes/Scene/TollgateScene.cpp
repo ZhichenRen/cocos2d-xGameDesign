@@ -96,6 +96,10 @@ void TollgateScene::loadUI()
 	m_hpBar = (LoadingBar*)Helper::seekWidgetByName(UI, "HP_bar");
 	m_mpBar = (LoadingBar*)Helper::seekWidgetByName(UI, "magic_bar");
 	m_armorBar = (LoadingBar*)Helper::seekWidgetByName(UI, "armor_bar");
+	m_hp = (Text*)Helper::seekWidgetByName(UI, "HP_label");
+	m_armor = (Text*)Helper::seekWidgetByName(UI, "armor_label");
+	m_mp = (Text*)Helper::seekWidgetByName(UI, "magic_label");
+	m_coin = (Text*)Helper::seekWidgetByName(UI, "coin_num");
 
 	auto pause_button = (Button*)Helper::seekWidgetByName(UI, "pause_button");
 	pause_button->addTouchEventListener(this, toucheventselector(TollgateScene::pauseEvent));
@@ -216,6 +220,15 @@ void TollgateScene::loadListeners()
 					Director::getInstance()->replaceScene(scene);
 				}
 			}
+
+			for (auto blue_medicine : m_map->getBlueMedicineList())
+			{
+				if (ccpDistance(m_player->getPosition(), blue_medicine->getPosition()) < 5.0f)
+				{
+					m_player->setiNowMp(m_player->getiNowMp() + blue_medicine->getBlueMedicineValue());
+					blue_medicine->disappear();
+				}
+			}
 			break;
 		case EventKeyboard::KeyCode::KEY_ESCAPE:
 			Size visible_size = Director::getInstance()->getVisibleSize();
@@ -290,6 +303,11 @@ void TollgateScene::update(float dt)
 		static_cast<float>(m_player->getiTotalHp()) * 100);
 	(m_mpBar)->setPercent(m_player->getiNowMp() /
 		static_cast<float>(m_player->getiTotalMp()) * 100);
+
+	m_hp->setText(std::to_string(m_player->getiNowHp()) + "/" + std::to_string(m_player->getiTotalHp()));
+	m_armor->setText(std::to_string(m_player->getiNowArmor()) + "/" + std::to_string(m_player->getiTotalArmor()));
+	m_mp->setText(std::to_string(m_player->getiNowMp()) + "/" + std::to_string(m_player->getiTotalMp()));
+	m_coin->setText(std::to_string(GameData::getCoinNum()));
 	auto playerPos = m_player->getPosition();
 	auto barrier = m_map->getCollidable();
 	auto map = m_map->getMap();
@@ -370,7 +388,7 @@ void TollgateScene::update(float dt)
 						cocos2d::Point explosive_origin_point = m_map->convertToWorldSpace(explosive_bullet->getPosition());
 						if (unlucky_monster->getBoundingBox().intersectsCircle(explosive_origin_point, explosive_bullet->getExplosionRange()))
 						{
-							unlucky_monster->hit(explosive_bullet->getExplosionDamage());
+							unlucky_monster->hit(explosive_bullet->getExplosionDamage(), bullet->getDegree(), 0);
 						}
 					}
 				}
@@ -422,6 +440,10 @@ void TollgateScene::update(float dt)
 	//monster bullet
 	for (auto bullet : monsters_bullet)
 	{
+		if (bullet->isUsed())
+		{
+			continue;
+		}
 		cocos2d::Point bullet_pos = bullet->getPosition();
 		if (m_map->isBarrier(bullet_pos))
 		{

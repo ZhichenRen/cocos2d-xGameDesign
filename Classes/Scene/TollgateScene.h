@@ -49,6 +49,10 @@ private:
 	LoadingBar* m_hpBar = NULL;
 	LoadingBar* m_mpBar = NULL;
 	LoadingBar* m_armorBar = NULL;
+	Text* m_hp = NULL;
+	Text* m_armor = NULL;
+	Text* m_mp = NULL;
+	Text* m_coin = NULL;
 
 	Player* m_player;
 	AdventureMapLayer* m_map;
