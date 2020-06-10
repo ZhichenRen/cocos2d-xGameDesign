@@ -7,7 +7,7 @@ bool Shotgun::init()
 	m_power_cost = 5;
 	m_bullet_num = 100;
 	m_range = 100;
-	m_bullet_damage = 5;
+	m_bullet_damage = 10;
 	m_bullet_speed = 500;
 	m_attack_speed = 0.25f;
 	m_degree = 15.0f;
@@ -60,18 +60,18 @@ void Shotgun::attack(Point pos)
 		if (m_bullet_num_at_once % 2)
 		{
 			int mid = m_bullet_num_at_once / 2 + 1;
-			fire_degree = degree - (i - mid)*m_degree;
+			fire_degree = degree - (i - mid) * m_degree;
 		}
 		else
 		{
 			int mid = m_bullet_num_at_once / 2;
 			if (i <= mid)
 			{
-				fire_degree = degree - (i - mid)*m_degree + m_degree / 2;
+				fire_degree = degree - (i - mid) * m_degree + m_degree / 2;
 			}
 			else
 			{
-				fire_degree = degree - (i - mid - 1)*m_degree - m_degree / 2;
+				fire_degree = degree - (i - mid - 1) * m_degree - m_degree / 2;
 			}
 		}
 		auto new_bullet = generateBullet(degree, 0.3f, 0.3f);

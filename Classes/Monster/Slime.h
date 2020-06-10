@@ -7,7 +7,8 @@ class Slime : public Monster {
 public:
 	virtual bool init();
 	CREATE_FUNC(Slime);
+	virtual void resetPropoties();
 private:
-	
+	static const int m_initHp = 20;
 };
 #endif // !__Slime_H__

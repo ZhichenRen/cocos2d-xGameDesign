@@ -1,5 +1,4 @@
 #include "Monster\Monster.h"
-
 Monster::Monster() 
 {
 	m_isAlive = false;
@@ -18,21 +17,20 @@ bool Monster::init()
 
 void Monster::show()
 {
-	if (getSprite() != NULL)
-	{
-		setVisible(true);
-		m_isAlive = true;
-	}
+	if (getSprite())
+		getSprite()->setVisible(true);
+	m_isAlive = true;
 }
 
 void Monster::hide()
 {
 	if (getSprite() != NULL)
 	{
-		removeAllChildren();
+		getSprite()->setVisible(false);
 		m_isAlive = false;
 	}
 }
+
 
 bool Monster::isAlive()
 {
@@ -55,15 +53,27 @@ void Monster::moveBy(const Vec2& distance)
 }
 
 
-bool Monster::getAttacked(const int damage)
+
+void Monster::hit(int damage)
 {
-	m_Hp -= damage;
-	return true;
+	this->m_Hp -= damage;
 }
+
 
 void Monster::die()
 {
 	hide();
 	auto coin = Coin::create();
-	this->bindSprite((Sprite*)coin);
+	//this->getSprite()->setVisible(false);//¹ÖÎïÏûÊ§
+	auto ranF = CCRANDOM_0_1();
+	if (ranF < BLUERATE)
+	{
+		auto blue = Blue::create();
+		blue->setPosition(this->getPosition());
+		this->getParent()->addChild(blue);
+		blue->setRandomPosition();
+
+	}
+	coin->setPosition(this->getPosition());
+	this->getParent()->addChild(coin);
 }

@@ -15,10 +15,10 @@ bool RPG::init()
 	m_bullet_damage = 10;
 	m_bullet_speed = 300;
 	m_attack_speed = 0.3f;
-	m_explosion_damage = 90;
-	m_explosion_range = 20;
+	m_explosion_damage = 30;
+	m_explosion_range = 40;
 	m_bullet_picture = std::string("RPG.png");
-	bindSprite(Sprite::create("Fist_of_Heaven.png"), 0.2f, 0.2f);
+	bindSprite(Sprite::create("Fist_of_Heaven.png"), 0.15f, 0.15f);
 	m_sprite->setAnchorPoint(Vec2(0.0f, 0.5f));
 	scheduleUpdate();
 	return true;
@@ -69,8 +69,8 @@ ExplosiveBullet* RPG::generateExplosiveBullet(float degree, float scale_x, float
 	ExplosiveBullet* new_bullet = ExplosiveBullet::create();
 	new_bullet->bindSprite(Sprite::create(m_bullet_picture.c_str()), scale_x, scale_y);
 	new_bullet->setInfo(m_range, m_bullet_damage, m_explosion_range, m_explosion_damage);
-	Point origin_pos = Point(getSprite()->getPositionX() + getSprite()->getBoundingBox().size.width*cos(degree / 180 * PI)
-		, getSprite()->getPositionY() + getSprite()->getBoundingBox().size.width*sin(degree / 180 * PI));
+	Point origin_pos = Point(getSprite()->getPositionX() + getSprite()->getBoundingBox().size.width * cos(degree / 180 * PI)
+		, getSprite()->getPositionY() + getSprite()->getBoundingBox().size.width * sin(degree / 180 * PI));
 	origin_pos = m_map->convertToMapSpace(convertToWorldSpace(origin_pos));
 	new_bullet->setPosition(origin_pos);
 	new_bullet->setOriginPos(origin_pos);

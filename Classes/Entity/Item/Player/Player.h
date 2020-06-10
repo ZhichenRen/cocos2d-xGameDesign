@@ -48,6 +48,8 @@ public:
 
 	inline bool getIsInSkill() const { return m_isInSkill; }
 	void setLongRange(LongRange* longRange);
+	std::vector<Bullet*> getBullet()const;
+	void hit(int damage);
 public:
 	virtual Animate* walk() = 0;
 	virtual void skill() = 0;
@@ -75,6 +77,8 @@ protected:
 	int m_skillDirectionX = 0;
 	int m_skillDirectionY = 0;
 	bool m_isInSkill;
+
+	void getBulletFromWeapon();
 
 	LongRange* m_longRange;
 
