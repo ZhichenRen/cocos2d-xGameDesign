@@ -21,6 +21,7 @@ void MonsterManager::reviveAllMonsters()
 	for (auto monster : m_monsterList)
 	{
 		monster->resetPropoties();
+		monster->setVisible(true);
 	}
 	createMonsterPos();
 }
