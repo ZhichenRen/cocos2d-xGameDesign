@@ -44,7 +44,7 @@ public:
 	CC_SYNTHESIZE(float, m_fSpeed, MonsterSpeed);
 	CC_SYNTHESIZE(int, m_Hp, Hp);
 	CC_SYNTHESIZE(std::string, m_resTrack, ResTrack);
-	
+
 	CC_SYNTHESIZE(Weapon*, m_weapon, MonsterWeapon);
 protected:
 	AdventureMapLayer* m_map;
@@ -54,7 +54,7 @@ protected:
 	bool m_isAlive = false;
 	bool m_isBulkUp = false;
 	FlowWord* m_damageMsg;
-	Sprite* m_preRec; 
+	Sprite* m_preRec;
 
 };
 #endif // !__Monster_H__

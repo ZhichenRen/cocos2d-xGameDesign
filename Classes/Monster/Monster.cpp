@@ -1,7 +1,7 @@
 #include "Monster\Monster.h"
 #include "Monster/MonsterManager.h"
 #include <string>
-Monster::Monster() 
+Monster::Monster()
 {
 	m_preRec = Sprite::create("PreRect.png");
 	this->addChild(m_preRec, 1, "preRect");
@@ -16,7 +16,7 @@ Monster::~Monster()
 
 bool Monster::init()
 {
-	
+
 	return true;
 }
 
@@ -76,7 +76,7 @@ bool Monster::mySetPosition(Vec2 target)
 	}
 	if (m_monsMgr->isPosOccupied(tarBlock))
 		return false;
-	
+
 	auto dif = target - curPos;
 	if (dif.x > 0 && !m_fIsFacingRight)	//面朝左但是跑向右		
 	{
@@ -97,7 +97,7 @@ void Monster::bulkUp()
 {
 	m_fSpeed *= 1.3;
 	setContentSize(Size(getContentSize().width * 2, getContentSize().height * 2));
-	getSprite()->setContentSize(Size( getSprite()->getContentSize().width * 2, getSprite()->getContentSize().height * 2));
+	getSprite()->setContentSize(Size(getSprite()->getContentSize().width * 2, getSprite()->getContentSize().height * 2));
 	m_Hp *= 2.0;
 	m_isBulkUp = true;
 }
@@ -122,7 +122,7 @@ void Monster::bindMap(AdventureMapLayer* map)
 
 void Monster::bindMonsMgr(MonsterManager* monsMgr)
 {
-	m_monsMgr = monsMgr; 
+	m_monsMgr = monsMgr;
 }
 
 void Monster::hit(int damage)
@@ -139,16 +139,16 @@ void Monster::hit(int damage, float flyingDegree, bool isCriticalStrike)
 	setMonsTaunted();
 	this->stopAllActions();
 	auto curPos = getPosition();
-	auto vecToMove = Vec2( 5* cos(flyingDegree / 180 * 3.14), 5* sin(flyingDegree / 180 * 3.14));
+	auto vecToMove = Vec2(5 * cos(flyingDegree / 180 * 3.14), 5 * sin(flyingDegree / 180 * 3.14));
 	if (m_isBulkUp)
 		vecToMove *= 3;
 	auto targetPos = curPos + vecToMove;
-	
+
 	this->mySetPosition(targetPos);
 	/*if (!m_map->isBarrier(m_map->convertToMapSpace(convertToWorldSpace(targetPos))))
 	{
 		auto move_action = MoveBy::create(0.1f, vecToMove);
-		
+
 		this->runAction(move_action);
 	}*/
 	if (isCriticalStrike)
@@ -179,7 +179,7 @@ void Monster::die()
 	{
 		auto blue = Blue::create();
 		blue->setPosition(this->getPosition() + m_monsMgr->getPosition());
-		m_map->addChild(blue,2);
+		m_map->addChild(blue, 2);
 		blue->setRandomPosition();
 		m_map->addBlue(blue);
 	}
@@ -203,15 +203,17 @@ void Monster::die()
 		m_map->addBlueMedicine(blueMedicine);
 	}
 	coin->setPosition(this->getPosition() + m_monsMgr->getPosition());
-	m_map->addChild(coin,1);
+	m_map->addChild(coin, 1);
 	m_map->addCoin(coin);
 }
 
 void Monster::wander()
 {
 	auto curPos = getPosition();
+
 	auto tarPos = m_fIsFacingRight ? ccp(this->getMonsterSpeed(), 0) +
 		curPos : -ccp(this->getMonsterSpeed(), 0) + curPos;
+
 	mySetPosition(tarPos);
 	/*if (!)
 	{
@@ -229,6 +231,3 @@ void Monster::setMonsTaunted()
 	m_fIsTaunted = 1;
 	m_damageMsg->showMonsTaunted();
 }
-
-
-

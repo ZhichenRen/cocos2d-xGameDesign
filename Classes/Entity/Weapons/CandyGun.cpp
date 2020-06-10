@@ -6,7 +6,7 @@ CandyGun::CandyGun()
 }
 
 bool CandyGun::init()
-{	
+{
 	m_power_cost = 5;
 	m_bullet_num = 100;
 	m_range = 100;

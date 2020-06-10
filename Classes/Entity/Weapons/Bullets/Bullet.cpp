@@ -4,7 +4,7 @@
 
 Bullet::Bullet()
 {
-	
+
 }
 
 bool Bullet::init()
@@ -57,7 +57,7 @@ void Bullet::setOriginPos(const Point& pos)
 float Bullet::getDistance()const
 {
 	Point pos = getPosition();
-	float distance = sqrtf((pos.x - m_origin_pos.x)*(pos.x - m_origin_pos.x) + (pos.y - m_origin_pos.y)*(pos.y - m_origin_pos.y));
+	float distance = sqrtf((pos.x - m_origin_pos.x) * (pos.x - m_origin_pos.x) + (pos.y - m_origin_pos.y) * (pos.y - m_origin_pos.y));
 	return distance;
 }
 

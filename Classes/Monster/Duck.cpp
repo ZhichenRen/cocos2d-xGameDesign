@@ -5,7 +5,7 @@ bool Duck::init()
 	m_fIsFacingRight = false;
 	m_damageMsg = FlowWord::create();
 	this->addChild(m_damageMsg);
-	
+
 	setMonsterSpeed(0.5);
 	setHp(this->m_initHp);
 	setResTrack("duck.png");
@@ -33,7 +33,7 @@ void Duck::resetPropoties()
 		m_isBulkUp = 0;
 		m_fSpeed /= 1.3;
 	}
-	
+
 }
 
 //void Duck::resetPropoties()

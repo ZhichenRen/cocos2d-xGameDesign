@@ -4,12 +4,10 @@
 #include "Entity/Weapons/Bullets/ExplosiveBullet.h"
 #include "Entity/Weapons/RPG.h"
 #include "Entity/Weapons/Shotgun.h"
+#include "GameData.h"
 
 USING_NS_CC;
 
-extern int coinNum;
-extern int level;
-extern Vec2 lastRoomCoord;
 
 Scene* TollgateScene::createScene()
 {
@@ -38,12 +36,16 @@ void TollgateScene::addPlayer()
 
 	m_player->setTiledMap(m_map);
 	m_player->setCdBar(m_cdBar);
+	m_player->setHpBar(m_hpBar);
+	m_player->setMpBar(m_mpBar);
+	m_player->setArmorBar(m_armorBar);
 	m_map->addChild(m_player, 2, 200);
 }
 
 void TollgateScene::addLongRangeWeapon()
 {
 	m_player->setLongRange(CandyGun::create());
+//	m_player->setLongRange(RPG::create());
 }
 
 void TollgateScene::loadController()
@@ -91,6 +93,9 @@ void TollgateScene::loadUI()
 	auto UI = cocostudio::GUIReader::getInstance()->widgetFromJsonFile("INGAME_1.ExportJson");
 	this->addChild(UI, 0, 0);
 	m_cdBar = (LoadingBar*)Helper::seekWidgetByName(UI, "ability_loading_bar");
+	m_hpBar = (LoadingBar*)Helper::seekWidgetByName(UI, "HP_bar");
+	m_mpBar = (LoadingBar*)Helper::seekWidgetByName(UI, "magic_bar");
+	m_armorBar = (LoadingBar*)Helper::seekWidgetByName(UI, "armor_bar");
 
 	auto pause_button = (Button*)Helper::seekWidgetByName(UI, "pause_button");
 	pause_button->addTouchEventListener(this, toucheventselector(TollgateScene::pauseEvent));
@@ -111,23 +116,13 @@ void TollgateScene::pauseEvent(Ref*, TouchEventType type)
 	}
 }
 
-
-const int coord[25][2] = {
-		{11,11},{52,11},{93,11},{134,11},{175,11},
-		{11,52},{52,52},{93,52},{134,52},{175,52},
-		{11,93},{52,93},{93,93},{134,93},{175,93},
-		{11,134},{52,134},{93,134},{134,134},{175,134},
-		{11,175},{52,175},{93,175},{134,175},{175,175} };//25个房间的中心坐标
-
 void TollgateScene::loadMonstersInNewRoom(int giantNum = -1)
 {
-	
 	auto roomCoord = m_monsterMgr->getCurRoom();
 	m_monsterMgr->markRoomVisited(roomCoord);
-	auto midPoint = ccp(coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][0],
-		coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][1]);
+	auto midPoint = GameData::getCoord()[static_cast<int>(5 * roomCoord.x + roomCoord.y)];
 	midPoint.y = 186 - midPoint.y;
-	auto LUPoint = (midPoint + ccp(-10,- 10)) * 32;
+	auto LUPoint = (midPoint + ccp(-10, -10)) * 32;
 	m_monsterMgr->setPosition(LUPoint);
 
 	if (giantNum != -1)
@@ -151,8 +146,7 @@ void TollgateScene::loadMonsters()
 	//绑定房间
 	m_monsterMgr = MonsterManager::create();
 	//设置位置
-	auto midPoint = ccp( coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][0] ,
-		coord[static_cast<int>(5 * roomCoord.x + roomCoord.y)][1]);
+	auto midPoint = GameData::getCoord()[static_cast<int>(5 * roomCoord.x + roomCoord.y)];
 	midPoint.y = 186 - midPoint.y;
 	auto LUPoint = (midPoint + ccp(-10, -10)) * 32;
 	m_monsterMgr->setPosition(LUPoint);
@@ -175,6 +169,7 @@ void TollgateScene::loadListeners()
 		switch (key)
 		{
 		case EventKeyboard::KeyCode::KEY_E:
+			GameData::setCoinNum(GameData::getCoinNum() + 1);
 			if (ccpDistance(m_player->getPosition(), m_map->getChest()->getPosition()) < 20.0f && m_map->getChest()->isVisible())
 			{
 				m_map->getChest()->setVisible(false);
@@ -190,9 +185,9 @@ void TollgateScene::loadListeners()
 				}
 				else
 				{
-					if (coinNum >= m_map->getShop()->getPrice())
+					if (GameData::getCoinNum() >= m_map->getShop()->getPrice())
 					{
-						coinNum -= 20;
+						GameData::setCoinNum(GameData::getCoinNum() - 20);
 						m_map->getShop()->setWeapon(rand() % 3 + 1);
 						m_player->setLongRange(m_map->getShop()->getWeapon());
 						m_map->getShop()->showFlowWordEnoughMoney();
@@ -207,17 +202,17 @@ void TollgateScene::loadListeners()
 			if (ccpDistance(m_player->getPosition(), m_map->getPortal()->getPosition()) < 20.0f)
 			{
 				this->unscheduleUpdate();
-				if (level != 2)
+				if (GameData::getLevel() != 2)
 				{
-					lastRoomCoord = Vec2(2, 2);
-					level++;
+					GameData::setLastRoomCoord(Vec2(2, 2));
+					GameData::setLevel(GameData::getLevel() + 1);
 					auto scene = TollgateScene::createScene();
 					Director::getInstance()->replaceScene(scene);
 				}
 				else
 				{
-					lastRoomCoord = Vec2(2, 2);
-					level = 1;
+					GameData::setLastRoomCoord(Vec2(2, 2));
+					GameData::setLevel(1);
 					auto scene = HomeMenuLayer::createScene();
 					Director::getInstance()->replaceScene(scene);
 				}
@@ -254,21 +249,21 @@ void TollgateScene::updateMiniMap(TMXTiledMap* miniMap)
 		return;
 	}
 
-	miniMapLayer->setTileGID(2, 2 * lastRoomCoord);//浅灰
+	miniMapLayer->setTileGID(2, 2 * GameData::getLastRoomCoord());//浅灰
 	miniMapLayer->setTileGID(1, 2 * Vec2(roomCoord.y, roomCoord.x));//深灰
 
-	if (lastRoomCoord != Vec2(roomCoord.y, roomCoord.x))
+	if (GameData::getLastRoomCoord() != Vec2(roomCoord.y, roomCoord.x))
 	{
-		if (lastRoomCoord.x == roomCoord.y)//上下相连
+		if (GameData::getLastRoomCoord().x == roomCoord.y)//上下相连
 		{
-			miniMapLayer->setTileGID(4, lastRoomCoord + Vec2(roomCoord.y, roomCoord.x));
+			miniMapLayer->setTileGID(4, GameData::getLastRoomCoord() + Vec2(roomCoord.y, roomCoord.x));
 		}
 		else//左右相连
 		{
-			miniMapLayer->setTileGID(3, lastRoomCoord + Vec2(roomCoord.y, roomCoord.x));
+			miniMapLayer->setTileGID(3, GameData::getLastRoomCoord() + Vec2(roomCoord.y, roomCoord.x));
 		}
 	}
-	lastRoomCoord = Vec2(roomCoord.y, roomCoord.x);
+	GameData::setLastRoomCoord(Vec2(roomCoord.y, roomCoord.x));
 }
 
 void TollgateScene::updateCoinNum()
@@ -279,7 +274,7 @@ void TollgateScene::updateCoinNum()
 	{
 		this->removeChildByTag(101);
 	}
-	auto num = __String::createWithFormat("%d", coinNum);
+	auto num = __String::createWithFormat("%d", GameData::getCoinNum());
 	auto coinLabel = Label::createWithTTF(num->getCString(), "fonts/arial.ttf", 30);
 
 	coinLabel->setPosition(Vec2(visibleSize.width - 50, visibleSize.height - 600));
@@ -288,6 +283,14 @@ void TollgateScene::updateCoinNum()
 
 void TollgateScene::update(float dt)
 {
+	(m_cdBar)->setPercent(m_player->getiNowCD() /
+		static_cast<float>(m_player->getiTotalCD()) * 100);
+	(m_armorBar)->setPercent(m_player->getiNowArmor() /
+		static_cast<float>(m_player->getiTotalArmor()) * 100);
+	(m_hpBar)->setPercent(m_player->getiNowHp() /
+		static_cast<float>(m_player->getiTotalHp()) * 100);
+	(m_mpBar)->setPercent(m_player->getiNowMp() /
+		static_cast<float>(m_player->getiTotalMp()) * 100);
 	auto playerPos = m_player->getPosition();
 	auto barrier = m_map->getCollidable();
 	auto map = m_map->getMap();
@@ -302,7 +305,7 @@ void TollgateScene::update(float dt)
 	auto roomNum = roomCoord.x * 5 + roomCoord.y;//鎴块棿搴忓彿
 
 	if (m_map->isMonsterRoom(roomCoord)	//首先它得是个怪物房间
-		&&!m_monsterMgr->isRoomVisited(roomCoord))//其次它没有被到访过
+		&& !m_monsterMgr->isRoomVisited(roomCoord))//其次它没有被到访过
 	{
 		m_monsterMgr->setCurRoom(roomCoord);
 		loadMonstersInNewRoom(2);
@@ -396,7 +399,7 @@ void TollgateScene::update(float dt)
 					else
 						monster->hit(damage, bullet->getDegree(), 0);
 
-					
+
 					if (typeid(*bullet) == typeid(ExplosiveBullet))
 					{
 						auto explosive_bullet = dynamic_cast<ExplosiveBullet*>(bullet);
@@ -419,7 +422,7 @@ void TollgateScene::update(float dt)
 					else bullet->setIsUsed(true);
 				}
 			}
-		}			
+		}
 	}
 
 	//monster bullet
@@ -442,7 +445,7 @@ void TollgateScene::update(float dt)
 		if (ccpDistance(coin->getPosition(), m_player->getPosition()) < 20.0f && coin->isVisible())
 		{
 			coin->setVisible(false);
-			coinNum++;
+			GameData::setCoinNum(GameData::getCoinNum() + 1);
 		}
 	}
 }

@@ -29,7 +29,7 @@ public:
 protected:
 	float m_degree;
 	int m_bullet_range;
-	int m_bullet_damage;
+	int m_bullet_damage=1;
 	bool m_is_used;
 
 	float m_crit_rate;

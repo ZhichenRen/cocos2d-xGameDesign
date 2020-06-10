@@ -19,4 +19,3 @@ private:
 	LongRange* m_weapon;
 };
 #endif
-

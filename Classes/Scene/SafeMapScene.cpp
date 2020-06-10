@@ -6,45 +6,45 @@ USING_NS_CC;
 
 cocos2d::Scene* SafeMapLayer::createScene()
 {
-	auto scene = Scene::create();
+    auto scene = Scene::create();
 
-	auto layer = SafeMapLayer::create();
+    auto layer = SafeMapLayer::create();
 
-	scene->addChild(layer);
+    scene->addChild(layer);
 
-	return scene;
+    return scene;
 }
 
 bool SafeMapLayer::init()
 {
-	if (!Layer::init())
-	{
-		return false;
-	}
+    if (!Layer::init())
+    {
+        return false;
+    }
 
-	this->scheduleUpdate();
+    this->scheduleUpdate();
 
-	m_tileMap = TMXTiledMap::create("map/SafeMap.tmx");//创建地图
-	this->addChild(m_tileMap);
+    m_tileMap = TMXTiledMap::create("map/SafeMap.tmx");//创建地图
+    this->addChild(m_tileMap);
 
     m_collidable = m_tileMap->getLayer("barrier");//获取判断碰撞的障碍层
 
-	TMXObjectGroup* group = m_tileMap->getObjectGroup("objects");//获取对象层
-	ValueMap spawnPoint = group->getObject("hero");//根据hero对象的位置放置精灵
+    TMXObjectGroup* group = m_tileMap->getObjectGroup("objects");//获取对象层
+    ValueMap spawnPoint = group->getObject("hero");//根据hero对象的位置放置精灵
 
-	float x = spawnPoint["x"].asFloat();
-	float y = spawnPoint["y"].asFloat();
+    float x = spawnPoint["x"].asFloat();
+    float y = spawnPoint["y"].asFloat();
 
-	m_player = Sprite::create("map/hero.png");
-	m_player->setPosition(Vec2(x, y));
-	this->addChild(m_player);//游戏人物
+    m_player = Sprite::create("map/hero.png");
+    m_player->setPosition(Vec2(x, y));
+    this->addChild(m_player);//游戏人物
 
-	return true;
+    return true;
 }
 
 void SafeMapLayer::onEnter()
 {
-	Layer::onEnter();
+    Layer::onEnter();
 
     auto listener = EventListenerKeyboard::create();//创建监听事件
 
@@ -64,23 +64,23 @@ void SafeMapLayer::onEnter()
 
 void SafeMapLayer::onEnterTransitionDidFinish()
 {
-	Layer::onEnterTransitionDidFinish();
+    Layer::onEnterTransitionDidFinish();
 }
 
 void SafeMapLayer::onExit()
 {
-	Layer::onExit();
+    Layer::onExit();
     Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
 }
 
 void SafeMapLayer::onExitTransitionDidStart()
 {
-	Layer::onExitTransitionDidStart();
+    Layer::onExitTransitionDidStart();
 }
 
 void SafeMapLayer::cleanup()
 {
-	Layer::cleanup();
+    Layer::cleanup();
 }
 
 void SafeMapLayer::update(float dt)
@@ -112,9 +112,9 @@ void SafeMapLayer::update(float dt)
     auto playerPos = m_player->getPosition();
     this->setPlayerPosition(playerPos + offset, offset.x, offset.y);
 
-    Vec2 a = { 512-32,768 };
-    Vec2 b = { 512+32,768-32 };
-    if (m_player->getPosition().x >= a.x && m_player->getPosition().x <= b.x && 
+    Vec2 a = { 512 - 32,768 };
+    Vec2 b = { 512 + 32,768 - 32 };
+    if (m_player->getPosition().x >= a.x && m_player->getPosition().x <= b.x &&
         m_player->getPosition().y <= a.y && m_player->getPosition().y >= b.y)
     {
         auto scene = TollgateScene::createScene();
@@ -158,7 +158,7 @@ cocos2d::Vec2 SafeMapLayer::tileCoordFromPosition(cocos2d::Vec2 pos)
 void SafeMapLayer::setViewpointCenter(cocos2d::Vec2 position)
 {
     Size visibleSize = Director::getInstance()->getVisibleSize();
-    
+
     Vec2 centerPoint = Vec2(visibleSize.width / 2, visibleSize.height / 2);//屏幕的中点
 
     Vec2 offset = centerPoint - position;//偏移量

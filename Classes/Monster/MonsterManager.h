@@ -40,7 +40,7 @@ public:
 	std::vector<Monster*> getWoodWall()const;
 	std::map<Vec2, bool> getMonsPosMap()const { return m_monsPosMap; }
 	void setPosMap(Vec2 pos, bool flag);
-	
+
 
 	void setCurRoom(Vec2 curRoom);
 	Vec2 getCurRoom();
@@ -48,7 +48,7 @@ public:
 	void markRoomVisited(Vec2 room);
 	bool isRoomVisited(Vec2 room);
 	void setBulkMonsterNum(int giantNum);
-	void setInited() ;
+	void setInited();
 	bool getInited();
 private:
 

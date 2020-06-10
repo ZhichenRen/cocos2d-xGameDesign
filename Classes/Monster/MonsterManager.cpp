@@ -31,7 +31,7 @@ void MonsterManager::bindMapForWeapon()
 		monster->getMonsterWeapon()->bindMap(m_map);
 }
 
-bool MonsterManager::init() 
+bool MonsterManager::init()
 {
 	m_curCheckPoint = 1;
 	m_deathMonsNum = 0;
@@ -42,9 +42,9 @@ bool MonsterManager::init()
 
 
 
-void MonsterManager::createMonsterPos() 
+void MonsterManager::createMonsterPos()
 {//创建怪物位置，在显示怪物之前显示预选框。
-	
+
 	createRandomPos();
 	showPreRec();
 	auto callback2 = CallFunc::create(
@@ -118,7 +118,7 @@ void MonsterManager::bulkUpRandMons(int totalNum)
 	}
 }
 
-void MonsterManager::createMonstersWithGiantNum(int giantNum , int totalNum )
+void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 {
 	//giantNum为0：没有巨大化的怪物
 	//giantNum为1以上：有giantNum个巨大化的怪物
@@ -297,7 +297,7 @@ void MonsterManager::update(float dt)
 	//playerPosition = convertToNodeSpace(playerPosition);
 	if (m_deathMonsNum == m_monsterList.size())
 	{
-		
+
 		resetAllMons();
 	}
 
@@ -334,7 +334,7 @@ void MonsterManager::update(float dt)
 				m_deathMonsNum++;
 				continue;
 			}
-			
+
 
 
 			if (dis < 200)//200是嘲讽范围
@@ -347,20 +347,20 @@ void MonsterManager::update(float dt)
 				monster->wander();
 				continue;
 			}
-			
+
 			auto monsWeapon = monster->getMonsterWeapon();
 			if (dis < 2 * monsWeapon->getRange())//两倍距离以内再攻击
 				//攻击要用到地图中的坐标。
 				monsWeapon->attack(m_map->convertToWorldSpace(m_player->getPosition()));
 
-			
+
 			m_monsPosMap[blockOccupied] = 0;
 			//建立走位后的信息
-			
+
 			float xDirToMove = curPos.x > playerPosition.x ? -monster->getMonsterSpeed() : monster->getMonsterSpeed();
 			float yDirToMove = curPos.y > playerPosition.y ? -monster->getMonsterSpeed() : monster->getMonsterSpeed();
 
-			
+
 			if (abs(curPos.x - playerPosition.x) < 3)	xDirToMove = 0;
 			if (abs(curPos.y - playerPosition.y) < 3)	yDirToMove = 0;//若差距不大则不走位了
 
@@ -408,7 +408,7 @@ void MonsterManager::setPosMap(Vec2 pos, bool flag)
 	m_monsPosMap[pos] = flag;
 }
 
-bool MonsterManager::isPosOccupied(Vec2 pos) 
+bool MonsterManager::isPosOccupied(Vec2 pos)
 {
 	return m_monsPosMap[pos];
 }
