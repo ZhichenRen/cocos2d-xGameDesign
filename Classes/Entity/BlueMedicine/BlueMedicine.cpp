@@ -5,7 +5,8 @@
 bool BlueMedicine::init()
 {
 	bindSprite(Sprite::create("BlueMedicine.png"), 1.0f, 1.0f);
-
+	m_BlueMedicineValue = 50;
+	m_is_used = false;
 	return true;
 }
 
@@ -17,6 +18,7 @@ int BlueMedicine::getBlueMedicineValue()const
 void BlueMedicine::disappear()
 {
 	m_sprite->setVisible(false);
+	m_is_used = true;
 }
 
 //可以让蓝一直上下跳
@@ -31,4 +33,9 @@ void BlueMedicine::setRandomPosition()
 	auto ranPosition = ccp(curPosition.x + xDif, curPosition.y + yDif);
 	//设置一个偏差范围
 	this->setPosition(ranPosition);
+}
+
+bool BlueMedicine::isUsed()const
+{
+	return m_is_used;
 }

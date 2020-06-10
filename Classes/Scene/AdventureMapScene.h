@@ -82,6 +82,8 @@ public:
 	bool isBarrier(cocos2d::Vec2 position);
 	bool isMonsterRoom(cocos2d::Vec2 roomCoord);
 
+	virtual void update(float dt);
+
 	// implement the "static create()" method manually
 	CREATE_FUNC(AdventureMapLayer);
 };

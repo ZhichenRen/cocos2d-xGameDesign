@@ -76,3 +76,58 @@ bool AdventureMapLayer::isMonsterRoom(Vec2 roomCoord)
 {
 	return m_rooms[roomCoord] == ENEMY;
 }
+
+void AdventureMapLayer::update(float dt)
+{
+	for (auto it = m_blueList.begin(); it != m_blueList.end();)
+	{
+		if ((*it)->isUsed())
+		{
+			(*it)->removeFromParent();
+			it = m_blueList.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+
+	for (auto it = m_redList.begin(); it != m_redList.end();)
+	{
+		if ((*it)->isUsed())
+		{
+			(*it)->removeFromParent();
+			it = m_redList.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+
+	for (auto it = m_blueMedicineList.begin(); it != m_blueMedicineList.end();)
+	{
+		if ((*it)->isUsed())
+		{
+			(*it)->removeFromParent();
+			it = m_blueMedicineList.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+
+	for (auto it = m_coinList.begin(); it != m_coinList.end();)
+	{
+		if ((*it)->isUsed())
+		{
+			(*it)->removeFromParent();
+			it = m_coinList.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+}
