@@ -62,8 +62,8 @@ void MonsterManager::createRandomPos() {
 	//Éú³ÉËæ»úÒ°¹Ö
 	for (int i = 0; i < m_monsterList.size(); i++)
 	{
-		auto randInt1 = rand() % 21;
-		auto randInt2 = rand() % 21;
+		auto randInt1 = rand() % 18 + 2;
+		auto randInt2 = rand() % 18 + 2;
 
 		auto monsterPos = 32 * ccp(randInt1, randInt2) + ccp(16.5, 0);
 
