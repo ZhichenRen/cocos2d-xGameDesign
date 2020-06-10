@@ -59,6 +59,8 @@ public:
 	inline cocos2d::Sprite* getPortal() { return m_portal; }
 	inline std::vector<Coin*> getCoinList() { return m_coinList; }
 	inline std::vector<Blue*> getBlueList() { return m_blueList; }
+	inline std::vector<Red*> getRedMedicineList() { return m_redList; }
+	inline std::vector<BlueMedicine*> getBlueMedicineList() { return m_blueMedicineList; }
 	static cocos2d::Scene* createScene();
 	virtual bool init();
 
