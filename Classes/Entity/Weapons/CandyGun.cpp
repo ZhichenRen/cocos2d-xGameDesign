@@ -7,10 +7,10 @@ CandyGun::CandyGun()
 
 bool CandyGun::init()
 {
-	m_power_cost = 5;
+	m_power_cost = 3;
 	m_bullet_num = 100;
 	m_range = 100;
-	m_bullet_damage = 25;
+	m_bullet_damage = 10;
 	m_bullet_speed = 500;
 	m_attack_speed = 0.2f;
 	m_crit_rate = 0.3f;

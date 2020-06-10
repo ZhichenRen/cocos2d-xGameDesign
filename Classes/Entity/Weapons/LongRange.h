@@ -16,6 +16,7 @@ public:
 	virtual void attack(Point pos);
 	std::vector<Bullet*> getBullet()const;
 	int getDamage()const;
+	virtual void flipped(bool status);
 	virtual void update(float dt);
 protected:
 	int m_bullet_speed;//speed of the bullet

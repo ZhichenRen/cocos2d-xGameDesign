@@ -13,8 +13,9 @@ public:
 	int getBlueMedicineValue()const;
 	void disappear();
 	void setRandomPosition();
-
+	bool isUsed()const;
 private:
 	int m_BlueMedicineValue;
+	bool m_is_used;
 };
 #endif

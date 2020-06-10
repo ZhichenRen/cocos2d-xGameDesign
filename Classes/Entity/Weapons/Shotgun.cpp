@@ -7,7 +7,7 @@ bool Shotgun::init()
 	m_power_cost = 5;
 	m_bullet_num = 100;
 	m_range = 100;
-	m_bullet_damage = 10;
+	m_bullet_damage = 5;
 	m_bullet_speed = 500;
 	m_attack_speed = 0.25f;
 	m_degree = 15.0f;

@@ -133,23 +133,27 @@ void PlayerController::onKeyPressed(EventKeyboard::KeyCode keycode, Event* event
 	{
 		//CCLOG("按W：上方向键");
 		this->setiYSpeed(4);
+		m_player->resetWeaponPosition(m_player->getLeftSide());
 	}
 	else if (keycode == EventKeyboard::KeyCode::KEY_A)
 	{
 		//CCLOG("按A：左方向键");
 		this->setiXSpeed(-4);
 		m_player->setRightToward();
+		m_player->resetWeaponPosition(true);
 	}
 	else if (keycode == EventKeyboard::KeyCode::KEY_D)
 	{
 		//CCLOG("按D：右方向键");
 		this->setiXSpeed(4);
 		m_player->setLeftToward();
+		m_player->resetWeaponPosition(false);
 	}
 	else if (keycode == EventKeyboard::KeyCode::KEY_S)
 	{
 		//CCLOG("按S：下方向键");
 		this->setiYSpeed(-4);
+		m_player->resetWeaponPosition(m_player->getLeftSide());
 	}
 	else if (keycode == EventKeyboard::KeyCode::KEY_F)
 	{

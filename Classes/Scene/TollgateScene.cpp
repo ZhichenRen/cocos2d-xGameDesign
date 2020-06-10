@@ -44,7 +44,7 @@ void TollgateScene::addPlayer()
 
 void TollgateScene::addLongRangeWeapon()
 {
-	m_player->setLongRange(CandyGun::create());
+	m_player->setLongRange(RPG::create());
 //	m_player->setLongRange(RPG::create());
 }
 
@@ -96,6 +96,10 @@ void TollgateScene::loadUI()
 	m_hpBar = (LoadingBar*)Helper::seekWidgetByName(UI, "HP_bar");
 	m_mpBar = (LoadingBar*)Helper::seekWidgetByName(UI, "magic_bar");
 	m_armorBar = (LoadingBar*)Helper::seekWidgetByName(UI, "armor_bar");
+	m_hp = (Text*)Helper::seekWidgetByName(UI, "HP_label");
+	m_armor = (Text*)Helper::seekWidgetByName(UI, "armor_label");
+	m_mp = (Text*)Helper::seekWidgetByName(UI, "magic_label");
+	m_coin = (Text*)Helper::seekWidgetByName(UI, "coin_num");
 
 	auto pause_button = (Button*)Helper::seekWidgetByName(UI, "pause_button");
 	pause_button->addTouchEventListener(this, toucheventselector(TollgateScene::pauseEvent));
@@ -217,6 +221,30 @@ void TollgateScene::loadListeners()
 					Director::getInstance()->replaceScene(scene);
 				}
 			}
+			for (auto redMedicine : m_map->getRedMedicineList())
+			{
+				if (redMedicine->isUsed())
+				{
+					continue;
+				}
+				if (ccpDistance(m_player->getPosition(), redMedicine->getPosition()) < 20.0f && redMedicine->isVisible())
+				{
+					m_player->setiNowHp(m_player->getiNowHp() + redMedicine->getRedValue());
+					redMedicine->disappear();
+				}
+			}
+			for (auto blueMedicine : m_map->getBlueMedicineList())
+			{
+				if (blueMedicine->isUsed())
+				{
+					continue;
+				}
+				if (ccpDistance(m_player->getPosition(), blueMedicine->getPosition()) < 20.0f && blueMedicine->isVisible())
+				{
+					m_player->setiNowMp(m_player->getiNowMp() + blueMedicine->getBlueMedicineValue());
+					blueMedicine->disappear();
+				}
+			}
 			break;
 		case EventKeyboard::KeyCode::KEY_ESCAPE:
 			Size visible_size = Director::getInstance()->getVisibleSize();
@@ -291,6 +319,11 @@ void TollgateScene::update(float dt)
 		static_cast<float>(m_player->getiTotalHp()) * 100);
 	(m_mpBar)->setPercent(m_player->getiNowMp() /
 		static_cast<float>(m_player->getiTotalMp()) * 100);
+
+	m_hp->setText(std::to_string(m_player->getiNowHp()) + "/" + std::to_string(m_player->getiTotalHp()));
+	m_armor->setText(std::to_string(m_player->getiNowArmor()) + "/" + std::to_string(m_player->getiTotalArmor()));
+	m_mp->setText(std::to_string(m_player->getiNowMp()) + "/" + std::to_string(m_player->getiTotalMp()));
+	m_coin->setText(std::to_string(GameData::getCoinNum()));
 	auto playerPos = m_player->getPosition();
 	auto barrier = m_map->getCollidable();
 	auto map = m_map->getMap();
@@ -375,7 +408,7 @@ void TollgateScene::update(float dt)
 						cocos2d::Point explosive_origin_point = m_map->convertToWorldSpace(explosive_bullet->getPosition());
 						if (unlucky_monster->getBoundingBox().intersectsCircle(explosive_origin_point, explosive_bullet->getExplosionRange()))
 						{
-							unlucky_monster->hit(explosive_bullet->getExplosionDamage());
+							unlucky_monster->hit(explosive_bullet->getExplosionDamage(), bullet->getDegree(), 0);
 						}
 					}
 				}
@@ -428,6 +461,10 @@ void TollgateScene::update(float dt)
 	//monster bullet
 	for (auto bullet : monsters_bullet)
 	{
+		if (bullet->isUsed())
+		{
+			continue;
+		}
 		cocos2d::Point bullet_pos = bullet->getPosition();
 		if (m_map->isBarrier(bullet_pos))
 		{
@@ -440,12 +477,40 @@ void TollgateScene::update(float dt)
 		}
 	}
 
+	//小金币和小蓝的自动拾取
 	for (auto coin : m_map->getCoinList())
 	{
-		if (ccpDistance(coin->getPosition(), m_player->getPosition()) < 20.0f && coin->isVisible())
+		if (coin->isUsed())
 		{
-			coin->setVisible(false);
-			GameData::setCoinNum(GameData::getCoinNum() + 1);
+			continue;
+		}
+		if (ccpDistance(coin->getPosition(), m_player->getPosition()) < 100.0f && coin->isVisible())
+		{
+			auto moveBy = MoveBy::create(1.0f / 60.0f, (m_player->getPosition() - coin->getPosition()) / 5.0f);
+			coin->runAction(moveBy);
+			if (ccpDistance(coin->getPosition(), m_player->getPosition()) < 20.0f)
+			{
+				coin->disappear();
+				GameData::setCoinNum(GameData::getCoinNum() + coin->getPrice());
+			}
 		}
 	}
+	for (auto blue : m_map->getBlueList())
+	{
+		if (blue->isUsed())
+		{
+			continue;
+		}
+		if (ccpDistance(blue->getPosition(), m_player->getPosition()) < 100.0f && blue->isVisible())
+		{
+			auto moveBy = MoveBy::create(1.0f / 60.0f, (m_player->getPosition() - blue->getPosition()) / 5.0f);
+			blue->runAction(moveBy);
+			if (ccpDistance(blue->getPosition(), m_player->getPosition()) < 20.0f)
+			{
+				m_player->setiNowMp(m_player->getiNowMp() + blue->getBlueValue());
+				blue->disappear();
+			}
+		}
+	}
+	
 }
