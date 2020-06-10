@@ -222,16 +222,26 @@ void TollgateScene::loadListeners()
 			}
 			for (auto redMedicine : m_map->getRedMedicineList())
 			{
+				if (redMedicine->isUsed())
+				{
+					continue;
+				}
 				if (ccpDistance(m_player->getPosition(), redMedicine->getPosition()) < 20.0f && redMedicine->isVisible())
 				{
-					redMedicine->setVisible(false);
+					m_player->setiNowHp(m_player->getiNowHp() + redMedicine->getRedValue());
+					redMedicine->disappear();
 				}
 			}
 			for (auto blueMedicine : m_map->getBlueMedicineList())
 			{
+				if (blueMedicine->isUsed())
+				{
+					continue;
+				}
 				if (ccpDistance(m_player->getPosition(), blueMedicine->getPosition()) < 20.0f && blueMedicine->isVisible())
 				{
-					blueMedicine->setVisible(false);
+					m_player->setiNowMp(m_player->getiNowMp() + blueMedicine->getBlueMedicineValue());
+					blueMedicine->disappear();
 				}
 			}
 			break;
@@ -461,29 +471,40 @@ void TollgateScene::update(float dt)
 		}
 	}
 
+	//小金币和小蓝的自动拾取
 	for (auto coin : m_map->getCoinList())
 	{
+		if (coin->isUsed())
+		{
+			continue;
+		}
 		if (ccpDistance(coin->getPosition(), m_player->getPosition()) < 100.0f && coin->isVisible())
 		{
 			auto moveBy = MoveBy::create(1.0f / 60.0f, (m_player->getPosition() - coin->getPosition()) / 5.0f);
 			coin->runAction(moveBy);
 			if (ccpDistance(coin->getPosition(), m_player->getPosition()) < 20.0f)
 			{
-				coin->setVisible(false);
-				GameData::setCoinNum(GameData::getCoinNum() + 1);
+				coin->disappear();
+				GameData::setCoinNum(GameData::getCoinNum() + coin->getPrice());
 			}
 		}
 	}
 	for (auto blue : m_map->getBlueList())
 	{
+		if (blue->isUsed())
+		{
+			continue;
+		}
 		if (ccpDistance(blue->getPosition(), m_player->getPosition()) < 100.0f && blue->isVisible())
 		{
 			auto moveBy = MoveBy::create(1.0f / 60.0f, (m_player->getPosition() - blue->getPosition()) / 5.0f);
 			blue->runAction(moveBy);
 			if (ccpDistance(blue->getPosition(), m_player->getPosition()) < 20.0f)
 			{
-				blue->setVisible(false);
+				m_player->setiNowMp(m_player->getiNowMp() + blue->getBlueValue());
+				blue->disappear();
 			}
 		}
 	}
+	
 }
