@@ -12,10 +12,10 @@ bool RPG::init()
 	m_power_cost = 5;
 	m_bullet_num = 30;
 	m_range = 250;
-	m_bullet_damage = 10;
+	m_bullet_damage = 5;
 	m_bullet_speed = 300;
 	m_attack_speed = 0.3f;
-	m_explosion_damage = 30;
+	m_explosion_damage = 25;
 	m_explosion_range = 30;
 	m_crit_rate = 0.0f;
 	m_bullet_picture = std::string("RPG.png");
