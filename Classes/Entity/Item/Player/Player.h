@@ -6,13 +6,12 @@
 #include <typeinfo>
 #include "Entity/Weapons/Bullets/Bullet.h"
 #include "Entity/Item/Item.h"
-#include "Scene/AdventureMapScene.h"
 #include "AuxiliaryClass/AnimationUtil/AnimationUtil.h"
 
 #include "Entity/Weapons/LongRange.h"
 //#include "Entity/Weapons/CloseWeapon.h"
-
 #include "Controller/ControllerListener.h"
+#include "Scene/AdventureMapScene.h"
 #include "editor-support/cocostudio/CCSGUIReader.h"
 #include "ui/CocosGUI.h"
 using namespace cocos2d::ui;
@@ -84,6 +83,10 @@ public:
 	inline void setHpBar(LoadingBar* hpBar) { m_hpBar = hpBar; }
 	inline void setMpBar(LoadingBar* mpBar) { m_mpBar = mpBar; }
 	inline void setArmorBar(LoadingBar* armorBar) { m_armorBar = armorBar; }
+	inline bool getLeftSide() const { return  m_leftSide; }
+	inline bool getRightSide() const { return m_rightSide; }
+	inline void setLeftSide(bool aim) { m_leftSide = aim; }
+	inline void setRightSide(bool aim) { m_rightSide = aim; }
 
 	std::vector<Bullet*> getBullet()const;
 
@@ -92,6 +95,8 @@ public:
 	LoadingBar* m_mpBar = NULL;
 	LoadingBar* m_armorBar = NULL;
 	std::vector<Bullet*> m_bullet;
+	bool isAttackingWithCloseWeapon()const;
+	void resetWeaponPosition(bool status/*true stands for left and false stands for right*/);
 
 protected:
 	AdventureMapLayer* m_map;
@@ -123,12 +128,10 @@ protected:
 	int m_numLongRangeWeapon;
 	int m_numCloseWeapon;
 
+	bool m_is_attacking;
+	bool m_is_close_weapon_now;
+
 private:
 	bool m_leftSide = false;
 	bool m_rightSide = true;
-
-	inline bool getLeftSide() const { return  m_leftSide; }
-	inline bool getRightSide() const { return m_rightSide; }
-	inline void setLeftSide(bool aim) { m_leftSide = aim; }
-	inline void setRightSide(bool aim) { m_rightSide = aim; }
 };
