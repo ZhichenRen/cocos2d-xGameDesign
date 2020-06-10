@@ -44,7 +44,7 @@ void TollgateScene::addPlayer()
 
 void TollgateScene::addLongRangeWeapon()
 {
-	m_player->setLongRange(CandyGun::create());
+	m_player->setLongRange(RPG::create());
 //	m_player->setLongRange(RPG::create());
 }
 

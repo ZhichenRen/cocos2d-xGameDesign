@@ -32,10 +32,10 @@ bool AdventureMapLayer::init()
 	m_miniMap = TMXTiledMap::create("map/miniMap.tmx");
 	this->addChild(m_miniMap, 0, 300);
 
+	this->scheduleUpdate();
 	//loadMonsters();
 	return true;
 }
-
 
 //像素坐标转换为瓦片坐标
 cocos2d::Vec2 AdventureMapLayer::tileCoordFromPosition(Vec2 pos)
