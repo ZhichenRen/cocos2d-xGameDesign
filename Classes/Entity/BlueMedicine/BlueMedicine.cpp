@@ -5,7 +5,7 @@
 bool BlueMedicine::init()
 {
 	bindSprite(Sprite::create("BlueMedicine.png"), 1.0f, 1.0f);
-	m_BlueMedicineValue = 50;
+	m_BlueMedicineValue = 60;
 	m_is_used = false;
 	return true;
 }
