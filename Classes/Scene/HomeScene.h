@@ -8,7 +8,7 @@ class HomeMenuLayer :public cocos2d::Layer
 {
 public:
 	static cocos2d::Scene* createScene();
-	
+
 	virtual bool init();
 
 	void menuItemStartCallback(cocos2d::Ref* pSender);

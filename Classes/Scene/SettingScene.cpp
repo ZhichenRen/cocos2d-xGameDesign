@@ -25,7 +25,7 @@ bool SettingLayer::init()
 	{
 		return false;
 	}
-	
+
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto origin = Director::getInstance()->getVisibleOrigin();
 	//背景
@@ -42,10 +42,10 @@ bool SettingLayer::init()
 
 	//添加事件监听器
 	slider->addEventListener([slider](Ref* pSender, Slider::EventType type)
-		{
-			float percentage = static_cast<float>(slider->getPercent());//获取百分比
-			SimpleAudioEngine::getInstance()->setBackgroundMusicVolume(percentage / 100.0f);
-		});
+	{
+		float percentage = static_cast<float>(slider->getPercent());//获取百分比
+		SimpleAudioEngine::getInstance()->setBackgroundMusicVolume(percentage / 100.0f);
+	});
 
 	this->addChild(slider);
 	//音量控制按钮

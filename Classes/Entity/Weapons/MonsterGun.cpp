@@ -13,6 +13,7 @@ bool MonsterGun::init()
 	m_power_cost = 0;
 	m_bullet_num = 100;
 	m_range = 100;
+	m_bullet_damage = 1;
 	m_bullet_speed = 100;
 	m_attack_speed = 2.0f;
 	m_bullet_picture = std::string("MonsterBullet.png");

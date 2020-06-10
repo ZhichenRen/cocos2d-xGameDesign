@@ -18,7 +18,7 @@ void CloseWeapon::attack(Point pos)
 	auto rotate_down = RotateBy::create(m_attack_speed / 2, 90);
 	auto rotate_up = RotateBy::create(m_attack_speed / 2, -90);
 	auto call_back = CallFunc::create(
-		[&](){
+		[&]() {
 		m_is_attack = false;
 	}
 	);
@@ -52,7 +52,7 @@ bool CloseWeapon::isCollideWith(Entity* entity)
 	{
 		weapon_rect = Rect(pos_now.x, pos_now.y - m_range, m_range, 2 * m_range);
 	}
-	else if(m_attack_position == LEFT)
+	else if (m_attack_position == LEFT)
 	{
 		weapon_rect = Rect(pos_now.x - m_range, pos_now.y - m_range, m_range, 2 * m_range);
 	}

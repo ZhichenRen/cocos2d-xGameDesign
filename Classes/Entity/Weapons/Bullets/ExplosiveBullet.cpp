@@ -34,7 +34,7 @@ void ExplosiveBullet::explode()
 	this->addChild(explosion);
 
 	auto callback = CallFunc::create(
-		[this](){
+		[this]() {
 		this->explosionCallback();
 	}
 	);

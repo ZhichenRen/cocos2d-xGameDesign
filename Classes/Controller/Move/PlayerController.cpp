@@ -4,7 +4,6 @@ bool PlayerController::init()
 {
 	m_iXSpeed = 0;
 	m_iYSpeed = 0;
-	//registeControllerEvent();
 	this->scheduleUpdate();
 	return true;
 }
@@ -79,7 +78,7 @@ void PlayerController::animateOperate()
 	}
 }
 
-void PlayerController::isEncounterBarriers(const int x,const int y)
+void PlayerController::isEncounterBarriers(const int x, const int y)
 {
 	Size spriteSize = m_player->getSprite()->getContentSize();
 	Point dstPos = Point(x + m_player->isPositiveOrNegative(m_player->getController()->getiXSpeed()) * 20 +
@@ -112,9 +111,9 @@ void PlayerController::isEncounterBarriers(const int x,const int y)
 			if (prop.asString().compare("true") == 0)
 			{
 				auto moveBy = MoveBy::create(0.01f, Point(-(m_player->isPositiveOrNegative
-				(m_player->getController()->getiXSpeed())+ m_player->getSkillDirectionX()) * 5,
+				(m_player->getController()->getiXSpeed()) + m_player->getSkillDirectionX()) * 5,
 					-(m_player->isPositiveOrNegative(m_player->getController()->
-						getiYSpeed())+ m_player->getSkillDirectionY()) * 5));
+						getiYSpeed()) + m_player->getSkillDirectionY()) * 5));
 
 				/* 执行动作，碰撞到障碍物时的反弹效果 */
 				if (m_rangerSkill != NULL)
@@ -130,24 +129,24 @@ void PlayerController::isEncounterBarriers(const int x,const int y)
 
 void PlayerController::onKeyPressed(EventKeyboard::KeyCode keycode, Event* event)
 {
-	if (keycode == EventKeyboard::KeyCode::KEY_W) 
+	if (keycode == EventKeyboard::KeyCode::KEY_W)
 	{
 		//CCLOG("按W：上方向键");
 		this->setiYSpeed(4);
 	}
-	else if (keycode == EventKeyboard::KeyCode::KEY_A) 
+	else if (keycode == EventKeyboard::KeyCode::KEY_A)
 	{
 		//CCLOG("按A：左方向键");
 		this->setiXSpeed(-4);
 		m_player->setRightToward();
 	}
-	else if (keycode == EventKeyboard::KeyCode::KEY_D) 
+	else if (keycode == EventKeyboard::KeyCode::KEY_D)
 	{
 		//CCLOG("按D：右方向键");
 		this->setiXSpeed(4);
 		m_player->setLeftToward();
 	}
-	else if (keycode == EventKeyboard::KeyCode::KEY_S) 
+	else if (keycode == EventKeyboard::KeyCode::KEY_S)
 	{
 		//CCLOG("按S：下方向键");
 		this->setiYSpeed(-4);
@@ -174,12 +173,15 @@ void PlayerController::onKeyPressed(EventKeyboard::KeyCode keycode, Event* event
 
 void PlayerController::onKeyReleased(EventKeyboard::KeyCode keycode, Event* event)
 {
-	if (getiXSpeed() != 0 || getiYSpeed() != 0)
+	if (keycode == EventKeyboard::KeyCode::KEY_A || keycode == EventKeyboard::KeyCode::KEY_D)
 	{
 		this->setiXSpeed(0);
+	}
+	else if(keycode == EventKeyboard::KeyCode::KEY_W || keycode == EventKeyboard::KeyCode::KEY_S)
+	{
 		this->setiYSpeed(0);
 	}
-	if (m_walkAnimate != NULL)
+	if (m_walkAnimate != NULL && m_iXSpeed == 0 && m_iYSpeed == 0)
 	{
 		stopAction(m_walkAnimate);
 		m_walkAnimate = NULL;
@@ -195,7 +197,7 @@ void PlayerController::onKeyReleased(EventKeyboard::KeyCode keycode, Event* even
 void PlayerController::playerOperate()const
 {
 	m_player->setiNowCD((m_player->getiNowCD() + 1));
-	(m_player->m_cdBar)->setPercent(m_player->getiNowCD() / 150.0f * 100);
+    m_player->setArmorCd();
 	if (m_player->getIsInSkill())
 	{
 		m_player->setiNowSkillDuration(m_player->getiNowSkillDuration() + 1);

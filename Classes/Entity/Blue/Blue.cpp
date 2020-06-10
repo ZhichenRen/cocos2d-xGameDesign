@@ -5,7 +5,7 @@
 bool Blue::init()
 {
 	bindSprite(Sprite::create("Blue.png"), 1.0f, 1.0f);
-	
+
 	return true;
 }
 
@@ -29,6 +29,6 @@ void Blue::setRandomPosition()
 	auto xDif = ranF1 * RANDOMRANGE * 2 - RANDOMRANGE;
 	auto yDif = ranF2 * RANDOMRANGE * 2 - RANDOMRANGE;
 	auto ranPosition = ccp(curPosition.x + xDif, curPosition.y + yDif);
-		//ÉèÖÃÒ»¸öÆ«²î·¶Î§
+	//ÉèÖÃÒ»¸öÆ«²î·¶Î§
 	this->setPosition(ranPosition);
 }
