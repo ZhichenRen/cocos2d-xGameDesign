@@ -1,7 +1,7 @@
 #pragma once
 #ifndef __Monster_H__
 #define __Monster_H__
-#define BLUERATE 0.2f
+#define BLUERATE 0.25f
 #define REDRATE 0.05f
 #define BLUEMEDICINERATE 0.1f
 #include "Entity/Entity.h"
