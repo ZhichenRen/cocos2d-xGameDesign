@@ -220,13 +220,18 @@ void TollgateScene::loadListeners()
 					Director::getInstance()->replaceScene(scene);
 				}
 			}
-
-			for (auto blue_medicine : m_map->getBlueMedicineList())
+			for (auto redMedicine : m_map->getRedMedicineList())
 			{
-				if (ccpDistance(m_player->getPosition(), blue_medicine->getPosition()) < 5.0f)
+				if (ccpDistance(m_player->getPosition(), redMedicine->getPosition()) < 20.0f && redMedicine->isVisible())
 				{
-					m_player->setiNowMp(m_player->getiNowMp() + blue_medicine->getBlueMedicineValue());
-					blue_medicine->disappear();
+					redMedicine->setVisible(false);
+				}
+			}
+			for (auto blueMedicine : m_map->getBlueMedicineList())
+			{
+				if (ccpDistance(m_player->getPosition(), blueMedicine->getPosition()) < 20.0f && blueMedicine->isVisible())
+				{
+					blueMedicine->setVisible(false);
 				}
 			}
 			break;
@@ -458,10 +463,27 @@ void TollgateScene::update(float dt)
 
 	for (auto coin : m_map->getCoinList())
 	{
-		if (ccpDistance(coin->getPosition(), m_player->getPosition()) < 20.0f && coin->isVisible())
+		if (ccpDistance(coin->getPosition(), m_player->getPosition()) < 100.0f && coin->isVisible())
 		{
-			coin->setVisible(false);
-			GameData::setCoinNum(GameData::getCoinNum() + 1);
+			auto moveBy = MoveBy::create(1.0f / 60.0f, (m_player->getPosition() - coin->getPosition()) / 5.0f);
+			coin->runAction(moveBy);
+			if (ccpDistance(coin->getPosition(), m_player->getPosition()) < 20.0f)
+			{
+				coin->setVisible(false);
+				GameData::setCoinNum(GameData::getCoinNum() + 1);
+			}
+		}
+	}
+	for (auto blue : m_map->getBlueList())
+	{
+		if (ccpDistance(blue->getPosition(), m_player->getPosition()) < 100.0f && blue->isVisible())
+		{
+			auto moveBy = MoveBy::create(1.0f / 60.0f, (m_player->getPosition() - blue->getPosition()) / 5.0f);
+			blue->runAction(moveBy);
+			if (ccpDistance(blue->getPosition(), m_player->getPosition()) < 20.0f)
+			{
+				blue->setVisible(false);
+			}
 		}
 	}
 }
