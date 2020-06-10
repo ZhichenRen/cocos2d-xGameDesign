@@ -3,7 +3,7 @@
 #include "Entity/Item/Player/Player.h"
 #include "cocos2d.h"
 using namespace cocos2d;
-class Ranger:public Player
+class Ranger :public Player
 {
 public:
 	Ranger();

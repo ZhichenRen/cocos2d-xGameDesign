@@ -4,7 +4,7 @@
 #include "Controller/ControllerListener.h"
 #include "cocos2d.h"
 using namespace cocos2d;
-class Item:public Entity,public ControllerListener
+class Item :public Entity, public ControllerListener
 {
 public:
 	inline int getiNowHp() const { return m_iNowHp; }

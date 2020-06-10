@@ -43,15 +43,15 @@ void Shop::setWeapon(int num)
 
 void Shop::showFlowWordFirstMeet()
 {
-	m_flowWord->showShopWord("杩欎綅鍕囧＋,鎮ㄨ鑺辫垂20閲戝竵璐拱涓�鎶婄绉樻鍣ㄥ悧?");
+	m_flowWord->showShopWord("这位勇士,您要花费20金币购买一把神秘武器吗?");
 }
 
 void Shop::showFlowWordLackMoney()
 {
-	m_flowWord->showShopWord("鎮ㄧ殑閲戝竵涓嶈冻,涓嬫鍐嶆潵!");
+	m_flowWord->showShopWord("您的金币不足,下次再来!");
 }
 
 void Shop::showFlowWordEnoughMoney()
 {
-	m_flowWord->showShopWord("璋㈣阿鎯犻【,鎮ㄤ細鏇村姞寮哄ぇ!");
+	m_flowWord->showShopWord("谢谢惠顾,您会更加强大!");
 }

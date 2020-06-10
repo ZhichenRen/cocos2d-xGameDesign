@@ -19,13 +19,13 @@ void FlowWord::showWord(const char* text, Point pos)
 	auto scaleUp = ScaleBy::create(0.2f, 1.2);
 	auto scaleDown = ScaleTo::create(0.2f, 1);
 
-	auto callBack=CallFunc::create
+	auto callBack = CallFunc::create
 	(
 		[&]()
-		{
-			m_message->setVisible(false);
-			m_message->removeFromParentAndCleanup(true);
-		}
+	{
+		m_message->setVisible(false);
+		m_message->removeFromParentAndCleanup(true);
+	}
 	);
 	auto actions = Sequence::create(scaleUp, scaleDown, callBack, NULL);
 
@@ -40,15 +40,15 @@ void FlowWord::showShopWord(const char* text)
 
 	m_message->setVisible(true);
 	auto scaleUp = ScaleBy::create(0.2f, 1.2);
-	auto scaleDown = ScaleTo::create(3.0f, 1.0/1.2);
+	auto scaleDown = ScaleTo::create(3.0f, 1.0 / 1.2);
 
 	auto callBack = CallFunc::create
 	(
 		[&]()
-		{
-			m_message->setVisible(false);
-			//m_message->removeFromParentAndCleanup(true);
-		}
+	{
+		m_message->setVisible(false);
+		//m_message->removeFromParentAndCleanup(true);
+	}
 	);
 	auto actions = Sequence::create(scaleUp, scaleDown, callBack, NULL);
 
@@ -59,7 +59,7 @@ void FlowWord::showShopWord(const char* text)
 void FlowWord::showMonsDmg(const char* text, float ySize)
 {
 	m_message->setString(text);
-	m_message->setPosition(getPosition()+ccp(0, 5 + ySize));
+	m_message->setPosition(getPosition() + ccp(0, 5 + ySize));
 	m_message->setVisible(true);
 	m_message->stopAllActions();
 	auto scaleUp = ScaleBy::create(0.2f, 1.2);
@@ -103,7 +103,7 @@ void FlowWord::showCritDmg(const char* text, float ySize)
 void FlowWord::showMonsTaunted()
 {
 	m_message->setString("!!");
-	m_message->setPosition(getPosition() + ccp(0, 40 ));
+	m_message->setPosition(getPosition() + ccp(0, 40));
 	m_message->setVisible(true);
 	auto scaleUp = ScaleBy::create(0.2f, 2.0);
 	auto scaleDown = ScaleTo::create(0.6f, 1);

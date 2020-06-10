@@ -8,7 +8,7 @@ bool Pig::init()
 	this->addChild(m_damageMsg);
 	setHp(this->m_initHp);
 	setResTrack("Pig.png");
-	this->bindSprite(Sprite::create(this->getResTrack()),0.6f,0.6f);
+	this->bindSprite(Sprite::create(this->getResTrack()), 0.6f, 0.6f);
 	auto sword = MonsterSword::create();
 	//sword->setPosition(this->getPosition());
 	setMonsterWeapon(sword);

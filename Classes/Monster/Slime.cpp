@@ -7,7 +7,7 @@ bool Slime::init()
 	setHp(this->m_initHp);
 	m_damageMsg = FlowWord::create();
 	this->addChild(m_damageMsg);
-	setResTrack("Slime.png"); 
+	setResTrack("Slime.png");
 	auto gun = MonsterGun::create();
 	gun->setPosition(this->getPosition());
 	setMonsterWeapon(gun);

@@ -28,7 +28,7 @@ bool AdventureMapLayer::init()
 	}
 
 	createRandomMap();
-	
+
 	m_miniMap = TMXTiledMap::create("map/miniMap.tmx");
 	this->addChild(m_miniMap, 0, 300);
 

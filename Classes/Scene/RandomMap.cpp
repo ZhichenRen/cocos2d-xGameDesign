@@ -58,7 +58,7 @@ void AdventureMapLayer::createRandomMap()
 	occupiedRoom.push_back(nextRoom);
 
 	roadPairs.push_back({ startRoom,nextRoom });
-	
+
 	int roomCnt = 2;
 
 	while (roomCnt < ROOM_NUM)//随机创建7个房间
@@ -89,9 +89,9 @@ void AdventureMapLayer::createRandomMap()
 		}
 		while (nearRoomCnt != randRoomNum)//延伸出1~3个房间
 		{
-			randDir = rand()% dirVec.size();//选取随机方向
+			randDir = rand() % dirVec.size();//选取随机方向
 			Vec2 offset = Vec2(dir[dirVec[randDir]].x, dir[dirVec[randDir]].y);
-			if (m_rooms[nextRoom+offset] == EMPTY)
+			if (m_rooms[nextRoom + offset] == EMPTY)
 			{
 				occupiedRoom.push_back(offset + nextRoom);
 
@@ -108,7 +108,7 @@ void AdventureMapLayer::createRandomMap()
 				else if (roomCnt == ROOM_NUM - 2)
 				{
 					m_rooms[nextRoom + offset] = BONUS;
-					
+
 				}
 				else if (roomCnt == ROOM_NUM - 1)
 				{
@@ -134,7 +134,7 @@ void AdventureMapLayer::createRandomMap()
 		}
 		else
 		{
-			buildRoom(GameData::getCoord()[z],false);
+			buildRoom(GameData::getCoord()[z], false);
 		}
 	}
 	m_roadPairs = roadPairs;
@@ -188,7 +188,7 @@ void AdventureMapLayer::buildRoad(std::pair<cocos2d::Vec2, cocos2d::Vec2> roadPa
 	int roomCoord2 = 5 * room2.x + room2.y;
 	if (room1.x == room2.x)//房间左右相连
 	{
-		
+
 		int midTileCoordX = (GameData::getCoord()[roomCoord1].x + GameData::getCoord()[roomCoord2].x) / 2;
 		int tileCoordY = GameData::getCoord()[roomCoord1].y;
 		for (int i = midTileCoordX - 9; i <= midTileCoordX + 10; i++)//修路 修墙
@@ -198,7 +198,7 @@ void AdventureMapLayer::buildRoad(std::pair<cocos2d::Vec2, cocos2d::Vec2> roadPa
 			{
 				m_wall->setTileGID(WALL_TILE_DOWN, Vec2(i, tileCoordY + 4));
 			}
-			
+
 			m_wall->setTileGID(WALL_TILE_UP, Vec2(i, tileCoordY - 3));//修下墙
 			m_wall->setTileGID(WALL_TILE_DOWN, Vec2(i, tileCoordY - 2));
 			for (int j = tileCoordY - 2; j <= tileCoordY + 2; j++)
@@ -212,7 +212,7 @@ void AdventureMapLayer::buildRoad(std::pair<cocos2d::Vec2, cocos2d::Vec2> roadPa
 				{
 					m_collidable->setTileGID(2, Vec2(i, j));
 				}
-				
+
 			}
 		}
 		int leftDoorX = midTileCoordX - 9;
@@ -230,8 +230,8 @@ void AdventureMapLayer::buildRoad(std::pair<cocos2d::Vec2, cocos2d::Vec2> roadPa
 		int midTileCoordY = (GameData::getCoord()[roomCoord1].y + GameData::getCoord()[roomCoord2].y) / 2;
 		for (int i = midTileCoordY - 9; i <= midTileCoordY + 10; i++)
 		{
-			m_wall->setTileGID(WALL_TILE_LEFT, Vec2(tileCoordX - 3,i));
-			m_wall->setTileGID(WALL_TILE_RIGHT, Vec2(tileCoordX + 3,i));
+			m_wall->setTileGID(WALL_TILE_LEFT, Vec2(tileCoordX - 3, i));
+			m_wall->setTileGID(WALL_TILE_RIGHT, Vec2(tileCoordX + 3, i));
 			for (int j = tileCoordX - 2; j <= tileCoordX + 2; j++)
 			{
 				m_road->setTileGID(ROAD_TILE, Vec2(j, i));
