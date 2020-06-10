@@ -13,7 +13,7 @@ public:
 	int getBlueValue()const;
 	void disappear();
 	void setRandomPosition();
-	
+
 private:
 	int m_blueValue;
 };

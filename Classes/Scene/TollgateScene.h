@@ -1,5 +1,6 @@
 #pragma once
 #pragma once
+#pragma once
 #include "cocos2d.h"
 #include "typeinfo"
 #include "AuxiliaryClass/AnimationUtil/AnimationUtil.h"
@@ -47,6 +48,8 @@ private:
 	LoadingBar* m_cdBar = NULL;
 	LoadingBar* m_hpBar = NULL;
 	LoadingBar* m_mpBar = NULL;
+	LoadingBar* m_armorBar = NULL;
+
 	Player* m_player;
 	AdventureMapLayer* m_map;
 	MonsterManager* m_monsterMgr;

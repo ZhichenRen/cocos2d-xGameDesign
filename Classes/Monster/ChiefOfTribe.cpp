@@ -31,4 +31,3 @@ void ChiefOfTribe::resetPropoties()
 		m_fSpeed /= 1.3;
 	}
 }
-

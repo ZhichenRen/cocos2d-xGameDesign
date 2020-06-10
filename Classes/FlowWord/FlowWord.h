@@ -4,7 +4,7 @@
 #include "cocos2d.h"
 USING_NS_CC;
 
-class FlowWord: public Node
+class FlowWord : public Node
 {
 public:
 	CREATE_FUNC(FlowWord);
