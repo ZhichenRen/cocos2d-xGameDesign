@@ -4,6 +4,7 @@ Weapon::Weapon()
 {
 	m_power_cost = 0;
 	m_range = 0;
+	m_attack_speed = 1.0f;
 }
 
 bool Weapon::init()
@@ -39,6 +40,21 @@ void Weapon::bindMap(AdventureMapLayer* map)
 void Weapon::setCritRate(float crit_rate)
 {
 	m_crit_rate = crit_rate;
+}
+
+float Weapon::getAttackSpeed()const
+{
+	return m_attack_speed;
+}
+
+void Weapon::resetPosition()
+{
+	getSprite()->setRotation(0.0f);
+}
+
+void Weapon::flipped(bool status)
+{
+
 }
 
 Weapon::~Weapon()

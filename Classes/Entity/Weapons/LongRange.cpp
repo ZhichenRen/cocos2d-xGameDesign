@@ -142,6 +142,20 @@ Bullet* LongRange::generateBullet(float degree, float scale_x, float scale_y)
 	return new_bullet;
 }
 
+void LongRange::flipped(bool status)
+{
+	if (status == true)//toward left
+	{
+		getSprite()->setFlippedX(true);
+		getSprite()->setAnchorPoint(Vec2(1.0f, 0.5f));
+	}
+	else
+	{
+		getSprite()->setFlippedX(false);
+		getSprite()->setAnchorPoint(Vec2(0.0f, 0.5f));
+	}
+}
+
 LongRange::~LongRange()
 {
 

@@ -68,3 +68,17 @@ float CloseWeapon::getCritRate()const
 {
 	return m_crit_rate;
 }
+
+void CloseWeapon::flipped(bool status)
+{
+	if (status == true)//toward left
+	{
+		getSprite()->setFlippedX(true);
+		getSprite()->setAnchorPoint(Vec2(1.0f, 0.0f));
+	}
+	else
+	{
+		getSprite()->setFlippedX(false);
+		getSprite()->setAnchorPoint(Vec2(0.0f, 0.0f));
+	}
+}

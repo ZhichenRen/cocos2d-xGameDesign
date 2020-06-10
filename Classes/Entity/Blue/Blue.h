@@ -13,8 +13,10 @@ public:
 	int getBlueValue()const;
 	void disappear();
 	void setRandomPosition();
+	bool isUsed()const;
 
 private:
 	int m_blueValue;
+	bool m_is_used;
 };
 #endif

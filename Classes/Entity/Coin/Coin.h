@@ -11,7 +11,9 @@ public:
 public:
 	int getPrice()const;
 	void disappear();
+	bool isUsed()const;
 private:
 	int m_price;
+	bool m_is_used;
 };
 #endif
