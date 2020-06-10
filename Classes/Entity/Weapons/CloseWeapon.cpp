@@ -63,3 +63,8 @@ bool CloseWeapon::isAttack()const
 {
 	return m_is_attack;
 }
+
+float CloseWeapon::getCritRate()const
+{
+	return m_crit_rate;
+}

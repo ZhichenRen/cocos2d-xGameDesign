@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="187" height="188" tilewidth="32" tileheight="32" nextobjectid="3">
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="187" height="188" tilewidth="32" tileheight="32" nextobjectid="6">
  <tileset firstgid="1" source="hero.tsx"/>
  <tileset firstgid="2" source="material.tsx"/>
  <layer name="ground" width="187" height="188">

@@ -9,6 +9,8 @@
 #include "Scene/PauseScene.h"
 #include "Scene/AdventureMapScene.h"
 #include "Monster/MonsterManager.h"
+#include "Bonus/Shop.h"
+#include "Bonus/Chest.h"
 
 #include "editor-support/cocostudio/CCSGUIReader.h"
 #include "ui/CocosGUI.h"
@@ -23,13 +25,16 @@ public:
 	virtual void onEnter();
 	void addPlayer();
 	void loadUI();
+	void loadMonstersInNewRoom(int giantNum);
 	void loadMap();
 	void addLongRangeWeapon();
 	void loadController();
 	void loadMonsters();
 	void loadListeners();
+	void pauseEvent(Ref*, TouchEventType type);
 
 	void updateMiniMap(TMXTiledMap* miniMap);
+	void updateCoinNum();
 
 	virtual void update(float dt);
 	void menuOkCallback(Ref* pSender);
@@ -44,5 +49,5 @@ private:
 	LoadingBar* m_mpBar = NULL;
 	Player* m_player;
 	AdventureMapLayer* m_map;
-	MonsterManager* monsterMgr;
+	MonsterManager* m_monsterMgr;
 };

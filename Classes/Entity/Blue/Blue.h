@@ -1,3 +1,4 @@
+#pragma once
 #ifndef __Blue_H__
 #define __Blue_H__
 

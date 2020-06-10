@@ -20,9 +20,11 @@ public:
 	int getPowerCost()const;
 	int getRange()const;
 	void bindMap(AdventureMapLayer* map);
+	void setCritRate(float crit_rate);
 protected:
 	int m_power_cost;
 	int m_range;
+	float m_crit_rate;
 	AdventureMapLayer* m_map;
 };
 #endif

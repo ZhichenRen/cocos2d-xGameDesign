@@ -26,8 +26,9 @@ void Blue::setRandomPosition()
 
 	auto ranF1 = CCRANDOM_0_1();
 	auto ranF2 = CCRANDOM_0_1();
-
-	auto ranPosition = ccp(curPosition.x + ranF1 * RANDOMRANGE, curPosition.y + ranF2 * RANDOMRANGE);
+	auto xDif = ranF1 * RANDOMRANGE * 2 - RANDOMRANGE;
+	auto yDif = ranF2 * RANDOMRANGE * 2 - RANDOMRANGE;
+	auto ranPosition = ccp(curPosition.x + xDif, curPosition.y + yDif);
 		//ÉèÖÃÒ»¸öÆ«²î·¶Î§
 	this->setPosition(ranPosition);
 }
