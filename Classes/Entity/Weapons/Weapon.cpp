@@ -68,6 +68,11 @@ void Weapon::upgrade()
 
 }
 
+bool Weapon::isCloseWeapon()const
+{
+	return false;
+}
+
 Weapon::~Weapon()
 {
 

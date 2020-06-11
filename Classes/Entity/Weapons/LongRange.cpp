@@ -186,6 +186,11 @@ void LongRange::flipped(bool status)
 	}
 }
 
+bool LongRange::isCloseWeapon()const
+{
+	return false;
+}
+
 LongRange::~LongRange()
 {
 

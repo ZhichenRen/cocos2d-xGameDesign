@@ -26,6 +26,7 @@ public:
 	virtual void flipped(bool status/*true for flipped and false for not flipped*/);
 	virtual void setRotationByPos(Point pos);
 	virtual void upgrade();
+	virtual bool isCloseWeapon()const;
 protected:
 	int m_power_cost;
 	int m_range;
