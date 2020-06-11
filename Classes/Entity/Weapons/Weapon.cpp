@@ -1,4 +1,5 @@
 #include "Entity\Weapons\Weapon.h"
+#define PI 3.1415926
 
 Weapon::Weapon()
 {
@@ -52,9 +53,24 @@ void Weapon::resetPosition()
 	getSprite()->setRotation(0.0f);
 }
 
+void Weapon::setRotationByPos(Point pos)
+{
+
+}
+
 void Weapon::flipped(bool status)
 {
 
+}
+
+void Weapon::upgrade()
+{
+
+}
+
+bool Weapon::isCloseWeapon()const
+{
+	return false;
 }
 
 Weapon::~Weapon()

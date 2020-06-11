@@ -1,4 +1,5 @@
 #include "Monster\MonsterManager.h"
+#include "Entity\Weapons\TrackWeapon.h"
 
 
 
@@ -352,7 +353,13 @@ void MonsterManager::update(float dt)
 			auto monsWeapon = monster->getMonsterWeapon();
 			if (dis < 2 * monsWeapon->getRange())//两倍距离以内再攻击
 				//攻击要用到地图中的坐标。
+			{
+				if (typeid(*monsWeapon) == typeid(TrackWeapon))
+				{
+					dynamic_cast<TrackWeapon*>(monsWeapon)->bindPlayer(m_player);
+				}
 				monsWeapon->attack(m_map->convertToWorldSpace(m_player->getPosition()));
+			}
 
 
 			m_monsPosMap[blockOccupied] = 0;

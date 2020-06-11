@@ -17,7 +17,9 @@ public:
 	std::vector<Bullet*> getBullet()const;
 	int getDamage()const;
 	virtual void flipped(bool status);
+	virtual void setRotationByPos(Point pos);
 	virtual void update(float dt);
+	virtual bool isCloseWeapon()const override;
 protected:
 	int m_bullet_speed;//speed of the bullet
 	float m_attack_speed;
