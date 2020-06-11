@@ -294,17 +294,17 @@ void TollgateScene::updateMiniMap(TMXTiledMap* miniMap)
 
 void TollgateScene::updateCoinNum()
 {
-	auto visibleSize = Director::getInstance()->getVisibleSize();
-	auto n = this->getChildByTag(101);
-	if (n)
-	{
-		this->removeChildByTag(101);
-	}
-	auto num = __String::createWithFormat("%d", GameData::getCoinNum());
-	auto coinLabel = Label::createWithTTF(num->getCString(), "fonts/arial.ttf", 30);
+	//auto visibleSize = Director::getInstance()->getVisibleSize();
+	//auto n = this->getChildByTag(101);
+	//if (n)
+	//{
+	//	this->removeChildByTag(101);
+	//}
+	//auto num = __String::createWithFormat("%d", GameData::getCoinNum());
+	//auto coinLabel = Label::createWithTTF(num->getCString(), "fonts/arial.ttf", 30);
 
-	coinLabel->setPosition(Vec2(visibleSize.width - 50, visibleSize.height - 600));
-	this->addChild(coinLabel, 20, 101);
+	//coinLabel->setPosition(Vec2(visibleSize.width - 50, visibleSize.height - 600));
+	//this->addChild(coinLabel, 20, 101);
 }
 
 void TollgateScene::update(float dt)
