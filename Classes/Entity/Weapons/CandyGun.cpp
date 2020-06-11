@@ -7,6 +7,10 @@ CandyGun::CandyGun()
 
 bool CandyGun::init()
 {
+	if (!LongRange::init())
+	{
+		return false;
+	}
 	m_power_cost = 3;
 	m_bullet_num = 100;
 	m_range = 100;

@@ -4,6 +4,10 @@
 
 bool Shotgun::init()
 {
+	if (!LongRange::init())
+	{
+		return false;
+	}
 	m_power_cost = 5;
 	m_bullet_num = 100;
 	m_range = 100;
@@ -26,8 +30,8 @@ void Shotgun::attack(Point pos)
 		return;
 	}
 	m_is_attack = true;
-	Point weapon_pos = m_sprite->getPosition();
-	Point now = this->convertToWorldSpace(weapon_pos);
+	Point weapon_pos = getPosition();
+	Point now = getParent()->convertToWorldSpace(weapon_pos);
 	float degree;
 	float dx = pos.x - now.x;
 	float dy = pos.y - now.y;
