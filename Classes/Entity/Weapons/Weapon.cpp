@@ -63,6 +63,11 @@ void Weapon::flipped(bool status)
 
 }
 
+void Weapon::upgrade()
+{
+
+}
+
 Weapon::~Weapon()
 {
 
