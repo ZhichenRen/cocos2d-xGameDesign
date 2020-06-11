@@ -8,7 +8,10 @@ Monster::Monster()
 	//this->getChildByName("preRect")->setVisible(false);
 	m_isAlive = false;
 }
-
+bool Monster::isCollideWith(Entity* entity)
+{
+	return getBoundingBox().intersectsRect(entity->getBoundingBox());
+}
 Monster::~Monster()
 {
 	//this->autorelease();
@@ -74,6 +77,7 @@ bool Monster::mySetPosition(Vec2 target)
 		}
 		return false;
 	}
+	
 	if (m_monsMgr->isPosOccupied(tarBlock))
 		return false;
 
@@ -90,6 +94,7 @@ bool Monster::mySetPosition(Vec2 target)
 	}
 	setPosition(target);
 	m_monsMgr->setPosMap(tarBlock, 1);
+
 	return true;
 }
 
@@ -215,11 +220,7 @@ void Monster::wander()
 		curPos : -ccp(this->getMonsterSpeed(), 0) + curPos;
 
 	mySetPosition(tarPos);
-	/*if (!)
-	{
-		tarPos = m_fIsFacingRight ? -ccp(this->getMonsterSpeed(), 0) +
-			curPos : ccp(this->getMonsterSpeed(), 0) + curPos;
-	}*/
+	
 }
 
 
