@@ -5,7 +5,7 @@
 bool Blue::init()
 {
 	bindSprite(Sprite::create("Blue.png"), 1.0f, 1.0f);
-	m_blueValue = 10;
+	m_blueValue = 8;
 	m_is_used = false;
 	return true;
 }
