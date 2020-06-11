@@ -32,8 +32,8 @@ void RPG::attack(Point pos)
 		return;
 	}
 	m_is_attack = true;
-	Point weapon_pos = m_sprite->getPosition();
-	Point now = this->convertToWorldSpace(weapon_pos);
+	Point weapon_pos = getPosition();
+	Point now = getParent()->convertToWorldSpace(weapon_pos);
 	float degree;
 	float dx = pos.x - now.x;
 	float dy = pos.y - now.y;

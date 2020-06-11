@@ -82,3 +82,8 @@ void CloseWeapon::flipped(bool status)
 		getSprite()->setAnchorPoint(Vec2(0.0f, 0.0f));
 	}
 }
+
+bool CloseWeapon::isCloseWeapon()const
+{
+	return true;
+}

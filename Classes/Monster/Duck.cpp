@@ -1,4 +1,5 @@
 #include "duck.h"
+#include "Entity/Weapons/TrackWeapon.h"
 
 bool Duck::init()
 {
@@ -10,11 +11,17 @@ bool Duck::init()
 	setHp(this->m_initHp);
 	setResTrack("duck.png");
 	this->bindSprite(Sprite::create(this->getResTrack()), 0.8f, 0.8f);
-	auto sword = MonsterSword::create();
-	sword->setVisible(false);
-	//sword->setPosition(this->getPosition());
-	setMonsterWeapon(sword);
-	this->addChild(sword, 1);
+	//auto sword = MonsterSword::create();
+	//sword->setVisible(false);
+	////sword->setPosition(this->getPosition());
+	//setMonsterWeapon(sword);
+	//this->addChild(sword, 1);
+
+	auto gun = TrackWeapon::create();
+	gun->setPosition(this->getPosition());
+	setMonsterWeapon(gun);
+	this->addChild(gun, 1);
+
 	m_isAlive = true;
 	return true;
 }

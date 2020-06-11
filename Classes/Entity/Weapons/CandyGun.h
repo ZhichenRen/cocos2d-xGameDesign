@@ -10,6 +10,7 @@ public:
 	~CandyGun();
 	CREATE_FUNC(CandyGun);
 	virtual bool init();
+	virtual void upgrade();
 };
 
 #endif
