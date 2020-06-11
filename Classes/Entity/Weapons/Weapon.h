@@ -24,6 +24,7 @@ public:
 	float getAttackSpeed()const;
 	void resetPosition();
 	virtual void flipped(bool status/*true for flipped and false for not flipped*/);
+	virtual void setRotationByPos(Point pos);
 protected:
 	int m_power_cost;
 	int m_range;

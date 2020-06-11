@@ -11,8 +11,8 @@ bool CandyGun::init()
 	m_bullet_num = 100;
 	m_range = 100;
 	m_bullet_damage = 10;
-	m_bullet_speed = 500;
-	m_attack_speed = 0.2f;
+	m_bullet_speed = 750;
+	m_attack_speed = 0.1f;
 	m_crit_rate = 0.3f;
 	m_bullet_picture = std::string("CandyBullet.png");
 	bindSprite(Sprite::create("CandyGun!.png"), 0.25f, 0.25f);
