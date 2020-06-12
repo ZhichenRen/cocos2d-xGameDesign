@@ -10,6 +10,7 @@ MonsterGun::~MonsterGun()
 
 bool MonsterGun::init()
 {
+	m_bullet_damage = 1;
 	m_power_cost = 0;
 	m_bullet_num = 100;
 	m_range = 100;

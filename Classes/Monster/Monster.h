@@ -1,9 +1,9 @@
 #pragma once
 #ifndef __Monster_H__
 #define __Monster_H__
-#define BLUERATE 0.25f
-#define REDRATE 0.05f
-#define BLUEMEDICINERATE 0.1f
+#define BLUERATE 0.35f
+#define REDRATE 0.0025f
+#define BLUEMEDICINERATE 0.005f
 #include "Entity/Entity.h"
 #include "cocos2d.h"
 #include "Entity\Coin\Coin.h"
@@ -28,7 +28,7 @@ public:
 	void hit(int damage);
 	void bindMap(AdventureMapLayer* map);
 	void bindMonsMgr(MonsterManager* monsMgr);
-	void hit(int damage, float flyingDegree, bool isCriticalStrike);
+	virtual void hit(int damage, float flyingDegree, bool isCriticalStrike);
 	void die();
 	void wander();
 	//void showWords();
