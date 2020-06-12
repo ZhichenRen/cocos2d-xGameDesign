@@ -39,7 +39,7 @@ void Monster::hide()
 	if (getSprite() != NULL)
 	{
 		//m_sprite->setVisible(false);
-		m_weapon->setVisible(false);
+		m_weapon->getSprite()->setVisible(false);
 		m_isAlive = false;
 	}
 }

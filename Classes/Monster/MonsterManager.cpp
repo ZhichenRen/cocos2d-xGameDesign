@@ -15,7 +15,7 @@ void MonsterManager::bindPlayer(Entity* player)
 }
 
 void MonsterManager::reviveAllMonsters()
-{//有bug
+{
 	m_curCheckPoint = 1;
 	m_fGameOver = 0;
 	m_deathMonsNum = 0;
@@ -23,6 +23,7 @@ void MonsterManager::reviveAllMonsters()
 	{
 		monster->resetPropoties();
 		monster->setVisible(true);
+		monster->getSprite()->setVisible(true);
 	}
 	createMonsterPos();
 }
@@ -142,7 +143,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 		pig->bindMap(m_map);
 		pig->getMonsterWeapon()->bindMap(m_map);
 		pig->bindMonsMgr(this);
-		this->addChild(pig);
+		this->addChild(pig,1);
 		m_monsterList.push_back(pig);
 		m_shortMonsterList.push_back(pig);
 	}
@@ -153,7 +154,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 		duck->bindMap(m_map);
 		duck->getMonsterWeapon()->bindMap(m_map);
 		duck->bindMonsMgr(this);
-		this->addChild(duck);
+		this->addChild(duck,1);
 		m_monsterList.push_back(duck);
 		m_shortMonsterList.push_back(duck);
 	}
@@ -161,7 +162,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 	for (int i = 0; i < randVec[2] + 1; i++)
 	{
 		slime = Slime::create();
-		this->addChild(slime);
+		this->addChild(slime,1);
 		slime->bindMap(m_map);
 		slime->getMonsterWeapon()->bindMap(m_map);
 		slime->bindMonsMgr(this);
@@ -172,7 +173,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 	for (int i = 0; i < randVec[3] + 1; i++)
 	{
 		chiefOfTribe = ChiefOfTribe::create();
-		this->addChild(chiefOfTribe);
+		this->addChild(chiefOfTribe,1);
 		chiefOfTribe->bindMap(m_map);
 		chiefOfTribe->getMonsterWeapon()->bindMap(m_map);
 		chiefOfTribe->bindMonsMgr(this);
@@ -187,8 +188,8 @@ void MonsterManager::createWoodWalls(int woodWallsNum)
 	//生成随机野怪
 	for (int i = 0; i < woodWallsNum; i++)
 	{
-		auto randInt1 = rand() % 21 ;
-		auto randInt2 = rand() % 21 ;
+		auto randInt1 = rand() % 15 + 3 ;
+		auto randInt2 = rand() % 15 + 3 ;
 
 		auto monsterPos = 32 * ccp(randInt1, randInt2) + ccp(16.5, 0);
 
@@ -204,7 +205,7 @@ void MonsterManager::createWoodWalls(int woodWallsNum)
 		
 		m_monsPosMap[tarBlock] = 1;
 		auto woodWall = WoodWall::create();
-		addChild(woodWall);
+		addChild(woodWall,-1);
 		woodWall->bindMonsMgr(this);
 		woodWall->bindMap(m_map);
 		woodWall->setPosition(monsterPos);
@@ -363,9 +364,16 @@ void MonsterManager::update(float dt)
 				{
 					dynamic_cast<TrackWeapon*>(monsWeapon)->bindPlayer(m_player);
 				}
+				if (typeid(*monsWeapon) == typeid(MonsterSword))
+				{
+					monsWeapon->getSprite()->setVisible(true);
+				}
 				monsWeapon->attack(m_map->convertToWorldSpace(m_player->getPosition()));
 			}
-
+			else
+			{
+				monsWeapon->getSprite()->setVisible(false);
+			}
 
 			m_monsPosMap[blockOccupied] = 0;
 			//建立走位后的信息

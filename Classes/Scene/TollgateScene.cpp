@@ -157,7 +157,7 @@ void TollgateScene::loadMonsters()
 	//初始化工作
 	m_monsterMgr->bindMap(m_map);
 	m_monsterMgr->bindPlayer(static_cast<Entity*>(this->m_player));
-	m_map->addChild(m_monsterMgr, 2);
+	m_map->addChild(m_monsterMgr, 1);
 }
 
 void TollgateScene::loadListeners()
