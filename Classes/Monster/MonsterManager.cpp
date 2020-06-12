@@ -208,6 +208,9 @@ void MonsterManager::createWoodWalls(int woodWallsNum)
 		woodWall->bindMonsMgr(this);
 		woodWall->bindMap(m_map);
 		woodWall->setPosition(monsterPos);
+		//m_map->getCollidable()->setTileGID(89, GameData::getCoord()[5 * m_curRoom.x + m_curRoom.y] - Vec2(10 - randInt1, -11 + randInt2));
+		m_map->getCollidable()->setTileGID(89, Vec2(0, -1) + 
+			m_map->tileCoordFromPosition(m_map->convertToNodeSpace(this->convertToWorldSpace(woodWall->getPosition()))));
 		woodWall->getChildByName("preRect")->setVisible(false);
 		m_woodWallList.push_back(woodWall);
 	}
@@ -314,6 +317,8 @@ void MonsterManager::update(float dt)
 		if (woodWall->getHp() <= 0) //更新活着的状态
 		{
 			m_monsPosMap[blockOccupied] = 0;//清除位置信息
+			m_map->getCollidable()->setTileGID(2, Vec2(0, -1) +
+				m_map->tileCoordFromPosition(m_map->convertToNodeSpace(this->convertToWorldSpace(woodWall->getPosition()))));
 			woodWall->die();
 		}
 	}
