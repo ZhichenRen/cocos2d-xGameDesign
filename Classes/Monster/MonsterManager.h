@@ -3,6 +3,7 @@
 #define __MonsterManager_H__
 
 #include "cocos2d.h"
+#include "GameData.h"
 #include "Monster\Monster.h"
 #include "Entity\Entity.h"
 #include "Monster\Slime.h"
