@@ -166,6 +166,7 @@ void Player::determineWhichWeapon()
 
 void Player::rangeAttack()
 {
+
 	LongRange* longRange = m_longRange;
 
 	auto listener = EventListenerTouchOneByOne::create();
@@ -175,13 +176,17 @@ void Player::rangeAttack()
 	};
 	listener->onTouchEnded = [longRange,this](Touch* touch, Event* event)
 	{
+		if (m_is_attacking)
+		{
+			return;
+		}
 		Point pos = Director::getInstance()->convertToGL(touch->getLocationInView());
 		if (m_iNowMp >= longRange->getPowerCost())
 		{
 			m_is_attacking = true;
-
+			longRange->attack(pos);
 			//call back to change attack status
-			auto attack_delay = DelayTime::create(m_longRange->getAttackSpeed());
+			auto attack_delay = DelayTime::create(longRange->getAttackSpeed());
 			auto callback = CallFunc::create(
 				[this]() {
 				m_is_attacking = false;
@@ -189,7 +194,6 @@ void Player::rangeAttack()
 			);
 			auto attack = Sequence::create(attack_delay, callback, NULL);
 			this->runAction(attack);
-			longRange->attack(pos);
 			//this->hit(2);
 			this->mpDepletion(longRange->getPowerCost());
 		}

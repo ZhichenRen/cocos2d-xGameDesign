@@ -128,7 +128,7 @@ protected:
 	int m_numLongRangeWeapon;
 	int m_numCloseWeapon;
 
-	bool m_is_attacking;
+	bool m_is_attacking = false;
 	bool m_is_close_weapon_now;
 
 private:

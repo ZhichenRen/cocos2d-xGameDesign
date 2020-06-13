@@ -18,7 +18,6 @@ public:
 	virtual void flipped(bool status);
 	virtual bool isCloseWeapon()const override;
 protected:
-	float m_attack_speed;
 	int m_damage;
 private:
 	bool m_is_attack;
