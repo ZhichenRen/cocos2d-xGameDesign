@@ -1,4 +1,4 @@
-#include "Entity\Weapons\Shotgun.h"
+﻿#include "Entity\Weapons\Shotgun.h"
 #include "Entity\Weapons\Bullets\Bullet.h"
 #define PI 3.1415926
 
@@ -17,9 +17,9 @@ bool Shotgun::init()
 	m_degree = 15.0f;
 	m_bullet_num_at_once = 4;
 	m_crit_rate = 0.1f;
-	m_weaponName = "Shotgun";
+	m_weaponName = "Rifle&Shotgun";
 	m_bullet_picture = std::string("BasicBullet.png");
-	bindSprite(Sprite::create("Rifle&Shotgun.png"), 0.12f, 0.12f);
+	bindSprite(Sprite::create("Rifle&Shotgun.png"), 0.14f, 0.14f);
 	m_sprite->setAnchorPoint(Vec2(0.0f, 0.5f));
 	return true;
 }
