@@ -31,5 +31,5 @@ void PlayerChoose::setPlayer()
 
 void PlayerChoose::back()
 {
-	this->removeFromParentAndCleanup();
+	this->removeFromParentAndCleanup(true);
 }

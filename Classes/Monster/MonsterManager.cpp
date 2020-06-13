@@ -187,8 +187,8 @@ void MonsterManager::createWoodWalls(int woodWallsNum)
 	//Éú³ÉËæ»úÒ°¹Ö
 	for (int i = 0; i < woodWallsNum; i++)
 	{
-		auto randInt1 = rand() % 21 ;
-		auto randInt2 = rand() % 21 ;
+		auto randInt1 = rand() % 21;
+		auto randInt2 = rand() % 21;
 
 		auto monsterPos = 32 * ccp(randInt1, randInt2) + ccp(16.5, 0);
 
@@ -200,8 +200,8 @@ void MonsterManager::createWoodWalls(int woodWallsNum)
 			i--;
 			continue;
 		}
-		
-		
+
+
 		m_monsPosMap[tarBlock] = 1;
 		auto woodWall = WoodWall::create();
 		addChild(woodWall);
@@ -209,7 +209,7 @@ void MonsterManager::createWoodWalls(int woodWallsNum)
 		woodWall->bindMap(m_map);
 		woodWall->setPosition(monsterPos);
 		//m_map->getCollidable()->setTileGID(89, GameData::getCoord()[5 * m_curRoom.x + m_curRoom.y] - Vec2(10 - randInt1, -11 + randInt2));
-		m_map->getCollidable()->setTileGID(89, Vec2(0, -1) + 
+		m_map->getCollidable()->setTileGID(89, Vec2(0, -1) +
 			m_map->tileCoordFromPosition(m_map->convertToNodeSpace(this->convertToWorldSpace(woodWall->getPosition()))));
 		woodWall->getChildByName("preRect")->setVisible(false);
 		m_woodWallList.push_back(woodWall);
@@ -390,7 +390,7 @@ void MonsterManager::update(float dt)
 		}
 	}
 
-	
+
 }
 
 
