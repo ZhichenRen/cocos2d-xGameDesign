@@ -232,24 +232,24 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>CandyGun!.png</key>
+			<key>nothing.png</key>
 			<dict>
 				<key>width</key>
-				<integer>204</integer>
+				<integer>1</integer>
 				<key>height</key>
-				<integer>107</integer>
+				<integer>1</integer>
 				<key>originalWidth</key>
-				<integer>209</integer>
+				<integer>260</integer>
 				<key>originalHeight</key>
-				<integer>112</integer>
+				<integer>260</integer>
 				<key>x</key>
 				<integer>506</integer>
 				<key>y</key>
 				<integer>542</integer>
 				<key>offsetX</key>
-				<real>0.5</real>
+				<real>129.5</real>
 				<key>offsetY</key>
-				<real>-1.5</real>
+				<real>-129.5</real>
 			</dict>
 		</dict>
 		<key>metadata</key>
