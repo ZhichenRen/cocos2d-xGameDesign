@@ -23,36 +23,30 @@ bool SafeMapLayer::init()
         return false;
     }
 
-    this->scheduleUpdate();
-
     m_tileMap = TMXTiledMap::create("map/SafeMap.tmx");//创建地图
     this->addChild(m_tileMap);
 
     m_collidable = m_tileMap->getLayer("barrier");//获取判断碰撞的障碍层
 
-    TMXObjectGroup* group = m_tileMap->getObjectGroup("objects");//获取对象层
-    ValueMap spawnPoint = group->getObject("hero");//根据hero对象的位置放置精灵
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    auto origin = Director::getInstance()->getVisibleOrigin();
 
-    float x = spawnPoint["x"].asFloat();
-    float y = spawnPoint["y"].asFloat();
+    MenuItemFont* text = MenuItemFont::create("选择你的英雄");
+    text->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height - 200));
 
-    m_player = Sprite::create("map/hero.png");
-    m_player->setPosition(Vec2(x, y));
-    this->addChild(m_player);//游戏人物
+    MenuItemImage* settingItem = MenuItemImage::create("menu/SettingNormal.png", "menu/SettingSelected.png", CC_CALLBACK_1(SafeMapLayer::menuItemSettingCallback, this));
+    settingItem->setPosition(Vec2(origin.x + visibleSize.width - 100, origin.y + visibleSize.height - 50));
 
-	auto player_choose_layer = PlayerChoose::create();
-	PlayerInfomation mage = {
-		3,
-		5,
-		210,
-		"法师",
-		"奥术闪电",
-		"释放强大的闪电\n攻击敌人！！",
-		"mage_image.png",
-		"mage_ability.png"
-	};
-	player_choose_layer->setPlayerInformation(mage);
-	this->addChild(player_choose_layer, 2);
+    MenuItemImage* rangerItem = MenuItemImage::create("ranger_image.png", "ranger_image.png", CC_CALLBACK_1(SafeMapLayer::menuItemRangerCallback, this));
+    rangerItem->setPosition(Vec2(origin.x + visibleSize.width / 2 - 200, origin.y + visibleSize.height / 2 - 200));
+
+    MenuItemImage* mageItem = MenuItemImage::create("mage_image.png", "mage_image.png", CC_CALLBACK_1(SafeMapLayer::menuItemMageCallback, this));
+    mageItem->setPosition(Vec2(origin.x + visibleSize.width / 2 + 200, origin.y + visibleSize.height / 2 - 200));
+
+    Menu* menu = Menu::create(text,settingItem, rangerItem, mageItem, nullptr);
+
+    menu->setPosition(Vec2::ZERO);
+    this->addChild(menu, 0, 10086);
 
     return true;
 }
@@ -98,6 +92,72 @@ void SafeMapLayer::cleanup()
     Layer::cleanup();
 }
 
+void SafeMapLayer::setPlayer(int playerNum)
+{
+    TMXObjectGroup* group = m_tileMap->getObjectGroup("objects");//获取对象层
+    ValueMap spawnPoint = group->getObject("hero");//根据hero对象的位置放置精灵
+
+    float x = spawnPoint["x"].asFloat();
+    float y = spawnPoint["y"].asFloat();
+
+    switch (playerNum)
+    {
+    case 1:
+        m_player = Sprite::create("Ranger/RangerIni.png");
+        m_player->setPosition(Vec2(x, y));
+        this->addChild(m_player);//游戏人物
+        this->removeChildByTag(10086);
+        m_heroName = "Ranger";
+        this->scheduleUpdate();
+        break;
+    case 2:
+        m_player = Sprite::create("mage_image.PNG");
+        m_player->setPosition(Vec2(x, y));
+        this->addChild(m_player);//游戏人物
+        this->removeChildByTag(10086);
+        m_heroName = "Mage";
+        this->scheduleUpdate();
+    }
+    auto animation = AnimationUtil::createWithFrameNameAndNumUsingPlist("Ranger/RangerWalk/", "RangerWalk", 4, 0.12, -1);
+    auto animate = Animate::create(animation);
+    m_player->runAction(animate);
+}
+
+void SafeMapLayer::menuItemSettingCallback(cocos2d::Ref* pSender)
+{
+    Size visible_size = Director::getInstance()->getVisibleSize();
+    CCRenderTexture* background = CCRenderTexture::create(visible_size.width, visible_size.height);
+    background->begin();
+    this->visit();
+    background->end();
+    Director::getInstance()->pushScene(PauseScene::createScene(background));
+}
+
+void SafeMapLayer::menuItemRangerCallback(cocos2d::Ref* pSender)
+{
+    auto layer = PlayerChoose::create();
+    layer->bindMap(this);
+    this->addChild(layer, 10000);
+}
+
+void SafeMapLayer::menuItemMageCallback(cocos2d::Ref* pSender)
+{
+    auto layer = PlayerChoose::create();
+    layer->bindMap(this);
+    PlayerInfomation mage = {
+        3,
+        5,
+        210,
+        "法师",
+        "奥术闪电",
+        "释放强大的闪电\n攻击敌人！！",
+        "mage_image.png",
+        "mage_ability.png"
+    };
+    layer->setPlayerInformation(mage);
+    this->addChild(layer, 10001);
+}
+
 void SafeMapLayer::update(float dt)
 {
     auto moveUp = EventKeyboard::KeyCode::KEY_W;
@@ -118,10 +178,12 @@ void SafeMapLayer::update(float dt)
     if (m_keyMap[moveLeft])
     {
         offset.x = -4;
+        m_player->runAction(FlipX::create(true));
     }
     if (m_keyMap[moveRight])
     {
         offset.x = 4;
+        m_player->runAction(FlipX::create(false));
     }
 
     auto playerPos = m_player->getPosition();
