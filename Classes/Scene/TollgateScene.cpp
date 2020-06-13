@@ -1,8 +1,10 @@
+#include <string>
 #include "Scene/TollgateScene.h"
 #include "Scene/PauseScene.h"
 #include "Scene/HomeScene.h"
 #include "Entity/Weapons/Bullets/ExplosiveBullet.h"
 #include "Entity/Weapons/RPG.h"
+#include "Entity\Weapons\GoldenSword.h"
 #include "Entity/Weapons/Shotgun.h"
 #include "GameData.h"
 
@@ -42,9 +44,20 @@ void TollgateScene::addPlayer()
 	m_map->addChild(m_player, 2, 200);
 }
 
-void TollgateScene::addLongRangeWeapon()
+void TollgateScene::addWeapon()
 {
-	m_player->setLongRange(CandyGun::create());
+	std::string str = "CandyGun";
+	m_player->setWeapon(str);
+	m_player->determineWhichWeapon();
+	str = "RPG";
+	m_player->setWeapon(str);
+	m_player->determineWhichWeapon();
+	str = "GoldenSword";
+	m_player->setWeapon(str);
+	m_player->determineWhichWeapon();
+	str = "CandyGun";
+	/*m_player->setWeapon(str);
+	m_player->determineWhichWeapon();*/
 }
 
 void TollgateScene::loadController()
@@ -71,7 +84,6 @@ bool TollgateScene::init()
 	loadMap();
 	loadUI();
 	addPlayer();
-	//addLongRangeWeapon();
 	loadController();
 	loadMonsters();
 	loadListeners();
@@ -83,7 +95,7 @@ void TollgateScene::onEnter()
 {
 	Layer::onEnter();
 	loadUI();
-	addLongRangeWeapon();
+	addWeapon();
 	loadListeners();
 }
 
@@ -177,7 +189,7 @@ void TollgateScene::loadListeners()
 			{
 				m_map->getChest()->setVisible(false);
 				m_map->getChest()->setWeapon(rand() % 3 + 1);
-				m_player->setLongRange(m_map->getChest()->getWeapon());
+				//m_player->setLongRange(m_map->getChest()->getWeapon());
 			}
 			else if (ccpDistance(m_player->getPosition(), m_map->getShop()->getPosition()) < 20.0f)
 			{
@@ -192,7 +204,7 @@ void TollgateScene::loadListeners()
 					{
 						GameData::setCoinNum(GameData::getCoinNum() - 20);
 						m_map->getShop()->setWeapon(rand() % 3 + 1);
-						m_player->setLongRange(m_map->getShop()->getWeapon());
+						//m_player->setLongRange(m_map->getShop()->getWeapon());
 						m_map->getShop()->showFlowWordEnoughMoney();
 					}
 					else
@@ -411,7 +423,7 @@ void TollgateScene::update(float dt)
 						}
 					}
 				}
-				
+
 			}
 			else bullet->setIsUsed(true);
 		}
@@ -511,5 +523,5 @@ void TollgateScene::update(float dt)
 			}
 		}
 	}
-	
+
 }

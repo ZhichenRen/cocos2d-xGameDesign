@@ -28,7 +28,7 @@ public:
 	void loadUI();
 	void loadMonstersInNewRoom(int giantNum);
 	void loadMap();
-	void addLongRangeWeapon();
+	void addWeapon();
 	void loadController();
 	void loadMonsters();
 	void loadListeners();

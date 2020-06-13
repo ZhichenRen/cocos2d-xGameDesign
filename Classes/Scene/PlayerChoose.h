@@ -4,7 +4,7 @@
 #include "cocos2d.h"
 using namespace cocos2d;
 
-class PlayerChoose:public Layer
+class PlayerChoose :public Layer
 {
 public:
 	virtual bool init();

@@ -165,7 +165,7 @@ void Monster::hit(int damage, float flyingDegree, bool isCriticalStrike)
 
 void Monster::die()
 {
-	
+
 	m_isAlive = false;
 	auto fade = FadeTo::create(1.0f, 0);//消失至某一透明度
 	/*auto disappear_delay = DelayTime::create(2.0f);

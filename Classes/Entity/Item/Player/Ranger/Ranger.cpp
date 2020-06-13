@@ -25,11 +25,9 @@ bool Ranger::init()
 	m_iTotalArmor = 3;
 	m_iNowSkillDuration = 1;
 	m_iTotalSkillDuration = 1;
-	m_numTotalWeapon = 2;
-	m_numMyWeapon = 0;
-	m_numLongRangeWeapon = 0;
-	m_numCloseWeapon = 0;
+	m_numTotalWeapon = 3;
 	m_numWeapon = 0;
+	m_numLongRange = 0;
 	m_isInSkill = false;
 	return true;
 }
