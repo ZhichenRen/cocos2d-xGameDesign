@@ -9,7 +9,6 @@
 #include "AuxiliaryClass/AnimationUtil/AnimationUtil.h"
 
 #include "Entity/Weapons/LongRange.h"
-//#include "Entity/Weapons/CloseWeapon.h"
 #include "Controller/ControllerListener.h"
 #include "Scene/AdventureMapScene.h"
 #include "editor-support/cocostudio/CCSGUIReader.h"
@@ -61,10 +60,15 @@ public:
 	void setLeftToward();
 
 	inline bool getIsInSkill() const { return m_isInSkill; }
-	void setLongRange(LongRange* longRange);
-	void determineWhichWeapon();
 
-	void rangeAttack();
+	void setWeapon(std::string& str);
+	void chooseWeapon();
+	void determineWhichWeapon();
+	void loadLongRangeListener();
+	void loadCloseWeaponListener();
+	void resetWeapon();
+	void changeWeapon();
+	int findWhichLongRange()const;
 
 	void hit(int damage);
 	void mpDepletion(int mpDe);
@@ -88,7 +92,7 @@ public:
 	inline void setLeftSide(bool aim) { m_leftSide = aim; }
 	inline void setRightSide(bool aim) { m_rightSide = aim; }
 
-	std::vector<Bullet*> getBullet()const;
+	std::vector<Bullet*> getBullet();
 
 	LoadingBar* m_cdBar = NULL;
 	LoadingBar* m_hpBar = NULL;
@@ -97,7 +101,6 @@ public:
 	std::vector<Bullet*> m_bullet;
 	bool isAttackingWithCloseWeapon()const;
 	void resetWeaponPosition(bool status/*true stands for left and false stands for right*/);
-
 protected:
 	AdventureMapLayer* m_map;
 
@@ -117,21 +120,19 @@ protected:
 
 	void getBulletFromWeapon();
 
-
 	LongRange* m_longRange = NULL;
-	std::array <LongRange*, 10> m_longRangeWeapon;
-	std::array <CloseWeapon*, 10> m_closeWeapon;
+	CloseWeapon* m_close = NULL;
+	EventListenerTouchOneByOne* m_listener;
 	std::array <std::string,10> m_weapons;
-	int m_numMyWeapon;
+	std::array <LongRange*, 5> m_longRanges = {NULL};
 	int m_numWeapon;
 	int m_numTotalWeapon;
-	int m_numLongRangeWeapon;
-	int m_numCloseWeapon;
+	int m_numLongRange;
 
 	bool m_is_attacking = false;
 	bool m_is_close_weapon_now;
-
 private:
 	bool m_leftSide = false;
 	bool m_rightSide = true;
+
 };

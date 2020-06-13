@@ -1,5 +1,11 @@
 #include "Entity/Item/Player/Player.h"
 #include "Entity/Weapons/CloseWeapon.h"
+#include "Entity\Weapons\Shotgun.h"
+#include "Entity\Weapons\RPG.h"
+#include "Entity\Weapons\GoldenSword.h"
+#include "Entity\Weapons\CandyGun.h"
+#include "Entity/Weapons/TrackWeapon.h"
+#include "Entity/Weapons/Pistol.h"
 
 bool Player::init()
 {
@@ -126,49 +132,123 @@ int Player::isPositiveOrNegative(int num)
 		return 0;
 }
 
-void Player::setLongRange(LongRange* longRange)
+void Player::changeWeapon()
 {
-	m_longRange = longRange;
-	/*if(m_numWeapon==1)
-		m_longRangeWeapon[0]->removeFromParent();*/
-	if (m_numWeapon < m_numTotalWeapon)
-		m_numWeapon++;
-	if (m_numWeapon == 0 || m_weapons[m_numWeapon - 1] != "LongRange")
-	{
-		m_numLongRangeWeapon++;
-		if (m_weapons[m_numWeapon - 1] == "CloseWeapon")
-			m_numCloseWeapon--;
-	}
-	m_weapons[m_numWeapon - 1] = "LongRange";
-	m_longRangeWeapon[m_numLongRangeWeapon - 1] = longRange;
-
+	m_numWeapon--;
+	if (m_numWeapon == 0)
+		m_numWeapon = m_numTotalWeapon;
+	int numLongRange = 0, numCloseWeapon = 0;
 	determineWhichWeapon();
+}
+
+
+void Player::setWeapon(std::string& str)
+{
+	if (m_numWeapon < m_numTotalWeapon)
+	{
+		m_numWeapon++;
+	}
+	m_weapons[m_numWeapon - 1] = str;
+}
+
+void Player::resetWeapon()
+{
+	if (m_longRange == NULL && m_close == NULL)
+	{
+		return;
+	}
+	else if (m_longRange != NULL && m_close == NULL)
+	{
+		m_longRange->removeAllChildren();
+	}
+	else
+	{
+		m_close->removeAllChildren();
+	}
+	_eventDispatcher->removeEventListener(m_listener);
+}
+
+void Player::chooseWeapon()
+{
+	if (m_weapons[m_numWeapon - 1] == "CandyGun")
+	{
+		m_close = NULL;
+		m_longRange = CandyGun::create();
+		loadLongRangeListener();
+		m_is_close_weapon_now = false;
+	}
+	else if (m_weapons[m_numWeapon - 1] == "GoldenSword")
+	{
+		m_longRange = NULL;
+		m_close = GoldenSword::create();
+		loadCloseWeaponListener();
+		m_is_close_weapon_now = true;
+	}
+	else if (m_weapons[m_numWeapon - 1] == "RPG")
+	{
+		m_close = NULL;
+		m_longRange =RPG::create();
+		loadLongRangeListener();
+		m_is_close_weapon_now = false;
+	}
+	else if (m_weapons[m_numWeapon - 1] == "Shotgun")
+	{
+		m_close = NULL;
+		m_longRange = Shotgun::create();
+		loadLongRangeListener();
+		m_is_close_weapon_now = false;
+	}
+	else if (m_weapons[m_numWeapon - 1] == "TrackWeapon")
+	{
+		m_close = NULL;
+		m_longRange = TrackWeapon::create();
+		loadLongRangeListener();
+		m_is_close_weapon_now = false;
+	}
+	else if (m_weapons[m_numWeapon - 1] == "Pistol")
+	{
+		m_close = NULL;
+		m_longRange = Pistol::create();
+		loadLongRangeListener();
+		m_is_close_weapon_now = false;
+	}
 }
 
 void Player::determineWhichWeapon()
 {
-	int numLongRange = 0, numCloseWeapon = 0;
-	for (int i = 0; i < m_numWeapon; i++)
-		if (m_weapons[i] == "LongRange")
-			numLongRange++;
-		else
-			numCloseWeapon++;
-	if (m_weapons[m_numWeapon - 1] == "LongRange")
+	resetWeapon();
+	chooseWeapon();
+	if (m_longRange != NULL && m_close == NULL)
 	{
-		m_longRange = m_longRangeWeapon[numLongRange - 1];
-		m_longRange->setPosition(0, -8);
+		m_longRange->setPosition(0, -5);
 		m_longRange->bindMap(m_map);
 		this->addChild(m_longRange);
+	    _eventDispatcher->addEventListenerWithSceneGraphPriority(m_listener, this);
+	}
+	else
+	{
+		m_close->setPosition(0, -5);
+		m_close->bindMap(m_map);
+		this->addChild(m_close);
+		_eventDispatcher->addEventListenerWithSceneGraphPriority(m_listener, this);
 	}
 	
-	rangeAttack();
 }
 
-void Player::rangeAttack()
+int Player::findWhichLongRange()const
 {
+	if (m_numLongRange % 5 == 0)
+		return 4;
+	else
+	{
+		return m_numLongRange % 5 - 1;
+	}
+}
 
+void Player::loadLongRangeListener()
+{
+	m_numLongRange++;
 	LongRange* longRange = m_longRange;
-
 	auto listener = EventListenerTouchOneByOne::create();
 	listener->onTouchBegan = [](Touch* touch, Event* event)
 	{
@@ -181,6 +261,7 @@ void Player::rangeAttack()
 			return;
 		}
 		Point pos = Director::getInstance()->convertToGL(touch->getLocationInView());
+
 		if (m_iNowMp >= longRange->getPowerCost())
 		{
 			m_is_attacking = true;
@@ -206,15 +287,38 @@ void Player::rangeAttack()
 			setLeftToward();
 		}
 	};
+	m_listener = listener;
+	m_longRanges[findWhichLongRange()] = longRange;
+}
 
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
-
-	auto mouse_move = EventListenerMouse::create();
-	mouse_move->onMouseMove = [this](Event* event)
+void Player::loadCloseWeaponListener()
+{
+	CloseWeapon* closeWeapon = m_close;
+	auto listener = EventListenerTouchOneByOne::create();
+	listener->onTouchBegan = [](Touch* touch, Event* event)
 	{
-		EventMouse* mouse = dynamic_cast<EventMouse*>(event);
-		auto pos = Point(mouse->getCursorX(), mouse->getCursorY());
-		m_longRange->setRotationByPos(pos);
+		return true;
+	};
+	listener->onTouchEnded = [closeWeapon, this](Touch* touch, Event* event)
+	{
+		Point pos = Director::getInstance()->convertToGL(touch->getLocationInView());
+		if (m_iNowMp >= m_close->getPowerCost())
+		{
+			m_is_attacking = true;
+
+			//call back to change attack status
+			auto attack_delay = DelayTime::create(m_close->getAttackSpeed());
+			auto callback = CallFunc::create(
+				[this]() {
+				m_is_attacking = false;
+			}
+			);
+			auto attack = Sequence::create(attack_delay, callback, NULL);
+			this->runAction(attack);
+			closeWeapon->attack(pos);
+			//this->hit(2);
+			this->mpDepletion(closeWeapon->getPowerCost());
+		}
 		if (pos.x < 1024 / 2)//ÆÁÄ»Ò»°ë´óÐ¡
 		{
 			setRightToward();
@@ -224,9 +328,7 @@ void Player::rangeAttack()
 			setLeftToward();
 		}
 	};
-
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(mouse_move, this);
-
+	m_listener = listener;
 }
 
 void Player::setRightToward()
@@ -258,12 +360,20 @@ void Player::resetWeaponPosition(bool status)
 	}
 }
 
-std::vector<Bullet*> Player::getBullet()const
+std::vector<Bullet*> Player::getBullet()
 {
 	std::vector<Bullet*> bullets;
-	for (auto bullet : m_longRange->getBullet())
+	if (m_numLongRange!=0)
 	{
-		bullets.push_back(bullet);
+		int n = std::min(m_numLongRange, 5);
+		for (int i = 0; i < n; i++)
+		{
+			auto longRange = m_longRanges[i];
+			for (auto bullet : longRange->getBullet())
+			{
+				bullets.push_back(bullet);
+			}
+		}
 	}
 	return bullets;
 }

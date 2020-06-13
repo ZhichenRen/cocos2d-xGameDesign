@@ -155,11 +155,6 @@ void PlayerController::onKeyPressed(EventKeyboard::KeyCode keycode, Event* event
 		this->setiYSpeed(-4);
 		//m_player->resetWeaponPosition(m_player->getLeftSide());
 	}
-	else if (keycode == EventKeyboard::KeyCode::KEY_F)
-	{
-		//CCLOG("按F：换武器");
-		this->m_isChangWeapon = true;
-	}
 	else if (keycode == EventKeyboard::KeyCode::KEY_SPACE)
 	{
 		//CCLOG("按空格：放技能");
@@ -169,6 +164,10 @@ void PlayerController::onKeyPressed(EventKeyboard::KeyCode keycode, Event* event
 			rangerOpearte();
 		}
 		return;
+	}
+	else if (keycode == EventKeyboard::KeyCode::KEY_Q)
+	{
+		m_player->changeWeapon();
 	}
 
 	animateOperate();
