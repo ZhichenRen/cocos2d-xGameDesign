@@ -28,12 +28,13 @@ public:
 	virtual void setRotationByPos(Point pos);
 	virtual void upgrade();
 	virtual bool isCloseWeapon()const;
-	virtual std::string weaponName() { return " "; }
+    const std::string& getWeaponName() { return m_weaponName; }
 protected:
 	int m_power_cost;
 	int m_range;
 	float m_crit_rate;
 	float m_attack_speed;
+	std::string m_weaponName = "none";
 	AdventureMapLayer* m_map;
 };
 #endif
