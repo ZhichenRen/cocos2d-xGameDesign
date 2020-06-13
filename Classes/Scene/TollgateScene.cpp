@@ -189,7 +189,9 @@ void TollgateScene::loadListeners()
 			{
 				m_map->getChest()->setVisible(false);
 				m_map->getChest()->setWeapon(rand() % 3 + 1);
-				//m_player->setLongRange(m_map->getChest()->getWeapon());
+				std::string str = m_map->getChest()->getWeapon()->getWeaponName();
+				m_player->setWeapon(str);
+				m_player->determineWhichWeapon();
 			}
 			else if (ccpDistance(m_player->getPosition(), m_map->getShop()->getPosition()) < 20.0f)
 			{
@@ -204,7 +206,9 @@ void TollgateScene::loadListeners()
 					{
 						GameData::setCoinNum(GameData::getCoinNum() - 20);
 						m_map->getShop()->setWeapon(rand() % 3 + 1);
-						//m_player->setLongRange(m_map->getShop()->getWeapon());
+						std::string str = m_map->getChest()->getWeapon()->getWeaponName();
+						m_player->setWeapon(str);
+						m_player->determineWhichWeapon();
 						m_map->getShop()->showFlowWordEnoughMoney();
 					}
 					else
