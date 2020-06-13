@@ -1,6 +1,7 @@
 #ifndef __Weapon_H__
 #define __Weapon_H__
 
+#include <string>
 #include "cocos2d.h"
 #include "Entity\Entity.h"
 #include "Scene\AdventureMapScene.h"
@@ -27,6 +28,7 @@ public:
 	virtual void setRotationByPos(Point pos);
 	virtual void upgrade();
 	virtual bool isCloseWeapon()const;
+	virtual std::string weaponName() { return " "; }
 protected:
 	int m_power_cost;
 	int m_range;

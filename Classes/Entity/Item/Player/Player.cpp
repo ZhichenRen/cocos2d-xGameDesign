@@ -174,43 +174,46 @@ void Player::chooseWeapon()
 	{
 		m_close = NULL;
 		m_longRange = CandyGun::create();
-		loadLongRangeListener();
 		m_is_close_weapon_now = false;
+		m_weaponFileName = "CandyGun!.png";
+		m_weaponPowerCost = m_longRange->getPowerCost();
+		loadLongRangeListener();
 	}
 	else if (m_weapons[m_numWeapon - 1] == "GoldenSword")
 	{
 		m_longRange = NULL;
 		m_close = GoldenSword::create();
-		loadCloseWeaponListener();
 		m_is_close_weapon_now = true;
+		m_weaponFileName = "GoldenSword!.png";
+		m_weaponPowerCost = m_close->getPowerCost();
+		loadCloseWeaponListener();
 	}
 	else if (m_weapons[m_numWeapon - 1] == "RPG")
 	{
 		m_close = NULL;
 		m_longRange =RPG::create();
-		loadLongRangeListener();
 		m_is_close_weapon_now = false;
+		m_weaponFileName = "Fist_of_Heaven.png";
+		m_weaponPowerCost = m_longRange->getPowerCost();
+		loadLongRangeListener();
 	}
 	else if (m_weapons[m_numWeapon - 1] == "Shotgun")
 	{
 		m_close = NULL;
 		m_longRange = Shotgun::create();
-		loadLongRangeListener();
 		m_is_close_weapon_now = false;
-	}
-	else if (m_weapons[m_numWeapon - 1] == "TrackWeapon")
-	{
-		m_close = NULL;
-		m_longRange = TrackWeapon::create();
+		m_weaponFileName = "Rifle&Shotgun.png";
+		m_weaponPowerCost = m_longRange->getPowerCost();
 		loadLongRangeListener();
-		m_is_close_weapon_now = false;
 	}
 	else if (m_weapons[m_numWeapon - 1] == "Pistol")
 	{
 		m_close = NULL;
 		m_longRange = Pistol::create();
-		loadLongRangeListener();
 		m_is_close_weapon_now = false;
+		m_weaponFileName = "pistol.png";
+		m_weaponPowerCost = m_longRange->getPowerCost();
+		loadLongRangeListener();
 	}
 }
 
@@ -306,6 +309,7 @@ void Player::loadCloseWeaponListener()
 			//call back to change attack status
 			auto attack_delay = DelayTime::create(m_close->getAttackSpeed());
 			auto callback = CallFunc::create(
+
 				[this]() {
 				m_is_attacking = false;
 			}

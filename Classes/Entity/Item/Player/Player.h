@@ -72,6 +72,9 @@ public:
 
 	void hit(int damage);
 	void mpDepletion(int mpDe);
+
+	const std::string& getWeaponFileName(){ return m_weaponFileName; }
+	int getWeaponPowerCost() { return m_weaponPowerCost; }
 public:
 	virtual Animate* walk() = 0;
 	virtual void skill() = 0;
@@ -117,6 +120,9 @@ protected:
 	int m_skillDirectionX = 0;
 	int m_skillDirectionY = 0;
 	bool m_isInSkill;
+
+	std::string m_weaponFileName;
+	int m_weaponPowerCost;
 
 	void getBulletFromWeapon();
 
