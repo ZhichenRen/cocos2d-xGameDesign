@@ -1,4 +1,4 @@
-#include "Entity/Item/Player/Player.h"
+ï»¿#include "Entity/Item/Player/Player.h"
 #include "Entity/Weapons/CloseWeapon.h"
 #include "Entity\Weapons\Shotgun.h"
 #include "Entity\Weapons\RPG.h"
@@ -220,14 +220,14 @@ void Player::determineWhichWeapon()
 	chooseWeapon();
 	if (m_longRange != NULL && m_close == NULL)
 	{
-		m_longRange->setPosition(0, -5);
+		m_longRange->setPosition(0, -15);
 		m_longRange->bindMap(m_map);
 		this->addChild(m_longRange);
 	    _eventDispatcher->addEventListenerWithSceneGraphPriority(m_listener, this);
 	}
 	else
 	{
-		m_close->setPosition(0, -5);
+		m_close->setPosition(0, -15);
 		m_close->bindMap(m_map);
 		this->addChild(m_close);
 		_eventDispatcher->addEventListenerWithSceneGraphPriority(m_listener, this);
@@ -278,7 +278,7 @@ void Player::loadLongRangeListener()
 			//this->hit(2);
 			this->mpDepletion(longRange->getPowerCost());
 		}
-		if (pos.x < 1024 / 2)//ÆÁÄ»Ò»°ë´óÐ¡
+		if (pos.x < 1024 / 2)//å±å¹•ä¸€åŠå¤§å°
 		{
 			setRightToward();
 		}
@@ -319,7 +319,7 @@ void Player::loadCloseWeaponListener()
 			//this->hit(2);
 			this->mpDepletion(closeWeapon->getPowerCost());
 		}
-		if (pos.x < 1024 / 2)//ÆÁÄ»Ò»°ë´óÐ¡
+		if (pos.x < 1024 / 2)//å±å¹•ä¸€åŠå¤§å°
 		{
 			setRightToward();
 		}
@@ -435,4 +435,9 @@ void Player::mpDepletion(int mpDe)
 bool Player::isAttackingWithCloseWeapon()const
 {
 	return m_is_close_weapon_now && m_is_attacking;
+}
+
+CloseWeapon* Player::getCloseWeapon()const
+{
+	return m_close;
 }
