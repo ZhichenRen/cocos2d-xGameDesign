@@ -4,25 +4,6 @@
 	<dict>
 		<key>frames</key>
 		<dict>
-			<key>pause.png</key>
-			<dict>
-				<key>width</key>
-				<integer>24</integer>
-				<key>height</key>
-				<integer>28</integer>
-				<key>originalWidth</key>
-				<integer>24</integer>
-				<key>originalHeight</key>
-				<integer>28</integer>
-				<key>x</key>
-				<integer>0</integer>
-				<key>y</key>
-				<integer>0</integer>
-				<key>offsetX</key>
-				<real>0</real>
-				<key>offsetY</key>
-				<real>0</real>
-			</dict>
 			<key>BG.png</key>
 			<dict>
 				<key>width</key>
@@ -34,7 +15,7 @@
 				<key>originalHeight</key>
 				<integer>540</integer>
 				<key>x</key>
-				<integer>26</integer>
+				<integer>0</integer>
 				<key>y</key>
 				<integer>0</integer>
 				<key>offsetX</key>
@@ -53,51 +34,13 @@
 				<key>originalHeight</key>
 				<integer>30</integer>
 				<key>x</key>
-				<integer>796</integer>
+				<integer>770</integer>
 				<key>y</key>
 				<integer>0</integer>
 				<key>offsetX</key>
 				<real>-1</real>
 				<key>offsetY</key>
 				<real>-1</real>
-			</dict>
-			<key>background.png</key>
-			<dict>
-				<key>width</key>
-				<integer>101</integer>
-				<key>height</key>
-				<integer>9</integer>
-				<key>originalWidth</key>
-				<integer>101</integer>
-				<key>originalHeight</key>
-				<integer>9</integer>
-				<key>x</key>
-				<integer>818</integer>
-				<key>y</key>
-				<integer>0</integer>
-				<key>offsetX</key>
-				<real>0</real>
-				<key>offsetY</key>
-				<real>0</real>
-			</dict>
-			<key>progress.png</key>
-			<dict>
-				<key>width</key>
-				<integer>95</integer>
-				<key>height</key>
-				<integer>5</integer>
-				<key>originalWidth</key>
-				<integer>101</integer>
-				<key>originalHeight</key>
-				<integer>9</integer>
-				<key>x</key>
-				<integer>921</integer>
-				<key>y</key>
-				<integer>0</integer>
-				<key>offsetX</key>
-				<real>0</real>
-				<key>offsetY</key>
-				<real>0</real>
 			</dict>
 			<key>armor.png</key>
 			<dict>
@@ -110,9 +53,9 @@
 				<key>originalHeight</key>
 				<integer>23</integer>
 				<key>x</key>
-				<integer>0</integer>
+				<integer>792</integer>
 				<key>y</key>
-				<integer>542</integer>
+				<integer>0</integer>
 				<key>offsetX</key>
 				<real>0</real>
 				<key>offsetY</key>
@@ -129,13 +72,32 @@
 				<key>originalHeight</key>
 				<integer>34</integer>
 				<key>x</key>
-				<integer>24</integer>
+				<integer>816</integer>
 				<key>y</key>
-				<integer>542</integer>
+				<integer>0</integer>
 				<key>offsetX</key>
 				<real>0</real>
 				<key>offsetY</key>
 				<real>0.5</real>
+			</dict>
+			<key>background.png</key>
+			<dict>
+				<key>width</key>
+				<integer>101</integer>
+				<key>height</key>
+				<integer>9</integer>
+				<key>originalWidth</key>
+				<integer>101</integer>
+				<key>originalHeight</key>
+				<integer>9</integer>
+				<key>x</key>
+				<integer>844</integer>
+				<key>y</key>
+				<integer>0</integer>
+				<key>offsetX</key>
+				<real>0</real>
+				<key>offsetY</key>
+				<real>0</real>
 			</dict>
 			<key>WhiteProgressBar.png</key>
 			<dict>
@@ -148,7 +110,7 @@
 				<key>originalHeight</key>
 				<integer>9</integer>
 				<key>x</key>
-				<integer>52</integer>
+				<integer>0</integer>
 				<key>y</key>
 				<integer>542</integer>
 				<key>offsetX</key>
@@ -156,56 +118,75 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>Ability.PNG</key>
+			<key>ranger_ability.png</key>
 			<dict>
 				<key>width</key>
-				<integer>125</integer>
+				<integer>102</integer>
 				<key>height</key>
-				<integer>125</integer>
+				<integer>103</integer>
 				<key>originalWidth</key>
-				<integer>135</integer>
+				<integer>102</integer>
 				<key>originalHeight</key>
-				<integer>135</integer>
+				<integer>103</integer>
 				<key>x</key>
-				<integer>149</integer>
+				<integer>97</integer>
 				<key>y</key>
 				<integer>542</integer>
 				<key>offsetX</key>
 				<real>0</real>
 				<key>offsetY</key>
-				<real>-1</real>
+				<real>0</real>
 			</dict>
-			<key>AbilityLoadingBar.png</key>
+			<key>ranger_image.PNG</key>
 			<dict>
 				<key>width</key>
-				<integer>73</integer>
+				<integer>111</integer>
 				<key>height</key>
-				<integer>42</integer>
+				<integer>111</integer>
 				<key>originalWidth</key>
-				<integer>73</integer>
+				<integer>111</integer>
 				<key>originalHeight</key>
-				<integer>73</integer>
+				<integer>111</integer>
 				<key>x</key>
-				<integer>276</integer>
+				<integer>201</integer>
 				<key>y</key>
 				<integer>542</integer>
 				<key>offsetX</key>
 				<real>0</real>
 				<key>offsetY</key>
-				<real>-2.5</real>
+				<real>0</real>
 			</dict>
-			<key>Coin.png</key>
+			<key>Back.png</key>
 			<dict>
 				<key>width</key>
-				<integer>19</integer>
+				<integer>155</integer>
 				<key>height</key>
-				<integer>19</integer>
+				<integer>124</integer>
 				<key>originalWidth</key>
-				<integer>19</integer>
+				<integer>155</integer>
 				<key>originalHeight</key>
-				<integer>19</integer>
+				<integer>124</integer>
 				<key>x</key>
-				<integer>351</integer>
+				<integer>314</integer>
+				<key>y</key>
+				<integer>542</integer>
+				<key>offsetX</key>
+				<real>0</real>
+				<key>offsetY</key>
+				<real>0</real>
+			</dict>
+			<key>choose.png</key>
+			<dict>
+				<key>width</key>
+				<integer>186</integer>
+				<key>height</key>
+				<integer>148</integer>
+				<key>originalWidth</key>
+				<integer>186</integer>
+				<key>originalHeight</key>
+				<integer>148</integer>
+				<key>x</key>
+				<integer>471</integer>
 				<key>y</key>
 				<integer>542</integer>
 				<key>offsetX</key>
@@ -219,9 +200,9 @@
 			<key>format</key>
 			<integer>0</integer>
 			<key>textureFileName</key>
-			<string>INGAME0.png</string>
+			<string>PlayerInfo0.png</string>
 			<key>realTextureFileName</key>
-			<string>INGAME0.png</string>
+			<string>PlayerInfo0.png</string>
 			<key>size</key>
 			<string>{1024,1024}</string>
 		</dict>

@@ -35,7 +35,7 @@ void Monster::hide()
 {
 	if (getSprite() != NULL)
 	{
-		m_sprite->setVisible(false);
+		//m_sprite->setVisible(false);
 		m_weapon->setVisible(false);
 		m_isAlive = false;
 	}
@@ -64,7 +64,8 @@ bool Monster::mySetPosition(Vec2 target)
 	Vec2 tarBlock = ccp(static_cast<int>(target.x) / 21, static_cast<int>(target.y) / 21);
 	auto curBlock = ccp(static_cast<int>(curPos.x) / 21, static_cast<int>(curPos.y) / 21);
 	m_monsMgr->setPosMap(curBlock, 0);
-	if (m_map->isBarrier(worldTar))
+	if (m_map->isBarrier(worldTar)
+		|| m_monsMgr->isPosOccupied(tarBlock))
 	{
 		if (!this->isTaunted())
 		{
@@ -128,7 +129,7 @@ void Monster::hit(int damage)
 {
 	setMonsTaunted();
 	this->m_Hp -= damage;
-	std::string msg = '-' + std::to_string(damage) + "hp";
+	std::string msg = '-' + std::to_string(damage);
 	m_damageMsg->showMonsDmg(msg.c_str(), this->getContentSize().height / 2);
 }
 
@@ -164,12 +165,13 @@ void Monster::hit(int damage, float flyingDegree, bool isCriticalStrike)
 
 void Monster::die()
 {
+	
 	m_isAlive = false;
-	auto fade = FadeTo::create(0.5f, 30);//消失至某一透明度
-	auto disappear_delay = DelayTime::create(2.0f);
+	auto fade = FadeTo::create(1.0f, 0);//消失至某一透明度
+	/*auto disappear_delay = DelayTime::create(2.0f);
 	auto disappear = FadeTo::create(0.5f, 0);
-	auto disappear_action = Sequence::create(fade, disappear_delay, disappear, NULL);
-	this->getSprite()->runAction(disappear_action);
+	auto disappear_action = Sequence::create(fade, disappear_delay, disappear, NULL);*/
+	this->getSprite()->runAction(fade);
 	auto coin = Coin::create();
 	//this->getSprite()->setVisible(false);//怪物消失
 	auto ranF1 = CCRANDOM_0_1();
@@ -192,7 +194,7 @@ void Monster::die()
 	}
 	coin->setPosition(this->getPosition() + m_monsMgr->getPosition());
 	auto ranF3 = CCRANDOM_0_1();
-	if (ranF2 < BLUEMEDICINERATE)
+	if (ranF3 < BLUEMEDICINERATE)
 	{
 		auto blueMedicine = BlueMedicine::create();
 		blueMedicine->setPosition(this->getPosition() + m_monsMgr->getPosition());
@@ -208,9 +210,16 @@ void Monster::die()
 void Monster::wander()
 {
 	auto curPos = getPosition();
-	auto tarPos = m_fIsFacingRight ? ccp(this->getMonsterSpeed(), 0) + curPos : -ccp(this->getMonsterSpeed(), 0) + curPos;
+
+	auto tarPos = m_fIsFacingRight ? ccp(this->getMonsterSpeed(), 0) +
+		curPos : -ccp(this->getMonsterSpeed(), 0) + curPos;
 
 	mySetPosition(tarPos);
+	/*if (!)
+	{
+		tarPos = m_fIsFacingRight ? -ccp(this->getMonsterSpeed(), 0) +
+			curPos : ccp(this->getMonsterSpeed(), 0) + curPos;
+	}*/
 }
 
 

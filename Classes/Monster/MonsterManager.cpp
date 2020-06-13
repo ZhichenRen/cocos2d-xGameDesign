@@ -1,4 +1,5 @@
 #include "Monster\MonsterManager.h"
+#include "Entity\Weapons\TrackWeapon.h"
 
 
 
@@ -21,6 +22,7 @@ void MonsterManager::reviveAllMonsters()
 	for (auto monster : m_monsterList)
 	{
 		monster->resetPropoties();
+		monster->setVisible(true);
 	}
 	createMonsterPos();
 }
@@ -57,19 +59,19 @@ void MonsterManager::createMonsterPos()
 }
 
 void MonsterManager::createRandomPos() {
-	auto size = Size(19 * 32, 19 * 32);
 	int k = 0;
-
 	//生成随机野怪
 	for (int i = 0; i < m_monsterList.size(); i++)
 	{
-		auto randInt1 = rand() % (21 * 32);
-		auto randInt2 = rand() % (21 * 32);
+		auto randInt1 = rand() % 18 + 2;
+		auto randInt2 = rand() % 18 + 2;
 
-		auto monsterPos = ccp(randInt1, randInt2);
+		auto monsterPos = 32 * ccp(randInt1, randInt2) + ccp(16.5, 0);
 
 		auto worldTar = monsterPos + getPosition();
-		if (m_map->isBarrier(worldTar))//若是障碍物则直接continue
+		Vec2 tarBlock = ccp(static_cast<int>(monsterPos.x) / 21, static_cast<int>(monsterPos.y) / 21);
+		if (m_map->isBarrier(worldTar)
+			|| m_monsPosMap[tarBlock])//若是障碍物则直接continue
 		{
 			i--;
 			continue;
@@ -84,14 +86,13 @@ void MonsterManager::createRandomPos() {
 			}
 		}
 
-		Vec2 tarBlock = ccp(static_cast<int>(monsterPos.x) / 21, static_cast<int>(monsterPos.y) / 21);
 		m_monsPosMap[tarBlock] = 1;
 		m_monsterList[k]->setPosition(monsterPos);
 
 		k++;
 	}
 
-	bulkUpRandMons(this->m_bulkMonsterNum);
+	bulkUpRandMons(this->m_bulkMonsterNum);//随机几个怪物变大
 }
 
 void MonsterManager::bulkUpRandMons(int totalNum)
@@ -181,6 +182,41 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 
 }
 
+void MonsterManager::createWoodWalls(int woodWallsNum)
+{
+	//生成随机野怪
+	for (int i = 0; i < woodWallsNum; i++)
+	{
+		auto randInt1 = rand() % 21 ;
+		auto randInt2 = rand() % 21 ;
+
+		auto monsterPos = 32 * ccp(randInt1, randInt2) + ccp(16.5, 0);
+
+		auto worldTar = monsterPos + getPosition();
+		Vec2 tarBlock = ccp(static_cast<int>(monsterPos.x) / 21, static_cast<int>(monsterPos.y) / 21);
+		if (m_map->isBarrier(worldTar)
+			|| m_monsPosMap[tarBlock])//若是障碍物则直接continue
+		{
+			i--;
+			continue;
+		}
+		
+		
+		m_monsPosMap[tarBlock] = 1;
+		auto woodWall = WoodWall::create();
+		addChild(woodWall);
+		woodWall->bindMonsMgr(this);
+		woodWall->bindMap(m_map);
+		woodWall->setPosition(monsterPos);
+		//m_map->getCollidable()->setTileGID(89, GameData::getCoord()[5 * m_curRoom.x + m_curRoom.y] - Vec2(10 - randInt1, -11 + randInt2));
+		m_map->getCollidable()->setTileGID(89, Vec2(0, -1) + 
+			m_map->tileCoordFromPosition(m_map->convertToNodeSpace(this->convertToWorldSpace(woodWall->getPosition()))));
+		woodWall->getChildByName("preRect")->setVisible(false);
+		m_woodWallList.push_back(woodWall);
+	}
+
+}
+
 void MonsterManager::showPreRec()
 {
 	//auto fadein = FadeIn::create(0.5f);
@@ -243,14 +279,20 @@ bool MonsterManager::isGameOver()
 		return true;
 	return m_fGameOver;
 }
+
+
 void MonsterManager::setInited()
 {
 	m_fIsInited = 1;
 }
+
+
 bool MonsterManager::getInited()
 {
 	return m_fIsInited;
 }
+
+
 void MonsterManager::update(float dt)
 {
 	if (!m_fIsInited)
@@ -263,6 +305,24 @@ void MonsterManager::update(float dt)
 
 		resetAllMons();
 	}
+
+	for (auto woodWall : m_woodWallList)
+	{
+		auto curPos = woodWall->getPosition();
+		Vec2 blockOccupied = ccp(static_cast<int>(curPos.x) / 21, static_cast<int>(curPos.y) / 21);
+		if (!woodWall->isAlive())
+		{
+			continue;
+		}
+		if (woodWall->getHp() <= 0) //更新活着的状态
+		{
+			m_monsPosMap[blockOccupied] = 0;//清除位置信息
+			m_map->getCollidable()->setTileGID(2, Vec2(0, -1) +
+				m_map->tileCoordFromPosition(m_map->convertToNodeSpace(this->convertToWorldSpace(woodWall->getPosition()))));
+			woodWall->die();
+		}
+	}
+
 	if (m_fGameOver)//游戏结束了
 	{
 		return;
@@ -298,7 +358,13 @@ void MonsterManager::update(float dt)
 			auto monsWeapon = monster->getMonsterWeapon();
 			if (dis < 2 * monsWeapon->getRange())//两倍距离以内再攻击
 				//攻击要用到地图中的坐标。
+			{
+				if (typeid(*monsWeapon) == typeid(TrackWeapon))
+				{
+					dynamic_cast<TrackWeapon*>(monsWeapon)->bindPlayer(m_player);
+				}
 				monsWeapon->attack(m_map->convertToWorldSpace(m_player->getPosition()));
+			}
 
 
 			m_monsPosMap[blockOccupied] = 0;
@@ -323,6 +389,8 @@ void MonsterManager::update(float dt)
 			}
 		}
 	}
+
+	
 }
 
 
@@ -341,6 +409,11 @@ std::vector<Bullet*> MonsterManager::getMonsterBullets() const
 std::vector<Monster*> MonsterManager::getMonster()const
 {
 	return m_monsterList;
+}
+
+std::vector<Monster*> MonsterManager::getWoodWall() const
+{
+	return m_woodWallList;
 }
 
 void MonsterManager::setPosMap(Vec2 pos, bool flag)
@@ -376,52 +449,3 @@ void MonsterManager::setBulkMonsterNum(int giantNum)
 {
 	m_bulkMonsterNum = giantNum;
 }
-//void MonsterManager::createMonsters()
-//{
-//	Pig* pig = NULL;
-//	Slime* slime = NULL;
-//	Sprite* sprite = NULL;
-//	ChiefOfTribe* chiefOfTribe = NULL;
-//	Duck* duck = NULL;
-//	int k = 0;
-//	
-//	for (int i = 0; i < this->pigNum; i++)
-//	{
-//		pig = Pig::create();
-//		pig->bindMap(m_map);
-//		pig->bindMonsMgr(this);
-//		this->addChild(pig);
-//		m_monsterList.push_back(pig);
-//		m_shortMonsterList.push_back(pig);
-//	}
-//
-//	for (int i = 0; i < this->duckNum; i++)
-//	{
-//		duck = Duck::create();
-//		duck->bindMap(m_map);
-//		duck->bindMonsMgr(this);
-//		this->addChild(duck);
-//		m_monsterList.push_back(duck);
-//		m_shortMonsterList.push_back(duck);
-//	}
-//
-//	for (int i = 0; i < this->slimeNum; i++)
-//	{
-//		slime = Slime::create();
-//		this->addChild(slime);
-//		slime->bindMap(m_map);
-//		slime->bindMonsMgr(this);
-//		m_monsterList.push_back(slime);
-//		m_longMonsterList.push_back(slime);
-//	}
-//
-//	for (int i = 0; i < this->chiefOfTribeNum; i++)
-//	{
-//		chiefOfTribe = ChiefOfTribe::create();
-//		this->addChild(chiefOfTribe);
-//		chiefOfTribe->bindMap(m_map);
-//		chiefOfTribe->bindMonsMgr(this);
-//		m_monsterList.push_back(chiefOfTribe);
-//		m_longMonsterList.push_back(chiefOfTribe);
-//	}
-//}

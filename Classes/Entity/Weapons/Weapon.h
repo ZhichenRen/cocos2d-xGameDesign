@@ -21,10 +21,17 @@ public:
 	int getRange()const;
 	void bindMap(AdventureMapLayer* map);
 	void setCritRate(float crit_rate);
+	float getAttackSpeed()const;
+	void resetPosition();
+	virtual void flipped(bool status/*true for flipped and false for not flipped*/);
+	virtual void setRotationByPos(Point pos);
+	virtual void upgrade();
+	virtual bool isCloseWeapon()const;
 protected:
 	int m_power_cost;
 	int m_range;
 	float m_crit_rate;
+	float m_attack_speed;
 	AdventureMapLayer* m_map;
 };
 #endif

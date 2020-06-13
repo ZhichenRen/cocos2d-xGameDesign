@@ -1,14 +1,14 @@
-#ifndef __Pig_H__
-#define __Pig_H__
+#ifndef __Boss_H__
+#define __Boss_H__
 #include "cocos2d.h"
 #include "Monster\Monster.h"
 #include "Entity\Weapons\MonsterSword.h"
-class Pig : public Monster {
+class Boss : public Monster {
 public:
 	virtual bool init();
 	void resetPropoties();
-	CREATE_FUNC(Pig);
+	CREATE_FUNC(Boss);
 private:
-	static const int m_initHp = 15;
+	static const int m_initHp = 50;
 };
 #endif // !__Slime_H__

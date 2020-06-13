@@ -15,6 +15,8 @@ public:
 	bool isCollideWith(Entity* entity);
 	bool isAttack()const;
 	float getCritRate()const;
+	virtual void flipped(bool status);
+	virtual bool isCloseWeapon()const override;
 protected:
 	float m_attack_speed;
 	int m_damage;

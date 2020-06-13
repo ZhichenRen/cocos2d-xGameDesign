@@ -25,8 +25,8 @@ void LongRange::attack(Point pos)
 		return;
 	}
 	m_is_attack = true;
-	Point weapon_pos = m_sprite->getPosition();
-	Point now = this->convertToWorldSpace(weapon_pos);
+	Point weapon_pos = getPosition();
+	Point now = getParent()->convertToWorldSpace(weapon_pos);
 	float degree;
 	float dx = pos.x - now.x;
 	float dy = pos.y - now.y;
@@ -57,6 +57,40 @@ void LongRange::attack(Point pos)
 	}
 	auto new_bullet = generateBullet(degree, 0.3f, 0.3f);
 	new_bullet->setBulletAction(degree, m_bullet_speed);
+}
+
+void LongRange::setRotationByPos(Point pos)
+{
+	auto now = getParent()->convertToWorldSpace(getPosition());
+	float degree;
+	float dx = pos.x - now.x;
+	float dy = pos.y - now.y;
+	if (dx == 0)
+	{
+		if (dy > 0)
+		{
+			degree = 90.0f;
+		}
+		else
+		{
+			degree = -90.0f;
+		}
+	}
+	else
+	{
+		degree = atan(dy / dx) / PI * 180;
+	}
+	getSprite()->setRotation(-degree);
+	if ((degree > 0 && dy < 0 && dx < 0) || (degree < 0 && dy>0 && dx < 0))
+	{
+		getSprite()->setFlippedX(true);
+		getSprite()->setAnchorPoint(Vec2(1.0f, 0.5f));
+	}
+	else
+	{
+		getSprite()->setFlippedX(false);
+		getSprite()->setAnchorPoint(Vec2(0.0f, 0.5f));
+	}
 }
 
 std::vector<Bullet*> LongRange::getBullet()const
@@ -101,8 +135,6 @@ void LongRange::adjustWeaponPosition(float degree, bool is_flipped)
 {
 	getSprite()->setRotation(-degree);
 	Bullet* new_bullet = Bullet::create();
-	auto weapon_rotate_up = RotateBy::create(m_attack_speed / 2, -5);
-	auto weapon_rotate_down = RotateBy::create(m_attack_speed / 2, 5);
 	auto call_back = CallFunc::create(
 		[&]() {
 		m_is_attack = false;
@@ -112,16 +144,14 @@ void LongRange::adjustWeaponPosition(float degree, bool is_flipped)
 	{
 		getSprite()->setFlippedX(true);
 		getSprite()->setAnchorPoint(Vec2(1.0f, 0.5f));
-		auto gun_action = Sequence::create(weapon_rotate_down, weapon_rotate_up, call_back, NULL);
-		m_sprite->runAction(gun_action);
 	}
 	else
 	{
 		getSprite()->setFlippedX(false);
 		getSprite()->setAnchorPoint(Vec2(0.0f, 0.5f));
-		auto gun_action = Sequence::create(weapon_rotate_up, weapon_rotate_down, call_back, NULL);
-		m_sprite->runAction(gun_action);
 	}
+	auto gun_action = Sequence::create(DelayTime::create(m_attack_speed), call_back, NULL);
+	m_sprite->runAction(gun_action);
 }
 
 Bullet* LongRange::generateBullet(float degree, float scale_x, float scale_y)
@@ -140,6 +170,25 @@ Bullet* LongRange::generateBullet(float degree, float scale_x, float scale_y)
 	m_map->addChild(new_bullet, 2);
 	m_bullet.push_back(new_bullet);
 	return new_bullet;
+}
+
+void LongRange::flipped(bool status)
+{
+	if (status == true)//toward left
+	{
+		getSprite()->setFlippedX(true);
+		getSprite()->setAnchorPoint(Vec2(1.0f, 0.5f));
+	}
+	else
+	{
+		getSprite()->setFlippedX(false);
+		getSprite()->setAnchorPoint(Vec2(0.0f, 0.5f));
+	}
+}
+
+bool LongRange::isCloseWeapon()const
+{
+	return false;
 }
 
 LongRange::~LongRange()

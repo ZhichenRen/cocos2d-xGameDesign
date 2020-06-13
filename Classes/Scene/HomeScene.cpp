@@ -59,7 +59,7 @@ void HomeMenuLayer::menuItemStartCallback(cocos2d::Ref* pSender)
 void HomeMenuLayer::menuItemSettingCallback(cocos2d::Ref* pSender)
 {
 	auto scene = SettingLayer::createScene();
-	Director::getInstance()->replaceScene(scene);
+	Director::getInstance()->pushScene(scene);
 }
 
 void HomeMenuLayer::menuItemCloseCallback(cocos2d::Ref* pSender)

@@ -20,7 +20,6 @@
 
 class Shop;
 class Chest;
-
 #include "Entity/BlueMedicine/BlueMedicine.h"
 
 class AdventureMapLayer : public cocos2d::Layer
@@ -32,7 +31,6 @@ private:
 	cocos2d::TMXLayer* m_ground;
 	cocos2d::TMXLayer* m_wall;
 	cocos2d::TMXLayer* m_road;
-	cocos2d::Sprite* m_player;
 	Chest* m_chest;
 	Shop* m_shop;
 	cocos2d::Sprite* m_portal;
@@ -46,6 +44,7 @@ private:
 	std::vector<Blue*> m_blueList;
 	std::vector<Red*> m_redList;
 	std::vector<BlueMedicine*> m_blueMedicineList;
+
 public:
 	inline cocos2d::TMXTiledMap* getMap() { return m_tileMap; }
 	inline cocos2d::TMXTiledMap* getMiniMap() { return m_miniMap; }
@@ -53,12 +52,13 @@ public:
 	inline cocos2d::TMXLayer* getGround() { return m_ground; }
 	inline cocos2d::TMXLayer* getWall() { return m_wall; }
 	inline cocos2d::TMXLayer* getRoad() { return m_road; }
-	inline cocos2d::Sprite* getPlayer() { return m_player; }
 	inline Chest* getChest() { return m_chest; }
 	inline Shop* getShop() { return m_shop; }
 	inline cocos2d::Sprite* getPortal() { return m_portal; }
 	inline std::vector<Coin*> getCoinList() { return m_coinList; }
 	inline std::vector<Blue*> getBlueList() { return m_blueList; }
+	inline std::vector<Red*> getRedMedicineList() { return m_redList; }
+	inline std::vector<BlueMedicine*> getBlueMedicineList() { return m_blueMedicineList; }
 	static cocos2d::Scene* createScene();
 	virtual bool init();
 
@@ -79,6 +79,8 @@ public:
 	std::vector<std::pair<cocos2d::Vec2, cocos2d::Vec2>> getRoadPairs() { return m_roadPairs; }
 	bool isBarrier(cocos2d::Vec2 position);
 	bool isMonsterRoom(cocos2d::Vec2 roomCoord);
+
+	virtual void update(float dt);
 
 	// implement the "static create()" method manually
 	CREATE_FUNC(AdventureMapLayer);

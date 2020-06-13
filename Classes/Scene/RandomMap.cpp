@@ -173,7 +173,7 @@ void AdventureMapLayer::buildRoom(Vec2 roomCoord, bool buildBarrer)
 			else
 			{
 				m_ground->setTileGID(ROOM_TILE, Vec2(i, j));
-				m_collidable->setTileGID(EMPTY_TILE, Vec2(i, j));
+				m_collidable->setTileGID(2, Vec2(i, j));
 			}
 		}
 	}

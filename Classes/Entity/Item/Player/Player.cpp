@@ -3,6 +3,13 @@
 
 bool Player::init()
 {
+	if (!Item::init())
+	{
+		return false;
+	}
+	m_is_attacking = false;
+	m_is_close_weapon_now = false;
+	this->scheduleUpdate();
 	return true;
 }
 
@@ -149,7 +156,7 @@ void Player::determineWhichWeapon()
 	if (m_weapons[m_numWeapon - 1] == "LongRange")
 	{
 		m_longRange = m_longRangeWeapon[numLongRange - 1];
-		m_longRange->setPosition(0, -5);
+		m_longRange->setPosition(0, -8);
 		m_longRange->bindMap(m_map);
 		this->addChild(m_longRange);
 	}
@@ -160,6 +167,7 @@ void Player::determineWhichWeapon()
 void Player::rangeAttack()
 {
 	LongRange* longRange = m_longRange;
+
 	auto listener = EventListenerTouchOneByOne::create();
 	listener->onTouchBegan = [](Touch* touch, Event* event)
 	{
@@ -170,6 +178,17 @@ void Player::rangeAttack()
 		Point pos = Director::getInstance()->convertToGL(touch->getLocationInView());
 		if (m_iNowMp >= longRange->getPowerCost())
 		{
+			m_is_attacking = true;
+
+			//call back to change attack status
+			auto attack_delay = DelayTime::create(m_longRange->getAttackSpeed());
+			auto callback = CallFunc::create(
+				[this]() {
+				m_is_attacking = false;
+			}
+			);
+			auto attack = Sequence::create(attack_delay, callback, NULL);
+			this->runAction(attack);
 			longRange->attack(pos);
 			//this->hit(2);
 			this->mpDepletion(longRange->getPowerCost());
@@ -185,6 +204,24 @@ void Player::rangeAttack()
 	};
 
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+
+	auto mouse_move = EventListenerMouse::create();
+	mouse_move->onMouseMove = [this](Event* event)
+	{
+		EventMouse* mouse = dynamic_cast<EventMouse*>(event);
+		auto pos = Point(mouse->getCursorX(), mouse->getCursorY());
+		m_longRange->setRotationByPos(pos);
+		if (pos.x < 1024 / 2)//ÆÁÄ»Ò»°ë´óÐ¡
+		{
+			setRightToward();
+		}
+		else
+		{
+			setLeftToward();
+		}
+	};
+
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(mouse_move, this);
 
 }
 
@@ -205,6 +242,15 @@ void Player::setLeftToward()
 		this->setLeftSide(false);
 		this->setRightSide(true);
 		m_sprite->setFlipX(false);
+	}
+}
+
+void Player::resetWeaponPosition(bool status)
+{
+	if (!m_is_attacking)
+	{
+		m_longRange->flipped(status);
+		m_longRange->resetPosition();
 	}
 }
 
@@ -270,4 +316,9 @@ void Player::setArmorCd()
 void Player::mpDepletion(int mpDe)
 {
 	setiNowMp(getiNowMp() - mpDe);
+}
+
+bool Player::isAttackingWithCloseWeapon()const
+{
+	return m_is_close_weapon_now && m_is_attacking;
 }
