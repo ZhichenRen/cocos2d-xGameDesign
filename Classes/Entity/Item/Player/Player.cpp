@@ -445,3 +445,13 @@ CloseWeapon* Player::getCloseWeapon()const
 {
 	return m_close;
 }
+
+LongRange* Player::getLongrange()const
+{
+	return m_longRange;
+}
+
+bool Player::isClose()const
+{
+	return m_is_close_weapon_now;
+}

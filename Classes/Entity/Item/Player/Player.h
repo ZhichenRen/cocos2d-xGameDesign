@@ -105,6 +105,8 @@ public:
 	bool isAttackingWithCloseWeapon()const;
 	void resetWeaponPosition(bool status/*true stands for left and false stands for right*/);
 	CloseWeapon* getCloseWeapon()const;
+	LongRange* getLongrange()const;
+	bool isClose()const;
 protected:
 	AdventureMapLayer* m_map;
 
