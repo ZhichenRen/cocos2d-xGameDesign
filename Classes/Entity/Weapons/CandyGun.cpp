@@ -21,19 +21,19 @@ bool CandyGun::init()
 	m_bullet_picture = std::string("CandyBullet.png");
 	bindSprite(Sprite::create("CandyGun!.png"), 0.25f, 0.25f);
 	m_sprite->setAnchorPoint(Vec2(0.0f, 0.5f));
-
+	m_weaponName = "CandyGun";
 	//test
-	auto upgrade_effect = ParticleFlower::create();
-	upgrade_effect->setEmitterMode(ParticleSystem::Mode::RADIUS);
-	upgrade_effect->setPositionType(ParticleSystem::PositionType::RELATIVE);
-	upgrade_effect->setAutoRemoveOnFinish(true);
-	upgrade_effect->setTotalParticles(100);
-	upgrade_effect->setPosition(getSprite()->getContentSize().width / 2, getSprite()->getContentSize().height / 2);
-	upgrade_effect->setDuration(-1);
-	upgrade_effect->setStartRadius(50.0f);
-	upgrade_effect->setStartRadiusVar(25.0f);
-	upgrade_effect->setEndRadius(50.0f);
-	getSprite()->addChild(upgrade_effect);
+	//auto upgrade_effect = ParticleFlower::create();
+	//upgrade_effect->setEmitterMode(ParticleSystem::Mode::RADIUS);
+	//upgrade_effect->setPositionType(ParticleSystem::PositionType::RELATIVE);
+	//upgrade_effect->setAutoRemoveOnFinish(true);
+	//upgrade_effect->setTotalParticles(100);
+	//upgrade_effect->setPosition(getSprite()->getContentSize().width / 2, getSprite()->getContentSize().height / 2);
+	//upgrade_effect->setDuration(-1);
+	//upgrade_effect->setStartRadius(50.0f);
+	//upgrade_effect->setStartRadiusVar(25.0f);
+	//upgrade_effect->setEndRadius(50.0f);
+	//getSprite()->addChild(upgrade_effect);
 
 	return true;
 }

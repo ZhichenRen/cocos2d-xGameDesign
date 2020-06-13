@@ -1,6 +1,7 @@
 #ifndef __Weapon_H__
 #define __Weapon_H__
 
+#include <string>
 #include "cocos2d.h"
 #include "Entity\Entity.h"
 #include "Scene\AdventureMapScene.h"
@@ -21,17 +22,19 @@ public:
 	int getRange()const;
 	void bindMap(AdventureMapLayer* map);
 	void setCritRate(float crit_rate);
-	float getAttackSpeed()const;
+	virtual float getAttackSpeed()const;
 	void resetPosition();
 	virtual void flipped(bool status/*true for flipped and false for not flipped*/);
 	virtual void setRotationByPos(Point pos);
 	virtual void upgrade();
 	virtual bool isCloseWeapon()const;
+    const std::string& getWeaponName() { return m_weaponName; }
 protected:
 	int m_power_cost;
 	int m_range;
 	float m_crit_rate;
 	float m_attack_speed;
+	std::string m_weaponName = "none";
 	AdventureMapLayer* m_map;
 };
 #endif

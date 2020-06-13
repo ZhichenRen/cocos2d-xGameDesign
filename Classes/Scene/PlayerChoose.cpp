@@ -1,8 +1,5 @@
-#include "Scene/PlayerChoose.h"
-#include "editor-support/cocostudio/CCSGUIReader.h"
-#include "ui/CocosGUI.h"
-using namespace cocos2d::ui;
-using namespace cocostudio;
+ï»¿#include "Scene/PlayerChoose.h"
+#pragma execution_character_set("utf-8")
 
 bool PlayerChoose::init()
 {
@@ -22,14 +19,45 @@ void PlayerChoose::loadUI()
 	back_button->addTouchEventListener(this, toucheventselector(PlayerChoose::back));
 	auto choose_button = (Button*)Helper::seekWidgetByName(UI, "choose_button");
 	choose_button->addTouchEventListener(this, toucheventselector(PlayerChoose::setPlayer));
+
+	m_hp = (Text*)Helper::seekWidgetByName(UI, "hp_label");
+	m_mp= (Text*)Helper::seekWidgetByName(UI, "magic_label");
+	m_armor= (Text*)Helper::seekWidgetByName(UI, "armor_label");
+	m_name= (Text*)Helper::seekWidgetByName(UI, "name_label");
+	m_ability_name= (Text*)Helper::seekWidgetByName(UI, "ability_name");
+	m_ability_discription= (Text*)Helper::seekWidgetByName(UI, "ability_description");
+	m_image_file=(ImageView*)Helper::seekWidgetByName(UI, "player_image");
+	m_ability_image = (ImageView*)Helper::seekWidgetByName(UI, "ability_image");
 }
 
-void PlayerChoose::setPlayer()
+void PlayerChoose::setPlayer(Ref*, TouchEventType type)
 {
-	//ÕâÀïµ÷ÓÃÄãµÄ
+	switch (type)
+	{
+	case TOUCH_EVENT_ENDED:
+		//è¿™é‡Œè°ƒç”¨ä½ çš„
+		break;
+	}
 }
 
-void PlayerChoose::back()
+void PlayerChoose::back(Ref*, TouchEventType type)
 {
-	this->removeFromParentAndCleanup();
+	switch (type)
+	{
+	case TOUCH_EVENT_ENDED:
+		this->removeFromParentAndCleanup(true);
+		break;
+	}
+}
+
+void PlayerChoose::setPlayerInformation(const PlayerInfomation& player_information)
+{
+	m_hp->setText(std::to_string(player_information.hp) + "/" + std::to_string(player_information.hp));
+	m_mp->setText(std::to_string(player_information.mp) + "/" + std::to_string(player_information.mp));
+	m_armor->setText(std::to_string(player_information.armor) + "/" + std::to_string(player_information.armor));
+	m_name->setText(player_information.name);
+	m_ability_name->setText(player_information.ability_name);
+	m_ability_discription->setText(player_information.ability_discription);
+	m_ability_image->loadTexture(player_information.ability_image_file);
+	m_image_file->loadTexture(player_information.image_file);
 }

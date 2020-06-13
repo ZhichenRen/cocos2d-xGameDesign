@@ -118,4 +118,3 @@ void FlowWord::showMonsTaunted()
 	auto actions = Sequence::create(scaleUp, scaleDown, callBack, NULL);
 	this->runAction(actions);
 }
-
