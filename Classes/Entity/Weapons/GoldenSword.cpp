@@ -11,4 +11,3 @@ bool GoldenSword::init()
 	m_sprite->setAnchorPoint(Vec2(0, 0));
 	return true;
 }
-

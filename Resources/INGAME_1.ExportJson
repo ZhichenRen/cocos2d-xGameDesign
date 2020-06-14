@@ -1082,7 +1082,7 @@
               "fontName": "微软雅黑",
               "fontSize": 20,
               "hAlignment": 0,
-              "text": "3",
+              "text": "0",
               "touchScaleEnable": false,
               "vAlignment": 0
             }
@@ -1106,16 +1106,16 @@
               "customProperty": "",
               "flipX": false,
               "flipY": false,
-              "height": 260,
+              "height": 204,
               "ignoreSize": true,
               "layoutParameter": null,
               "opacity": 255,
-              "positionPercentX": 0.02877698,
-              "positionPercentY": 0,
+              "positionPercentX": -0.266187042,
+              "positionPercentY": 0.165354326,
               "positionType": 0,
               "rotation": 0,
-              "scaleX": 0.3,
-              "scaleY": 0.3,
+              "scaleX": 0.22,
+              "scaleY": 0.22,
               "sizePercentX": 1.50359714,
               "sizePercentY": 0.88188976,
               "sizeType": 0,
@@ -1123,9 +1123,9 @@
               "touchAble": false,
               "useMergedTexture": true,
               "visible": true,
-              "width": 260,
-              "x": 4,
-              "y": 0,
+              "width": 380,
+              "x": -37,
+              "y": 21,
               "capInsetsHeight": 1,
               "capInsetsWidth": 1,
               "capInsetsX": 0,
@@ -1137,8 +1137,8 @@
                 "resourceType": 1
               },
               "scale9Enable": false,
-              "scale9Height": 260,
-              "scale9Width": 260
+              "scale9Height": 204,
+              "scale9Width": 380
             }
           }
         ],

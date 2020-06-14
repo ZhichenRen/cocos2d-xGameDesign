@@ -3,20 +3,23 @@
 #include "Entity/Item/Player/Player.h"
 #include "cocos2d.h"
 using namespace cocos2d;
-class Ranger :public Player
+class Priest :public Player
 {
 public:
-	Ranger();
-	~Ranger();
+	Priest();
+	~Priest();
 	virtual bool init()override;
-	CREATE_FUNC(Ranger);
+	CREATE_FUNC(Priest);
 public:
 	virtual Animate* walk()override;
 	virtual void skill()override;
-	virtual void skillDuration() override{ return; }
+	virtual void skillDuration()override;
 	virtual void skillEnd()override;
 	virtual void die()override;
 	virtual Animate* stand()override;
-	virtual Point getSkillDirection()override;
+	virtual Point getSkillDirection()override { return this->getPosition(); }
+	
 protected:
+	Sprite* m_priestSkill = NULL;
+	int m_skillTime;
 };

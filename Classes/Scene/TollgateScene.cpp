@@ -2,6 +2,7 @@
 #include "Scene/TollgateScene.h"
 #include "Scene/PauseScene.h"
 #include "Scene/HomeScene.h"
+#include "Entity/Item/Player/Priest/Priest.h"
 #include "Entity/Weapons/Bullets/ExplosiveBullet.h"
 #include "Entity/Weapons/RPG.h"
 #include "Entity\Weapons\GoldenSword.h"
@@ -46,16 +47,16 @@ void TollgateScene::addPlayer()
 
 void TollgateScene::addWeapon()
 {
-	std::string str = "CandyGun";
+	std::string str = "CandyGun!";
 	m_player->setWeapon(str);
 	m_player->determineWhichWeapon();
-	str = "RPG";
+	str = "Fist_of_Heaven";
 	m_player->setWeapon(str);
 	m_player->determineWhichWeapon();
-	str = "GoldenSword";
+	str = "GoldenSword!";
 	m_player->setWeapon(str);
 	m_player->determineWhichWeapon();
-	str = "CandyGun";
+	str = "CandyGun!";
 	/*m_player->setWeapon(str);
 	m_player->determineWhichWeapon();*/
 }
@@ -82,7 +83,6 @@ bool TollgateScene::init()
 	this->scheduleUpdate();
 
 	loadMap();
-	loadUI();
 	addPlayer();
 	loadController();
 	loadMonsters();
