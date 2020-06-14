@@ -13,6 +13,8 @@ bool WoodWall::init()
 
 void WoodWall::hit(int damage, float flyingDegree, bool isCriticalStrike)
 {
+	if (!m_isAlive)
+		return;
 	this->m_Hp -= damage;
 
 	if (isCriticalStrike)

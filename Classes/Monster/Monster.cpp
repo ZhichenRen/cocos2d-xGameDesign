@@ -140,6 +140,8 @@ void Monster::hit(int damage)
 
 void Monster::hit(int damage, float flyingDegree, bool isCriticalStrike)
 {
+	if (!m_isAlive)
+		return;
 	this->m_Hp -= damage;
 	setMonsTaunted();
 	this->stopAllActions();
@@ -177,6 +179,10 @@ void Monster::die()
 	auto disappear = FadeTo::create(0.5f, 0);
 	auto disappear_action = Sequence::create(fade, disappear_delay, disappear, NULL);*/
 	this->getSprite()->runAction(fade);
+	if (m_weapon)
+	{
+		m_weapon->getSprite()->setVisible(false);
+	}
 	auto coin = Coin::create();
 	//this->getSprite()->setVisible(false);//นึฮ๏ฯ๛สง
 	auto ranF1 = CCRANDOM_0_1();
