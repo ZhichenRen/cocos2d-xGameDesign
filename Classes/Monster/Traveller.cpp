@@ -3,13 +3,17 @@
 bool Traveller::init()
 {
 	m_fIsFacingRight = false;
-	setMonsterSpeed(0.5);
+	setMonsterSpeed(1.5);
 	m_damageMsg = FlowWord::create();
 	this->addChild(m_damageMsg);
 	setHp(this->m_initHp);
 	setResTrack("traveller.png");
-	this->bindSprite(Sprite::create(this->getResTrack()), 0.6f, 0.6f);
+	this->bindSprite(Sprite::create(this->getResTrack()), 1.0f, 1.0f);
 	auto sword = MonsterSword::create();
+	auto swordSize = sword->getContentSize();
+	sword->setContentSize(swordSize * 2);
+	sword->getSprite()->setContentSize(sword->getSprite()->getContentSize() * 2);
+	sword->setRange(sword->getRange() * 3);
 	//sword->setPosition(this->getPosition());
 	setMonsterWeapon(sword);
 	this->addChild(sword, 1);

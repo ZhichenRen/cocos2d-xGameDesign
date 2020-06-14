@@ -9,3 +9,8 @@ bool MonsterSword::init()
 	//getSprite()->setVisible(false);
 	return true;
 }
+
+void MonsterSword::setRange(int range)
+{
+	this->m_range = range;
+}

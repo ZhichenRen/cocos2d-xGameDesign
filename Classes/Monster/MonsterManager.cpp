@@ -26,6 +26,8 @@ void MonsterManager::reviveAllMonsters()
 		monster->getSprite()->setVisible(true);
 	}
 	createMonsterPos();
+	//resetWallPos();
+	createWoodWalls();
 }
 
 void MonsterManager::bindMapForWeapon()
@@ -92,8 +94,8 @@ void MonsterManager::createRandomPos() {
 
 		k++;
 	}
-
-	bulkUpRandMons(this->m_bulkMonsterNum);//随机几个怪物变大
+	auto giantNum = rand() % (m_monsterList.size() - 3) + 1;
+	bulkUpRandMons(giantNum);//随机几个怪物变大
 }
 
 void MonsterManager::bulkUpRandMons(int totalNum)
@@ -123,8 +125,7 @@ void MonsterManager::bulkUpRandMons(int totalNum)
 
 void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 {
-	//giantNum为0：没有巨大化的怪物
-	//giantNum为1以上：有giantNum个巨大化的怪物
+	//随机生成巨大化敌人
 	auto randVec = createRandomNums(5, totalNum - 5);
 	this->m_bulkMonsterNum = giantNum;
 	if (giantNum > totalNum - 4)
@@ -195,7 +196,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 
 void MonsterManager::createWoodWalls(int woodWallsNum)
 {
-	//生成随机野怪
+	//生成随机木墙
 	for (int i = 0; i < woodWallsNum; i++)
 	{
 
@@ -217,13 +218,14 @@ void MonsterManager::createWoodWalls(int woodWallsNum)
 
 		m_monsPosMap[tarBlock] = 1;
 		auto woodWall = WoodWall::create();
-		addChild(woodWall,-1);
+		m_map->addChild(woodWall,0);
+		//addChild(woodWall, -1);
 		woodWall->bindMonsMgr(this);
 		woodWall->bindMap(m_map);
-		woodWall->setPosition(monsterPos);
+		woodWall->setPosition(worldTar);
 		//m_map->getCollidable()->setTileGID(89, GameData::getCoord()[5 * m_curRoom.x + m_curRoom.y] - Vec2(10 - randInt1, -11 + randInt2));
 		m_map->getCollidable()->setTileGID(89, Vec2(0, -1) +
-			m_map->tileCoordFromPosition(m_map->convertToNodeSpace(this->convertToWorldSpace(woodWall->getPosition()))));
+			m_map->tileCoordFromPosition(m_map->convertToNodeSpace(this->convertToWorldSpace(monsterPos))));
 		woodWall->getChildByName("preRect")->setVisible(false);
 		m_woodWallList.push_back(woodWall);
 	}
@@ -331,7 +333,7 @@ void MonsterManager::update(float dt)
 		{
 			m_monsPosMap[blockOccupied] = 0;//清除位置信息
 			m_map->getCollidable()->setTileGID(2, Vec2(0, -1) +
-				m_map->tileCoordFromPosition(m_map->convertToNodeSpace(this->convertToWorldSpace(woodWall->getPosition()))));
+				m_map->tileCoordFromPosition(woodWall->getPosition()));
 			woodWall->die();
 		}
 	}
@@ -412,6 +414,8 @@ void MonsterManager::update(float dt)
 
 
 }
+
+
 
 
 std::vector<Bullet*> MonsterManager::getMonsterBullets() const

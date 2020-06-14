@@ -104,6 +104,7 @@ void Monster::bulkUp()
 	setContentSize(Size(getContentSize().width * 2, getContentSize().height * 2));
 	getSprite()->setContentSize(Size(getSprite()->getContentSize().width * 2, getSprite()->getContentSize().height * 2));
 	m_Hp *= 2.0;
+
 	m_isBulkUp = true;
 }
 
