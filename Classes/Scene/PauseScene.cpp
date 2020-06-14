@@ -1,4 +1,4 @@
-#include "Scene\PauseScene.h"
+﻿#include "Scene\PauseScene.h"
 #include "Scene\HomeScene.h"
 #include "Scene\SettingScene.h"
 
@@ -8,7 +8,6 @@ bool PauseScene::init()
 	{
 		return false;
 	}
-
 	loadUI();
 	return true;
 }
