@@ -1,4 +1,4 @@
-#include "Entity\Weapons\Shotgun.h"
+﻿#include "Entity\Weapons\Shotgun.h"
 #include "Entity\Weapons\Bullets\Bullet.h"
 #define PI 3.1415926
 
@@ -17,10 +17,33 @@ bool Shotgun::init()
 	m_degree = 15.0f;
 	m_bullet_num_at_once = 4;
 	m_crit_rate = 0.1f;
+	m_weaponName = "Rifle&Shotgun";
 	m_bullet_picture = std::string("BasicBullet.png");
-	bindSprite(Sprite::create("Rifle&Shotgun.png"), 0.12f, 0.12f);
+	bindSprite(Sprite::create("Rifle&Shotgun.png"), 0.14f, 0.14f);
 	m_sprite->setAnchorPoint(Vec2(0.0f, 0.5f));
 	return true;
+}
+
+void Shotgun::upgrade()
+{
+	m_power_cost = 5;
+	m_bullet_damage = 8;
+	m_bullet_speed = 650;
+	m_attack_speed = 0.18f;
+	m_degree = 10.0f;
+	m_bullet_num_at_once = 5;
+	m_crit_rate = 0.15f;
+	auto upgrade_effect = ParticleFlower::create();
+	upgrade_effect->setEmitterMode(ParticleSystem::Mode::RADIUS);
+	upgrade_effect->setPositionType(ParticleSystem::PositionType::RELATIVE);
+	upgrade_effect->setAutoRemoveOnFinish(true);
+	upgrade_effect->setTotalParticles(100);
+	upgrade_effect->setPosition(getSprite()->getContentSize().width / 2, getSprite()->getContentSize().height / 2);
+	upgrade_effect->setDuration(-1);
+	upgrade_effect->setStartRadius(50.0f);
+	upgrade_effect->setStartRadiusVar(25.0f);
+	upgrade_effect->setEndRadius(50.0f);
+	getSprite()->addChild(upgrade_effect);
 }
 
 void Shotgun::attack(Point pos)

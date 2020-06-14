@@ -23,7 +23,6 @@ public:
 	virtual bool isCloseWeapon()const override;
 protected:
 	int m_bullet_speed;//speed of the bullet
-	float m_attack_speed;
 	int m_bullet_num;
 	int m_bullet_damage;
 	std::vector<Bullet*> m_bullet;

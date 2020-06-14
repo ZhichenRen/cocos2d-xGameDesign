@@ -74,7 +74,7 @@ private:
 	const int m_allCheckPoint = 3;
 	const int totalMonsterNum = 10;
 	int m_curCheckPoint;
-	int m_dirs[4][2] = { {0,1},{0,-1}, {1,0}d ,{-1,0} };
+	int m_dirs[4][2] = { {0,1},{0,-1}, {1,0} ,{-1,0} };
 	int m_deathMonsNum;
 	bool m_fGameOver = false;
 	Vec2 m_curRoom;

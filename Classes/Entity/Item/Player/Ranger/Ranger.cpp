@@ -25,11 +25,9 @@ bool Ranger::init()
 	m_iTotalArmor = 3;
 	m_iNowSkillDuration = 1;
 	m_iTotalSkillDuration = 1;
-	m_numTotalWeapon = 2;
-	m_numMyWeapon = 0;
-	m_numLongRangeWeapon = 0;
-	m_numCloseWeapon = 0;
+	m_numTotalWeapon = 3;
 	m_numWeapon = 0;
+	m_numLongRange = 0;
 	m_isInSkill = false;
 	return true;
 }
@@ -61,7 +59,6 @@ void Ranger::skill()
 	m_sprite->runAction(animate);
 
 	setiNowCD(0);
-	m_cdBar->setPercent(getiNowCD() / 150.0f * 100);
 }
 
 void Ranger::skillEnd()
@@ -92,7 +89,7 @@ Animate* Ranger::stand()
 	return animate;
 }
 
-Point& Ranger::getSkillDirection()
+Point Ranger::getSkillDirection()
 {
 	if (m_controller->getiXSpeed() == 0 && m_controller->getiYSpeed() == 0)
 	{

@@ -13,9 +13,10 @@ public:
 public:
 	virtual Animate* walk()override;
 	virtual void skill()override;
+	virtual void skillDuration() override{ return; }
 	virtual void skillEnd()override;
 	virtual void die()override;
 	virtual Animate* stand()override;
-	virtual Point& getSkillDirection()override;
+	virtual Point getSkillDirection()override;
 protected:
 };

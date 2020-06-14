@@ -43,7 +43,7 @@ void TrackBullet::update(float dt)
 	}
 	m_degree = degree;
 
-	float distance = sqrtf(dx*dx + dy * dy);
+	float distance = sqrtf(dx * dx + dy * dy);
 	dx = dx / distance * m_bullet_speed / 60.0f;
 	dy = dy / distance * m_bullet_speed / 60.0f;
 	auto track_action = MoveBy::create(1.0f / 60.0f, Vec2(dx, dy));

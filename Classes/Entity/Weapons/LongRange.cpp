@@ -9,8 +9,12 @@ LongRange::LongRange()
 
 bool LongRange::init()
 {
+	if (!Weapon::init())
+	{
+		return false;
+	}
 	m_bullet_speed = 1;
-	m_attack_speed = 1.0f;
+	m_attack_speed = 0.4f;
 	m_bullet_num = 1;
 	m_range = 1;
 	m_is_attack = false;
