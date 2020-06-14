@@ -1,22 +1,26 @@
-#include "Boss.h"
+#include "Traveller.h"
 
-bool Boss::init()
+bool Traveller::init()
 {
 	m_fIsFacingRight = false;
-	setMonsterSpeed(0.5);
+	setMonsterSpeed(1.5);
 	m_damageMsg = FlowWord::create();
 	this->addChild(m_damageMsg);
 	setHp(this->m_initHp);
-	setResTrack("Boss.png");
-	this->bindSprite(Sprite::create(this->getResTrack()), 0.6f, 0.6f);
+	setResTrack("traveller.png");
+	this->bindSprite(Sprite::create(this->getResTrack()), 1.0f, 1.0f);
 	auto sword = MonsterSword::create();
+	auto swordSize = sword->getContentSize();
+	sword->setContentSize(swordSize * 2);
+	sword->getSprite()->setContentSize(sword->getSprite()->getContentSize() * 2);
+	sword->setRange(sword->getRange() * 3);
 	//sword->setPosition(this->getPosition());
 	setMonsterWeapon(sword);
 	this->addChild(sword, 1);
 	m_isAlive = true;
 	return true;
 }
-void Boss::resetPropoties()
+void Traveller::resetPropoties()
 {
 	m_isAlive = true;
 	show();
@@ -30,12 +34,3 @@ void Boss::resetPropoties()
 		m_fSpeed /= 1.3;
 	}
 }
-
-//void Boss::resetPropoties() 
-//{
-//	show();
-//	setHp(this->m_initHp);
-//	m_weapon->setVisible(true);
-//	m_fIsTaunted = 0;
-//	m_isAlive = true;
-//}

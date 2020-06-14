@@ -8,7 +8,10 @@ Monster::Monster()
 	//this->getChildByName("preRect")->setVisible(false);
 	m_isAlive = false;
 }
-
+bool Monster::isCollideWith(Entity* entity)
+{
+	return getBoundingBox().intersectsRect(entity->getBoundingBox());
+}
 Monster::~Monster()
 {
 	//this->autorelease();
@@ -36,7 +39,7 @@ void Monster::hide()
 	if (getSprite() != NULL)
 	{
 		//m_sprite->setVisible(false);
-		m_weapon->setVisible(false);
+		m_weapon->getSprite()->setVisible(false);
 		m_isAlive = false;
 	}
 }
@@ -74,6 +77,7 @@ bool Monster::mySetPosition(Vec2 target)
 		}
 		return false;
 	}
+	
 	if (m_monsMgr->isPosOccupied(tarBlock))
 		return false;
 
@@ -90,6 +94,7 @@ bool Monster::mySetPosition(Vec2 target)
 	}
 	setPosition(target);
 	m_monsMgr->setPosMap(tarBlock, 1);
+
 	return true;
 }
 
@@ -99,6 +104,7 @@ void Monster::bulkUp()
 	setContentSize(Size(getContentSize().width * 2, getContentSize().height * 2));
 	getSprite()->setContentSize(Size(getSprite()->getContentSize().width * 2, getSprite()->getContentSize().height * 2));
 	m_Hp *= 2.0;
+
 	m_isBulkUp = true;
 }
 
@@ -135,6 +141,8 @@ void Monster::hit(int damage)
 
 void Monster::hit(int damage, float flyingDegree, bool isCriticalStrike)
 {
+	if (!m_isAlive)
+		return;
 	this->m_Hp -= damage;
 	setMonsTaunted();
 	this->stopAllActions();
@@ -172,6 +180,10 @@ void Monster::die()
 	auto disappear = FadeTo::create(0.5f, 0);
 	auto disappear_action = Sequence::create(fade, disappear_delay, disappear, NULL);*/
 	this->getSprite()->runAction(fade);
+	if (m_weapon)
+	{
+		m_weapon->getSprite()->setVisible(false);
+	}
 	auto coin = Coin::create();
 	//this->getSprite()->setVisible(false);//¹ÖÎïÏûÊ§
 	auto ranF1 = CCRANDOM_0_1();
@@ -215,11 +227,7 @@ void Monster::wander()
 		curPos : -ccp(this->getMonsterSpeed(), 0) + curPos;
 
 	mySetPosition(tarPos);
-	/*if (!)
-	{
-		tarPos = m_fIsFacingRight ? -ccp(this->getMonsterSpeed(), 0) +
-			curPos : ccp(this->getMonsterSpeed(), 0) + curPos;
-	}*/
+	
 }
 
 

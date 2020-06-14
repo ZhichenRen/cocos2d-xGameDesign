@@ -10,6 +10,6 @@ public:
 	//void cancelPreRec();
 	CREATE_FUNC(WoodWall);
 private:
-	static const int m_initHp = 100;
+	static const int m_initHp = 35;
 };
 #endif // !__Slime_H__

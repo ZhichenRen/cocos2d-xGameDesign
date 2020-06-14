@@ -15,7 +15,7 @@ void MonsterManager::bindPlayer(Entity* player)
 }
 
 void MonsterManager::reviveAllMonsters()
-{//有bug
+{
 	m_curCheckPoint = 1;
 	m_fGameOver = 0;
 	m_deathMonsNum = 0;
@@ -23,8 +23,11 @@ void MonsterManager::reviveAllMonsters()
 	{
 		monster->resetPropoties();
 		monster->setVisible(true);
+		monster->getSprite()->setVisible(true);
 	}
 	createMonsterPos();
+	//resetWallPos();
+	createWoodWalls();
 }
 
 void MonsterManager::bindMapForWeapon()
@@ -91,8 +94,8 @@ void MonsterManager::createRandomPos() {
 
 		k++;
 	}
-
-	bulkUpRandMons(this->m_bulkMonsterNum);//随机几个怪物变大
+	auto giantNum = rand() % (m_monsterList.size() - 3) + 1;
+	bulkUpRandMons(giantNum);//随机几个怪物变大
 }
 
 void MonsterManager::bulkUpRandMons(int totalNum)
@@ -122,9 +125,8 @@ void MonsterManager::bulkUpRandMons(int totalNum)
 
 void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 {
-	//giantNum为0：没有巨大化的怪物
-	//giantNum为1以上：有giantNum个巨大化的怪物
-	auto randVec = createRandomNums(4, totalNum - 4);
+	//随机生成巨大化敌人
+	auto randVec = createRandomNums(5, totalNum - 5);
 	this->m_bulkMonsterNum = giantNum;
 	if (giantNum > totalNum - 4)
 	{
@@ -135,6 +137,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 	Sprite* sprite = NULL;
 	ChiefOfTribe* chiefOfTribe = NULL;
 	Duck* duck = NULL;
+	Traveller* traveller = NULL;
 	//int k = 0;
 	for (int i = 0; i < randVec[0] + 1; i++)
 	{
@@ -142,7 +145,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 		pig->bindMap(m_map);
 		pig->getMonsterWeapon()->bindMap(m_map);
 		pig->bindMonsMgr(this);
-		this->addChild(pig);
+		this->addChild(pig,1);
 		m_monsterList.push_back(pig);
 		m_shortMonsterList.push_back(pig);
 	}
@@ -153,7 +156,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 		duck->bindMap(m_map);
 		duck->getMonsterWeapon()->bindMap(m_map);
 		duck->bindMonsMgr(this);
-		this->addChild(duck);
+		this->addChild(duck,1);
 		m_monsterList.push_back(duck);
 		m_shortMonsterList.push_back(duck);
 	}
@@ -161,7 +164,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 	for (int i = 0; i < randVec[2] + 1; i++)
 	{
 		slime = Slime::create();
-		this->addChild(slime);
+		this->addChild(slime,1);
 		slime->bindMap(m_map);
 		slime->getMonsterWeapon()->bindMap(m_map);
 		slime->bindMonsMgr(this);
@@ -172,23 +175,34 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 	for (int i = 0; i < randVec[3] + 1; i++)
 	{
 		chiefOfTribe = ChiefOfTribe::create();
-		this->addChild(chiefOfTribe);
+		this->addChild(chiefOfTribe,1);
 		chiefOfTribe->bindMap(m_map);
 		chiefOfTribe->getMonsterWeapon()->bindMap(m_map);
 		chiefOfTribe->bindMonsMgr(this);
 		m_monsterList.push_back(chiefOfTribe);
 		m_longMonsterList.push_back(chiefOfTribe);
 	}
-
+	for (int i = 0; i < randVec[4] + 1; i++)
+	{
+		traveller = Traveller::create();
+		this->addChild(traveller, 1);
+		traveller->bindMap(m_map);
+		traveller->getMonsterWeapon()->bindMap(m_map);
+		traveller->bindMonsMgr(this);
+		m_monsterList.push_back(traveller);
+		m_longMonsterList.push_back(traveller);
+	}
 }
 
 void MonsterManager::createWoodWalls(int woodWallsNum)
 {
-	//生成随机野怪
+	//生成随机木墙
 	for (int i = 0; i < woodWallsNum; i++)
 	{
-		auto randInt1 = rand() % 21;
-		auto randInt2 = rand() % 21;
+
+		auto randInt1 = rand() % 15 + 3 ;
+		auto randInt2 = rand() % 15 + 3 ;
+
 
 		auto monsterPos = 32 * ccp(randInt1, randInt2) + ccp(16.5, 0);
 
@@ -204,13 +218,14 @@ void MonsterManager::createWoodWalls(int woodWallsNum)
 
 		m_monsPosMap[tarBlock] = 1;
 		auto woodWall = WoodWall::create();
-		addChild(woodWall);
+		m_map->addChild(woodWall,0);
+		//addChild(woodWall, -1);
 		woodWall->bindMonsMgr(this);
 		woodWall->bindMap(m_map);
-		woodWall->setPosition(monsterPos);
+		woodWall->setPosition(worldTar);
 		//m_map->getCollidable()->setTileGID(89, GameData::getCoord()[5 * m_curRoom.x + m_curRoom.y] - Vec2(10 - randInt1, -11 + randInt2));
 		m_map->getCollidable()->setTileGID(89, Vec2(0, -1) +
-			m_map->tileCoordFromPosition(m_map->convertToNodeSpace(this->convertToWorldSpace(woodWall->getPosition()))));
+			m_map->tileCoordFromPosition(m_map->convertToNodeSpace(this->convertToWorldSpace(monsterPos))));
 		woodWall->getChildByName("preRect")->setVisible(false);
 		m_woodWallList.push_back(woodWall);
 	}
@@ -318,7 +333,7 @@ void MonsterManager::update(float dt)
 		{
 			m_monsPosMap[blockOccupied] = 0;//清除位置信息
 			m_map->getCollidable()->setTileGID(2, Vec2(0, -1) +
-				m_map->tileCoordFromPosition(m_map->convertToNodeSpace(this->convertToWorldSpace(woodWall->getPosition()))));
+				m_map->tileCoordFromPosition(woodWall->getPosition()));
 			woodWall->die();
 		}
 	}
@@ -363,9 +378,16 @@ void MonsterManager::update(float dt)
 				{
 					dynamic_cast<TrackWeapon*>(monsWeapon)->bindPlayer(m_player);
 				}
+				if (typeid(*monsWeapon) == typeid(MonsterSword))
+				{
+					monsWeapon->getSprite()->setVisible(true);
+				}
 				monsWeapon->attack(m_map->convertToWorldSpace(m_player->getPosition()));
 			}
-
+			else
+			{
+				monsWeapon->getSprite()->setVisible(false);
+			}
 
 			m_monsPosMap[blockOccupied] = 0;
 			//建立走位后的信息
@@ -392,6 +414,8 @@ void MonsterManager::update(float dt)
 
 
 }
+
+
 
 
 std::vector<Bullet*> MonsterManager::getMonsterBullets() const
