@@ -2,6 +2,8 @@
 #include "Entity/Weapons/CandyGun.h"
 #include "Entity/Weapons/RPG.h"
 #include "Entity/Weapons/Shotgun.h"
+#include "Entity/Weapons/GoldenSword.h"
+
 Shop::Shop()
 {
 	m_interaction = 1;
@@ -35,23 +37,34 @@ void Shop::setWeapon(int num)
 	{
 		m_weapon = Shotgun::create();
 	}
-	else
+	else if (num == 3)
 	{
 		m_weapon = CandyGun::create();
+	}
+	else
+	{
+		m_weapon = GoldenSword::create();
 	}
 }
 
 void Shop::showFlowWordFirstMeet()
 {
-	m_flowWord->showShopWord("这位勇士,您要花费20金币购买一把神秘武器吗?");
+	CCDictionary* pDictionary = (CCDictionary*)CCDictionary::createWithContentsOfFile("ChineseCharacters.plist");
+	auto str = pDictionary->valueForKey("ShopFirstMeet")->getCString();
+	pDictionary->removeObjectForKey("ShopLackMoney");
+	m_flowWord->showShopWord(str);
 }
 
 void Shop::showFlowWordLackMoney()
 {
-	m_flowWord->showShopWord("您的金币不足,下次再来!");
+	CCDictionary* pDictionary = (CCDictionary*)CCDictionary::createWithContentsOfFile("ChineseCharacters.plist");
+	auto str = pDictionary->valueForKey("ShopLackMoney")->getCString();
+	m_flowWord->showShopWord(str);
 }
 
 void Shop::showFlowWordEnoughMoney()
 {
-	m_flowWord->showShopWord("谢谢惠顾,您会更加强大!");
+	CCDictionary* pDictionary = (CCDictionary*)CCDictionary::createWithContentsOfFile("ChineseCharacters.plist");
+	auto str = pDictionary->valueForKey("ShopEnoughMoney")->getCString();
+	m_flowWord->showShopWord(str);
 }

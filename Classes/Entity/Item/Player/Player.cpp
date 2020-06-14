@@ -305,7 +305,7 @@ void Player::loadLongRangeListener()
 		EventMouse* mouse = dynamic_cast<EventMouse*>(event);
 		auto pos = Point(mouse->getCursorX(), mouse->getCursorY());
 		longRange->setRotationByPos(pos);
-		if (pos.x < 1024 / 2)//ÆÁÄ»Ò»°ë´óÐ¡
+		if (pos.x < 1024 / 2)//ï¿½ï¿½Ä»Ò»ï¿½ï¿½ï¿½Ð¡
 		{
 			setRightToward();
 		}

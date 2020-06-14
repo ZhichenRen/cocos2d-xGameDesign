@@ -111,7 +111,7 @@ void SafeMapLayer::setPlayer(int playerNum)
         this->scheduleUpdate();
         break;
     case 2:
-        m_player = Sprite::create("mage_image.PNG");
+        m_player = Sprite::create("Priest/PriestIni.PNG");
         m_player->setPosition(Vec2(x, y));
         this->addChild(m_player);//游戏人物
         this->removeChildByTag(10086);
