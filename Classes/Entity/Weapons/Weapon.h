@@ -28,7 +28,7 @@ public:
 	virtual void setRotationByPos(Point pos);
 	virtual void upgrade();
 	virtual bool isCloseWeapon()const;
-    const std::string& getWeaponName() { return m_weaponName; }
+	const std::string& getWeaponName() { return m_weaponName; }
 protected:
 	int m_power_cost;
 	int m_range;

@@ -2,6 +2,7 @@
 #include "Scene/TollgateScene.h"
 #include "Scene/PauseScene.h"
 #include "Scene/HomeScene.h"
+#include "Entity/Item/Player/Priest/Priest.h"
 #include "Entity/Weapons/Bullets/ExplosiveBullet.h"
 #include "Entity/Weapons/RPG.h"
 #include "Entity\Weapons\GoldenSword.h"
@@ -41,21 +42,21 @@ void TollgateScene::addPlayer()
 	m_player->setHpBar(m_hpBar);
 	m_player->setMpBar(m_mpBar);
 	m_player->setArmorBar(m_armorBar);
-	m_map->addChild(m_player, 2, 200);
+	m_map->addChild(m_player, 3, 200);
 }
 
 void TollgateScene::addWeapon()
 {
-	std::string str = "CandyGun";
+	std::string str = "CandyGun!";
 	m_player->setWeapon(str);
 	m_player->determineWhichWeapon();
-	str = "RPG";
+	str = "Fist_of_Heaven";
 	m_player->setWeapon(str);
 	m_player->determineWhichWeapon();
-	str = "GoldenSword";
+	str = "GoldenSword!";
 	m_player->setWeapon(str);
 	m_player->determineWhichWeapon();
-	str = "CandyGun";
+	str = "CandyGun!";
 	/*m_player->setWeapon(str);
 	m_player->determineWhichWeapon();*/
 }
@@ -82,7 +83,6 @@ bool TollgateScene::init()
 	this->scheduleUpdate();
 
 	loadMap();
-	loadUI();
 	addPlayer();
 	loadController();
 	loadMonsters();
@@ -111,6 +111,10 @@ void TollgateScene::loadUI()
 	m_armor = (Text*)Helper::seekWidgetByName(UI, "armor_label");
 	m_mp = (Text*)Helper::seekWidgetByName(UI, "magic_label");
 	m_coin = (Text*)Helper::seekWidgetByName(UI, "coin_num");
+	m_mp_cost = (Text*)Helper::seekWidgetByName(UI, "weapon_mp_label");
+	m_weapon_image = (ImageView*)Helper::seekWidgetByName(UI, "weapon_image");
+	m_weapon_button = (Button*)Helper::seekWidgetByName(UI, "weapon_button");
+	m_weapon_button->addTouchEventListener(this, toucheventselector(TollgateScene::switchWeapon));
 
 	auto pause_button = (Button*)Helper::seekWidgetByName(UI, "pause_button");
 	pause_button->addTouchEventListener(this, toucheventselector(TollgateScene::pauseEvent));
@@ -129,6 +133,17 @@ void TollgateScene::pauseEvent(Ref*, TouchEventType type)
 		Director::getInstance()->pushScene(PauseScene::createScene(background));
 		break;
 	}
+}
+
+void TollgateScene::switchWeapon(Ref*, TouchEventType type)
+{
+	switch (type)
+	{
+	case TOUCH_EVENT_ENDED:
+		m_player->changeWeapon();
+		break;
+	}
+
 }
 
 void TollgateScene::loadMonstersInNewRoom(int giantNum = -1)
@@ -334,6 +349,8 @@ void TollgateScene::update(float dt)
 		static_cast<float>(m_player->getiTotalHp()) * 100);
 	(m_mpBar)->setPercent(m_player->getiNowMp() /
 		static_cast<float>(m_player->getiTotalMp()) * 100);
+	m_weapon_image->loadTexture(m_player->getWeaponFileName());
+	m_mp_cost->setText(std::to_string(m_player->getWeaponPowerCost()));
 
 	m_hp->setText(std::to_string(m_player->getiNowHp()) + "/" + std::to_string(m_player->getiTotalHp()));
 	m_armor->setText(std::to_string(m_player->getiNowArmor()) + "/" + std::to_string(m_player->getiTotalArmor()));

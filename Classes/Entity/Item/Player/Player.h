@@ -78,10 +78,11 @@ public:
 public:
 	virtual Animate* walk() = 0;
 	virtual void skill() = 0;
+	virtual void skillDuration() = 0;
 	virtual void skillEnd() = 0;
 	virtual void die() = 0;
 	virtual Animate* stand() = 0;
-	virtual Point& getSkillDirection() = 0;
+	virtual Point getSkillDirection() = 0;
 
 	int isPositiveOrNegative(int num);
 	Point tileCoordForPosition(Point pos);
@@ -105,6 +106,8 @@ public:
 	bool isAttackingWithCloseWeapon()const;
 	void resetWeaponPosition(bool status/*true stands for left and false stands for right*/);
 	CloseWeapon* getCloseWeapon()const;
+	LongRange* getLongrange()const;
+	bool isClose()const;
 protected:
 	AdventureMapLayer* m_map;
 
@@ -130,6 +133,7 @@ protected:
 	LongRange* m_longRange = NULL;
 	CloseWeapon* m_close = NULL;
 	EventListenerTouchOneByOne* m_listener;
+	EventListenerMouse* m_mouseMove;
 	std::array <std::string,10> m_weapons;
 	std::array <LongRange*, 5> m_longRanges = {NULL};
 	int m_numWeapon;
