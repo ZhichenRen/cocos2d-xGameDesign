@@ -125,7 +125,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 {
 	//giantNum为0：没有巨大化的怪物
 	//giantNum为1以上：有giantNum个巨大化的怪物
-	auto randVec = createRandomNums(4, totalNum - 4);
+	auto randVec = createRandomNums(5, totalNum - 5);
 	this->m_bulkMonsterNum = giantNum;
 	if (giantNum > totalNum - 4)
 	{
@@ -136,6 +136,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 	Sprite* sprite = NULL;
 	ChiefOfTribe* chiefOfTribe = NULL;
 	Duck* duck = NULL;
+	Traveller* traveller = NULL;
 	//int k = 0;
 	for (int i = 0; i < randVec[0] + 1; i++)
 	{
@@ -180,7 +181,16 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 		m_monsterList.push_back(chiefOfTribe);
 		m_longMonsterList.push_back(chiefOfTribe);
 	}
-
+	for (int i = 0; i < randVec[4] + 1; i++)
+	{
+		traveller = Traveller::create();
+		this->addChild(traveller, 1);
+		traveller->bindMap(m_map);
+		traveller->getMonsterWeapon()->bindMap(m_map);
+		traveller->bindMonsMgr(this);
+		m_monsterList.push_back(traveller);
+		m_longMonsterList.push_back(traveller);
+	}
 }
 
 void MonsterManager::createWoodWalls(int woodWallsNum)

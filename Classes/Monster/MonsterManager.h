@@ -10,6 +10,7 @@
 #include "Monster\Pig.h"
 #include "Monster\ChiefOfTribe.h"
 #include "Monster\Duck.h"
+#include "Monster/Traveller.h"
 #include "Monster/WoodWall.h"
 
 
