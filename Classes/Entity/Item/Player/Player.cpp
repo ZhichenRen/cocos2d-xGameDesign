@@ -160,6 +160,7 @@ void Player::resetWeapon()
 	else if (m_longRange != NULL && m_close == NULL)
 	{
 		m_longRange->removeAllChildren();
+		_eventDispatcher->removeEventListener(m_mouseMove);
 	}
 	else
 	{
@@ -170,7 +171,7 @@ void Player::resetWeapon()
 
 void Player::chooseWeapon()
 {
-	if (m_weapons[m_numWeapon - 1] == "CandyGun")
+	if (m_weapons[m_numWeapon - 1] == "CandyGun!")
 	{
 		m_close = NULL;
 		m_longRange = CandyGun::create();
@@ -179,7 +180,7 @@ void Player::chooseWeapon()
 		m_weaponPowerCost = m_longRange->getPowerCost();
 		loadLongRangeListener();
 	}
-	else if (m_weapons[m_numWeapon - 1] == "GoldenSword")
+	else if (m_weapons[m_numWeapon - 1] == "GoldenSword!")
 	{
 		m_longRange = NULL;
 		m_close = GoldenSword::create();
@@ -188,7 +189,7 @@ void Player::chooseWeapon()
 		m_weaponPowerCost = m_close->getPowerCost();
 		loadCloseWeaponListener();
 	}
-	else if (m_weapons[m_numWeapon - 1] == "RPG")
+	else if (m_weapons[m_numWeapon - 1] == "Fist_of_Heaven")
 	{
 		m_close = NULL;
 		m_longRange =RPG::create();
@@ -197,7 +198,7 @@ void Player::chooseWeapon()
 		m_weaponPowerCost = m_longRange->getPowerCost();
 		loadLongRangeListener();
 	}
-	else if (m_weapons[m_numWeapon - 1] == "Shotgun")
+	else if (m_weapons[m_numWeapon - 1] == "Rifle&Shotgun")
 	{
 		m_close = NULL;
 		m_longRange = Shotgun::create();
@@ -227,6 +228,7 @@ void Player::determineWhichWeapon()
 		m_longRange->bindMap(m_map);
 		this->addChild(m_longRange);
 	    _eventDispatcher->addEventListenerWithSceneGraphPriority(m_listener, this);
+		_eventDispatcher->addEventListenerWithSceneGraphPriority(m_mouseMove, this);
 	}
 	else
 	{
@@ -292,6 +294,27 @@ void Player::loadLongRangeListener()
 	};
 	m_listener = listener;
 	m_longRanges[findWhichLongRange()] = longRange;
+
+	auto mouse_move = EventListenerMouse::create();
+	mouse_move->onMouseMove = [longRange, this](Event* event)
+	{
+		if (longRange == NULL)
+		{
+			return;
+		}
+		EventMouse* mouse = dynamic_cast<EventMouse*>(event);
+		auto pos = Point(mouse->getCursorX(), mouse->getCursorY());
+		longRange->setRotationByPos(pos);
+		if (pos.x < 1024 / 2)//ÆÁÄ»Ò»°ë´óÐ¡
+		{
+			setRightToward();
+		}
+		else
+		{
+			setLeftToward();
+		}
+	};
+	m_mouseMove = mouse_move;
 }
 
 void Player::loadCloseWeaponListener()
@@ -333,6 +356,7 @@ void Player::loadCloseWeaponListener()
 		}
 	};
 	m_listener = listener;
+
 }
 
 void Player::setRightToward()

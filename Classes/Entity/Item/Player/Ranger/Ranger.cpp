@@ -59,7 +59,6 @@ void Ranger::skill()
 	m_sprite->runAction(animate);
 
 	setiNowCD(0);
-	m_cdBar->setPercent(getiNowCD() / 150.0f * 100);
 }
 
 void Ranger::skillEnd()
@@ -90,7 +89,7 @@ Animate* Ranger::stand()
 	return animate;
 }
 
-Point& Ranger::getSkillDirection()
+Point Ranger::getSkillDirection()
 {
 	if (m_controller->getiXSpeed() == 0 && m_controller->getiYSpeed() == 0)
 	{

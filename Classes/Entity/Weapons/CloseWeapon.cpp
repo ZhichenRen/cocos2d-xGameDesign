@@ -1,4 +1,5 @@
-﻿#include "Entity\Weapons\CloseWeapon.h"
+
+#include "Entity\Weapons\CloseWeapon.h"
 
 bool CloseWeapon::init()
 {

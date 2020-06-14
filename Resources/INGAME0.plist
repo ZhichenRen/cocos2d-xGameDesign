@@ -239,17 +239,17 @@
 				<key>height</key>
 				<integer>1</integer>
 				<key>originalWidth</key>
-				<integer>260</integer>
+				<integer>380</integer>
 				<key>originalHeight</key>
-				<integer>260</integer>
+				<integer>204</integer>
 				<key>x</key>
 				<integer>506</integer>
 				<key>y</key>
 				<integer>542</integer>
 				<key>offsetX</key>
-				<real>129.5</real>
+				<real>189.5</real>
 				<key>offsetY</key>
-				<real>-129.5</real>
+				<real>-101.5</real>
 			</dict>
 		</dict>
 		<key>metadata</key>
