@@ -22,7 +22,7 @@ public:
 	int getRange()const;
 	void bindMap(AdventureMapLayer* map);
 	void setCritRate(float crit_rate);
-	float getAttackSpeed()const;
+	virtual float getAttackSpeed()const;
 	void resetPosition();
 	virtual void flipped(bool status/*true for flipped and false for not flipped*/);
 	virtual void setRotationByPos(Point pos);

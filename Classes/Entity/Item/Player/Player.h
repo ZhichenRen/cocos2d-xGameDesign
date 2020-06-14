@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <algorithm>
 #include <vector>
 #include <string>
@@ -104,6 +104,9 @@ public:
 	std::vector<Bullet*> m_bullet;
 	bool isAttackingWithCloseWeapon()const;
 	void resetWeaponPosition(bool status/*true stands for left and false stands for right*/);
+	CloseWeapon* getCloseWeapon()const;
+	LongRange* getLongrange()const;
+	bool isClose()const;
 protected:
 	AdventureMapLayer* m_map;
 
@@ -135,7 +138,7 @@ protected:
 	int m_numTotalWeapon;
 	int m_numLongRange;
 
-	bool m_is_attacking;
+	bool m_is_attacking = false;
 	bool m_is_close_weapon_now;
 private:
 	bool m_leftSide = false;

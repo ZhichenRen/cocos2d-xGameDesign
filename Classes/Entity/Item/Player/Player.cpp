@@ -1,4 +1,4 @@
-#include "Entity/Item/Player/Player.h"
+ï»¿#include "Entity/Item/Player/Player.h"
 #include "Entity/Weapons/CloseWeapon.h"
 #include "Entity\Weapons\Shotgun.h"
 #include "Entity\Weapons\RPG.h"
@@ -223,14 +223,14 @@ void Player::determineWhichWeapon()
 	chooseWeapon();
 	if (m_longRange != NULL && m_close == NULL)
 	{
-		m_longRange->setPosition(0, -5);
+		m_longRange->setPosition(0, -15);
 		m_longRange->bindMap(m_map);
 		this->addChild(m_longRange);
 	    _eventDispatcher->addEventListenerWithSceneGraphPriority(m_listener, this);
 	}
 	else
 	{
-		m_close->setPosition(0, -5);
+		m_close->setPosition(0, -15);
 		m_close->bindMap(m_map);
 		this->addChild(m_close);
 		_eventDispatcher->addEventListenerWithSceneGraphPriority(m_listener, this);
@@ -259,14 +259,18 @@ void Player::loadLongRangeListener()
 	};
 	listener->onTouchEnded = [longRange,this](Touch* touch, Event* event)
 	{
+		if (m_is_attacking)
+		{
+			return;
+		}
 		Point pos = Director::getInstance()->convertToGL(touch->getLocationInView());
 
 		if (m_iNowMp >= longRange->getPowerCost())
 		{
 			m_is_attacking = true;
-
+			longRange->attack(pos);
 			//call back to change attack status
-			auto attack_delay = DelayTime::create(m_longRange->getAttackSpeed());
+			auto attack_delay = DelayTime::create(longRange->getAttackSpeed());
 			auto callback = CallFunc::create(
 				[this]() {
 				m_is_attacking = false;
@@ -274,11 +278,10 @@ void Player::loadLongRangeListener()
 			);
 			auto attack = Sequence::create(attack_delay, callback, NULL);
 			this->runAction(attack);
-			longRange->attack(pos);
 			//this->hit(2);
 			this->mpDepletion(longRange->getPowerCost());
 		}
-		if (pos.x < 1024 / 2)//ÆÁÄ»Ò»°ë´óÐ¡
+		if (pos.x < 1024 / 2)//å±å¹•ä¸€åŠå¤§å°
 		{
 			setRightToward();
 		}
@@ -320,7 +323,7 @@ void Player::loadCloseWeaponListener()
 			//this->hit(2);
 			this->mpDepletion(closeWeapon->getPowerCost());
 		}
-		if (pos.x < 1024 / 2)//ÆÁÄ»Ò»°ë´óÐ¡
+		if (pos.x < 1024 / 2)//å±å¹•ä¸€åŠå¤§å°
 		{
 			setRightToward();
 		}
@@ -436,4 +439,19 @@ void Player::mpDepletion(int mpDe)
 bool Player::isAttackingWithCloseWeapon()const
 {
 	return m_is_close_weapon_now && m_is_attacking;
+}
+
+CloseWeapon* Player::getCloseWeapon()const
+{
+	return m_close;
+}
+
+LongRange* Player::getLongrange()const
+{
+	return m_longRange;
+}
+
+bool Player::isClose()const
+{
+	return m_is_close_weapon_now;
 }
