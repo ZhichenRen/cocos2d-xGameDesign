@@ -8,6 +8,7 @@
 #include "Entity\Weapons\GoldenSword.h"
 #include "Entity/Weapons/Shotgun.h"
 #include "GameData.h"
+#include "Scene/DeathScene.h"
 
 USING_NS_CC;
 
@@ -130,7 +131,7 @@ void TollgateScene::pauseEvent(Ref*, TouchEventType type)
 		background->begin();
 		this->visit();
 		background->end();
-		Director::getInstance()->pushScene(PauseScene::createScene(background));
+		Director::getInstance()->pushScene(DeathScene::createScene(background, m_player));
 		break;
 	}
 }
@@ -184,7 +185,7 @@ void TollgateScene::loadMonsters()
 	//初始化工作
 	m_monsterMgr->bindMap(m_map);
 	m_monsterMgr->bindPlayer(static_cast<Entity*>(this->m_player));
-	m_map->addChild(m_monsterMgr, 2);
+	m_map->addChild(m_monsterMgr, 1);
 }
 
 void TollgateScene::loadListeners()
@@ -517,6 +518,26 @@ void TollgateScene::update(float dt)
 			if (bullet->isCollideWith(woodwall))
 			{
 				woodwall->hit(bullet->getDamage());
+			}
+		}
+	}
+
+	for (auto monster : monsters)
+	{
+		Weapon* weapon = monster->getMonsterWeapon();
+		if (weapon)
+		{
+			if (weapon->isCloseWeapon())
+			{
+				auto close_weapon = dynamic_cast<CloseWeapon*>(weapon);
+				if (!close_weapon->isHit())
+				{
+					if (close_weapon->isCollideWith(m_player))
+					{
+						m_player->hit(close_weapon->getDamage());
+					}
+				}
+				close_weapon->setIsHit(true);
 			}
 		}
 	}

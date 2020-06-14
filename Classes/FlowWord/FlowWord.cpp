@@ -60,6 +60,7 @@ void FlowWord::showMonsDmg(const char* text, float ySize)
 {
 	m_message->setString(text);
 	m_message->setPosition(getPosition() + ccp(0, 5 + ySize));
+	m_message->setColor(Color3B(220, 20, 60));
 	m_message->setVisible(true);
 	m_message->stopAllActions();
 	auto scaleUp = ScaleBy::create(0.2f, 1.2);
@@ -81,6 +82,7 @@ void FlowWord::showMonsDmg(const char* text, float ySize)
 void FlowWord::showCritDmg(const char* text, float ySize)
 {
 	m_message->setString(text);
+	m_message->setColor(Color3B(255, 0, 0));
 	m_message->setPosition(getPosition() + ccp(0, 5 + ySize));
 	m_message->setVisible(true);
 	//auto rewindToStdSize = ScaleTo::create(0.2f, 1);
@@ -103,6 +105,7 @@ void FlowWord::showCritDmg(const char* text, float ySize)
 void FlowWord::showMonsTaunted()
 {
 	m_message->setString("!!");
+	m_message->setColor(Color3B(255, 255, 255));
 	m_message->setPosition(getPosition() + ccp(0, 40));
 	m_message->setVisible(true);
 	auto scaleUp = ScaleBy::create(0.2f, 2.0);

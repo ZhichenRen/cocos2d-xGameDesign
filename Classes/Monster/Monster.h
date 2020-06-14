@@ -19,6 +19,7 @@ class MonsterManager;
 class Monster :public Entity {
 public:
 	Monster();
+	bool isCollideWith(Entity* entity);
 	~Monster();
 	virtual bool init();
 	CREATE_FUNC(Monster);
