@@ -4,7 +4,7 @@
 #include "FlowWord/FlowWord.h"
 
 USING_NS_CC;
-class LongRange;
+class Weapon;
 
 class Shop : public Node
 {
@@ -18,7 +18,7 @@ public:
 	void showFlowWordFirstMeet();
 	void showFlowWordLackMoney();
 	void showFlowWordEnoughMoney();
-	inline LongRange* getWeapon() { return m_weapon; }
+	inline Weapon* getWeapon() { return m_weapon; }
 	inline Sprite* getSprite() { return m_shop; }
 	inline int getInteractionNum() { return m_interaction; }
 	CREATE_FUNC(Shop);
@@ -26,7 +26,7 @@ private:
 	const int m_price = 20;
 	int m_interaction;
 	Sprite* m_shop;
-	LongRange* m_weapon;
+	Weapon* m_weapon;
 	FlowWord* m_flowWord;
 };
 

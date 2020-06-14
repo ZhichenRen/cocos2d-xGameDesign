@@ -3,7 +3,8 @@
 #include "cocos2d.h"
 
 USING_NS_CC;
-class LongRange;
+class Weapon;
+
 class Chest : public Node
 {
 public:
@@ -12,10 +13,10 @@ public:
 	void bindSprite(Sprite* chestSprite);
 	void setWeapon(int num);
 	inline Sprite* getSprite() { return m_chest; }
-	inline LongRange* getWeapon() { return m_weapon; }
+	inline Weapon* getWeapon() { return m_weapon; }
 	CREATE_FUNC(Chest);
 private:
 	Sprite* m_chest;
-	LongRange* m_weapon;
+	Weapon* m_weapon;
 };
 #endif

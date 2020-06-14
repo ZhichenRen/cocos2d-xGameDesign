@@ -200,11 +200,10 @@ void TollgateScene::loadListeners()
 		switch (key)
 		{
 		case EventKeyboard::KeyCode::KEY_E:
-			GameData::setCoinNum(GameData::getCoinNum() + 1);
 			if (ccpDistance(m_player->getPosition(), m_map->getChest()->getPosition()) < 20.0f && m_map->getChest()->isVisible())
 			{
 				m_map->getChest()->setVisible(false);
-				m_map->getChest()->setWeapon(rand() % 3 + 1);
+				m_map->getChest()->setWeapon(rand() % 4 + 1);
 				std::string str = m_map->getChest()->getWeapon()->getWeaponName();
 				m_player->setWeapon(str);
 				m_player->determineWhichWeapon();
@@ -221,7 +220,7 @@ void TollgateScene::loadListeners()
 					if (GameData::getCoinNum() >= m_map->getShop()->getPrice())
 					{
 						GameData::setCoinNum(GameData::getCoinNum() - 20);
-						m_map->getShop()->setWeapon(rand() % 3 + 1);
+						m_map->getShop()->setWeapon(rand() % 4 + 1);
 						std::string str = m_map->getChest()->getWeapon()->getWeaponName();
 						m_player->setWeapon(str);
 						m_player->determineWhichWeapon();
@@ -325,21 +324,6 @@ void TollgateScene::updateMiniMap(TMXTiledMap* miniMap)
 	GameData::setLastRoomCoord(Vec2(roomCoord.y, roomCoord.x));
 }
 
-void TollgateScene::updateCoinNum()
-{
-	//auto visibleSize = Director::getInstance()->getVisibleSize();
-	//auto n = this->getChildByTag(101);
-	//if (n)
-	//{
-	//	this->removeChildByTag(101);
-	//}
-	//auto num = __String::createWithFormat("%d", GameData::getCoinNum());
-	//auto coinLabel = Label::createWithTTF(num->getCString(), "fonts/arial.ttf", 30);
-
-	//coinLabel->setPosition(Vec2(visibleSize.width - 50, visibleSize.height - 600));
-	//this->addChild(coinLabel, 20, 101);
-}
-
 void TollgateScene::update(float dt)
 {
 	(m_cdBar)->setPercent(m_player->getiNowCD() /
@@ -364,8 +348,6 @@ void TollgateScene::update(float dt)
 	auto wall = m_map->getWall();
 	auto roadPairs = m_map->getRoadPairs();
 	updateMiniMap(miniMap);
-
-	updateCoinNum();
 
 	auto roomCoord = m_map->roomCoordFromPosition(playerPos);//鎴块棿鍧愭爣
 	auto roomNum = roomCoord.x * 5 + roomCoord.y;//鎴块棿搴忓彿
