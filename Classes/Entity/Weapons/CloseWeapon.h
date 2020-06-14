@@ -1,4 +1,4 @@
-#ifndef __CloseWeapon_H__
+﻿#ifndef __CloseWeapon_H__
 #define __CloseWeapon_H__
 
 #include "Entity\Weapons\Weapon.h"

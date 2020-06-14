@@ -1,7 +1,8 @@
-#include "SafeMapScene.h"
+ï»¿#include "SafeMapScene.h"
 #include "AdventureMapScene.h"
 #include "Scene/TollgateScene.h"
-
+#include "Scene/PlayerChoose.h"
+#pragma execution_character_set("utf-8")
 USING_NS_CC;
 
 cocos2d::Scene* SafeMapLayer::createScene()
@@ -24,20 +25,34 @@ bool SafeMapLayer::init()
 
     this->scheduleUpdate();
 
-    m_tileMap = TMXTiledMap::create("map/SafeMap.tmx");//´´½¨µØÍ¼
+    m_tileMap = TMXTiledMap::create("map/SafeMap.tmx");//åˆ›å»ºåœ°å›¾
     this->addChild(m_tileMap);
 
-    m_collidable = m_tileMap->getLayer("barrier");//»ñÈ¡ÅÐ¶ÏÅö×²µÄÕÏ°­²ã
+    m_collidable = m_tileMap->getLayer("barrier");//èŽ·å–åˆ¤æ–­ç¢°æ’žçš„éšœç¢å±‚
 
-    TMXObjectGroup* group = m_tileMap->getObjectGroup("objects");//»ñÈ¡¶ÔÏó²ã
-    ValueMap spawnPoint = group->getObject("hero");//¸ù¾Ýhero¶ÔÏóµÄÎ»ÖÃ·ÅÖÃ¾«Áé
+    TMXObjectGroup* group = m_tileMap->getObjectGroup("objects");//èŽ·å–å¯¹è±¡å±‚
+    ValueMap spawnPoint = group->getObject("hero");//æ ¹æ®heroå¯¹è±¡çš„ä½ç½®æ”¾ç½®ç²¾çµ
 
     float x = spawnPoint["x"].asFloat();
     float y = spawnPoint["y"].asFloat();
 
     m_player = Sprite::create("map/hero.png");
     m_player->setPosition(Vec2(x, y));
-    this->addChild(m_player);//ÓÎÏ·ÈËÎï
+    this->addChild(m_player);//æ¸¸æˆäººç‰©
+
+	auto player_choose_layer = PlayerChoose::create();
+	PlayerInfomation mage = {
+		3,
+		5,
+		210,
+		"æ³•å¸ˆ",
+		"å¥¥æœ¯é—ªç”µ",
+		"é‡Šæ”¾å¼ºå¤§çš„é—ªç”µ\næ”»å‡»æ•Œäººï¼ï¼",
+		"mage_image.png",
+		"mage_ability.png"
+	};
+	player_choose_layer->setPlayerInformation(mage);
+	this->addChild(player_choose_layer, 2);
 
     return true;
 }
@@ -46,7 +61,7 @@ void SafeMapLayer::onEnter()
 {
     Layer::onEnter();
 
-    auto listener = EventListenerKeyboard::create();//´´½¨¼àÌýÊÂ¼þ
+    auto listener = EventListenerKeyboard::create();//åˆ›å»ºç›‘å¬äº‹ä»¶
 
     listener->onKeyPressed = [=](EventKeyboard::KeyCode keycode, Event* event)
     {
@@ -90,8 +105,8 @@ void SafeMapLayer::update(float dt)
     auto moveLeft = EventKeyboard::KeyCode::KEY_A;
     auto moveRight = EventKeyboard::KeyCode::KEY_D;
 
-    Vec2 offset(0, 0);//Æ«ÒÆÁ¿
-    //Ã¿Ö¡ÒÆ¶¯Á½¸öÏñËØ
+    Vec2 offset(0, 0);//åç§»é‡
+    //æ¯å¸§ç§»åŠ¨ä¸¤ä¸ªåƒç´ 
     if (m_keyMap[moveUp])
     {
         offset.y = 4;
@@ -124,28 +139,28 @@ void SafeMapLayer::update(float dt)
 
 void SafeMapLayer::setPlayerPosition(Vec2 position, int dx, int dy)
 {
-    Vec2 tileCoord = this->tileCoordFromPosition(position);//ÏñËØ×ø±ê×ª»»ÎªÍßÆ¬×ø±ê
+    Vec2 tileCoord = this->tileCoordFromPosition(position);//åƒç´ åæ ‡è½¬æ¢ä¸ºç“¦ç‰‡åæ ‡
 
-    int tileGid = m_collidable->getTileGIDAt(tileCoord);//»ñµÃÍßÆ¬µÄGID
+    int tileGid = m_collidable->getTileGIDAt(tileCoord);//èŽ·å¾—ç“¦ç‰‡çš„GID
 
-    if (tileGid != 0)//ÍßÆ¬ÊÇ·ñ´æÔÚ£¨²»´æÔÚÊ±tileGid==0£©
+    if (tileGid != 0)//ç“¦ç‰‡æ˜¯å¦å­˜åœ¨ï¼ˆä¸å­˜åœ¨æ—¶tileGid==0ï¼‰
     {
 
         auto prop = m_tileMap->getPropertiesForGID(tileGid);
         auto valueMap = prop.asValueMap();
         bool collision = valueMap["Collidable"].asBool();
-        if (collision)//Åö×²¼ì²â
+        if (collision)//ç¢°æ’žæ£€æµ‹
         {
-            m_player->setPosition(position - Vec2(dx, dy));//»Øµ¯£¬·ñÔò»á¿¨Ç½Àï
+            m_player->setPosition(position - Vec2(dx, dy));//å›žå¼¹ï¼Œå¦åˆ™ä¼šå¡å¢™é‡Œ
             return;
         }
     }
-    m_player->setPosition(position);//ÒÆ¶¯¾«Áé
+    m_player->setPosition(position);//ç§»åŠ¨ç²¾çµ
 
-    this->setViewpointCenter(m_player->getPosition());//¹ö¶¯µØÍ¼
+    this->setViewpointCenter(m_player->getPosition());//æ»šåŠ¨åœ°å›¾
 }
 
-//ÏñËØ×ø±ê×ª»»ÎªÍßÆ¬×ø±ê
+//åƒç´ åæ ‡è½¬æ¢ä¸ºç“¦ç‰‡åæ ‡
 cocos2d::Vec2 SafeMapLayer::tileCoordFromPosition(cocos2d::Vec2 pos)
 {
     int x = pos.x / m_tileMap->getTileSize().width;
@@ -154,14 +169,14 @@ cocos2d::Vec2 SafeMapLayer::tileCoordFromPosition(cocos2d::Vec2 pos)
     return Vec2(x, y);
 }
 
-//½«ÈËÎï±£³ÖÔÚÆÁÄ»ÖÐ¼ä
+//å°†äººç‰©ä¿æŒåœ¨å±å¹•ä¸­é—´
 void SafeMapLayer::setViewpointCenter(cocos2d::Vec2 position)
 {
     Size visibleSize = Director::getInstance()->getVisibleSize();
 
-    Vec2 centerPoint = Vec2(visibleSize.width / 2, visibleSize.height / 2);//ÆÁÄ»µÄÖÐµã
+    Vec2 centerPoint = Vec2(visibleSize.width / 2, visibleSize.height / 2);//å±å¹•çš„ä¸­ç‚¹
 
-    Vec2 offset = centerPoint - position;//Æ«ÒÆÁ¿
+    Vec2 offset = centerPoint - position;//åç§»é‡
 
     this->setPosition(offset);
 }

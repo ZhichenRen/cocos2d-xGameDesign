@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <algorithm>
 #include <vector>
 #include <string>
@@ -140,7 +140,7 @@ protected:
 	int m_numTotalWeapon;
 	int m_numLongRange;
 
-	bool m_is_attacking;
+	bool m_is_attacking = false;
 	bool m_is_close_weapon_now;
 private:
 	bool m_leftSide = false;

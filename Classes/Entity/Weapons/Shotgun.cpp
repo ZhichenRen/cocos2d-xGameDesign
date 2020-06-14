@@ -1,4 +1,4 @@
-#include "Entity\Weapons\Shotgun.h"
+﻿#include "Entity\Weapons\Shotgun.h"
 #include "Entity\Weapons\Bullets\Bullet.h"
 #define PI 3.1415926
 

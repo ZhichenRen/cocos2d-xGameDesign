@@ -1,4 +1,4 @@
-#include "Entity\Weapons\GoldenSword.h"
+﻿#include "Entity\Weapons\GoldenSword.h"
 
 bool GoldenSword::init()
 {
