@@ -1,6 +1,4 @@
 #pragma once
-#pragma once
-#pragma once
 #include "cocos2d.h"
 #include "typeinfo"
 #include "AuxiliaryClass/AnimationUtil/AnimationUtil.h"
@@ -33,6 +31,7 @@ public:
 	void loadMonsters();
 	void loadListeners();
 	void pauseEvent(Ref*, TouchEventType type);
+	void switchWeapon(Ref*, TouchEventType type);
 
 	void updateMiniMap(TMXTiledMap* miniMap);
 	void updateCoinNum();
@@ -53,7 +52,9 @@ private:
 	Text* m_armor = NULL;
 	Text* m_mp = NULL;
 	Text* m_coin = NULL;
-
+	Text* m_mp_cost = NULL;
+	ImageView* m_weapon_image = NULL;
+	Button* m_weapon_button = NULL;
 	Player* m_player;
 	AdventureMapLayer* m_map;
 	MonsterManager* m_monsterMgr;

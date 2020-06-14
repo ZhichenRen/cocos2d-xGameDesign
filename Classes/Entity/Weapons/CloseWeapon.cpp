@@ -1,3 +1,4 @@
+
 #include "Entity\Weapons\CloseWeapon.h"
 
 bool CloseWeapon::init()
@@ -5,6 +6,7 @@ bool CloseWeapon::init()
 	m_attack_speed = 1.0f;
 	m_damage = 1;
 	m_is_attack = false;
+	m_is_hit = false;
 	return true;
 }
 
@@ -20,6 +22,7 @@ void CloseWeapon::attack(Point pos)
 	auto call_back = CallFunc::create(
 		[&]() {
 		m_is_attack = false;
+		m_is_hit = false;
 	}
 	);
 	Point now = convertToWorldSpace(Point(0, 0));
@@ -86,4 +89,19 @@ void CloseWeapon::flipped(bool status)
 bool CloseWeapon::isCloseWeapon()const
 {
 	return true;
+}
+
+int CloseWeapon::getDamage()const
+{
+	return m_damage;
+}
+
+void CloseWeapon::setIsHit(bool status)
+{
+	m_is_hit = status;
+}
+
+bool CloseWeapon::isHit()const
+{
+	return m_is_hit;
 }

@@ -19,7 +19,7 @@ bool RPG::init()
 	m_explosion_range = 30;
 	m_crit_rate = 0.0f;
 	m_bullet_picture = std::string("RPG.png");
-	m_weaponName = "RPG";
+	m_weaponName = "Fist_of_Heaven";
 	bindSprite(Sprite::create("Fist_of_Heaven.png"), 0.15f, 0.15f);
 	m_sprite->setAnchorPoint(Vec2(0.0f, 0.5f));
 	scheduleUpdate();
