@@ -6,6 +6,11 @@ bool MonsterSword::init()
 	m_range = 20;
 	m_attack_speed = 1.0f;
 	bindSprite(Sprite::create("GoldenSword!.png"), 0.1f, 0.1f);
-	getSprite()->setVisible(false);
+	//getSprite()->setVisible(false);
 	return true;
+}
+
+void MonsterSword::setRange(int range)
+{
+	this->m_range = range;
 }

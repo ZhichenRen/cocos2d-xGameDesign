@@ -14,6 +14,7 @@ public:
 	virtual bool init();
 public:
 	virtual void attack(Point pos);
+	bool isAttacking();
 	std::vector<Bullet*> getBullet()const;
 	int getDamage()const;
 	virtual void flipped(bool status);

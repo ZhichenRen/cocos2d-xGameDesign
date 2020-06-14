@@ -34,7 +34,6 @@ public:
 	void switchWeapon(Ref*, TouchEventType type);
 
 	void updateMiniMap(TMXTiledMap* miniMap);
-	void updateCoinNum();
 
 	virtual void update(float dt);
 	void menuOkCallback(Ref* pSender);

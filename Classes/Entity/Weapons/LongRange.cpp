@@ -63,6 +63,11 @@ void LongRange::attack(Point pos)
 	new_bullet->setBulletAction(degree, m_bullet_speed);
 }
 
+bool LongRange::isAttacking()
+{
+	return m_is_attack;
+}
+
 void LongRange::setRotationByPos(Point pos)
 {
 	auto now = getParent()->convertToWorldSpace(getPosition());
