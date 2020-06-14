@@ -1,4 +1,5 @@
 ﻿#include "Scene/PlayerChoose.h"
+#include "Scene//SafeMapScene.h"
 #pragma execution_character_set("utf-8")
 
 bool PlayerChoose::init()
@@ -30,12 +31,18 @@ void PlayerChoose::loadUI()
 	m_ability_image = (ImageView*)Helper::seekWidgetByName(UI, "ability_image");
 }
 
+void PlayerChoose::bindMap(SafeMapLayer* safeMap)
+{
+	m_safeMap = safeMap;
+}
+
 void PlayerChoose::setPlayer(Ref*, TouchEventType type)
 {
 	switch (type)
 	{
 	case TOUCH_EVENT_ENDED:
-		//这里调用你的
+		m_safeMap->setPlayer(1);
+		this->removeFromParentAndCleanup(true);
 		break;
 	}
 }

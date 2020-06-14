@@ -8,6 +8,8 @@ using namespace cocos2d::ui;
 using namespace cocostudio;
 using namespace cocos2d;
 
+class SafeMapLayer;
+
 struct PlayerInfomation
 {
 	int hp;
@@ -25,11 +27,13 @@ class PlayerChoose:public Layer
 public:
 	virtual bool init();
 	CREATE_FUNC(PlayerChoose);
+	void bindMap(SafeMapLayer* safeMap);
 	void setPlayer(Ref*, TouchEventType type);
 	void back(Ref*, TouchEventType type);
 	void setPlayerInformation(const PlayerInfomation& player_information);
 protected:
 	void loadUI();
+	SafeMapLayer* m_safeMap;
 	Text* m_hp;
 	Text* m_armor;
 	Text* m_mp;
