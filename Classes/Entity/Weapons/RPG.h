@@ -1,4 +1,4 @@
-#ifndef __RPG_H__
+﻿#ifndef __RPG_H__
 #define __RPG_H__
 
 #include "Entity\Weapons\LongRange.h"
@@ -10,6 +10,7 @@ public:
 	CREATE_FUNC(RPG);
 	virtual bool init();
 	virtual void attack(Point pos);
+	virtual void upgrade();
 protected:
 	ExplosiveBullet* generateExplosiveBullet(float degree, float scale_x, float scale_y);
 private:

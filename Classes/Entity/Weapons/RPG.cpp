@@ -26,6 +26,28 @@ bool RPG::init()
 	return true;
 }
 
+void RPG::upgrade()
+{
+	m_power_cost = 4;
+	m_bullet_damage = 5;
+	m_bullet_speed = 350;
+	m_attack_speed = 0.25f;
+	m_explosion_damage = 3;
+	m_explosion_range = 40;
+	m_crit_rate = 0.0f;
+	auto upgrade_effect = ParticleFlower::create();
+	upgrade_effect->setEmitterMode(ParticleSystem::Mode::RADIUS);
+	upgrade_effect->setPositionType(ParticleSystem::PositionType::RELATIVE);
+	upgrade_effect->setAutoRemoveOnFinish(true);
+	upgrade_effect->setTotalParticles(100);
+	upgrade_effect->setPosition(getSprite()->getContentSize().width / 2, getSprite()->getContentSize().height / 2);
+	upgrade_effect->setDuration(-1);
+	upgrade_effect->setStartRadius(50.0f);
+	upgrade_effect->setStartRadiusVar(25.0f);
+	upgrade_effect->setEndRadius(50.0f);
+	getSprite()->addChild(upgrade_effect);
+}
+
 void RPG::attack(Point pos)
 {
 	if (m_is_attack == true)

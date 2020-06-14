@@ -24,6 +24,28 @@ bool Shotgun::init()
 	return true;
 }
 
+void Shotgun::upgrade()
+{
+	m_power_cost = 5;
+	m_bullet_damage = 8;
+	m_bullet_speed = 650;
+	m_attack_speed = 0.18f;
+	m_degree = 10.0f;
+	m_bullet_num_at_once = 5;
+	m_crit_rate = 0.15f;
+	auto upgrade_effect = ParticleFlower::create();
+	upgrade_effect->setEmitterMode(ParticleSystem::Mode::RADIUS);
+	upgrade_effect->setPositionType(ParticleSystem::PositionType::RELATIVE);
+	upgrade_effect->setAutoRemoveOnFinish(true);
+	upgrade_effect->setTotalParticles(100);
+	upgrade_effect->setPosition(getSprite()->getContentSize().width / 2, getSprite()->getContentSize().height / 2);
+	upgrade_effect->setDuration(-1);
+	upgrade_effect->setStartRadius(50.0f);
+	upgrade_effect->setStartRadiusVar(25.0f);
+	upgrade_effect->setEndRadius(50.0f);
+	getSprite()->addChild(upgrade_effect);
+}
+
 void Shotgun::attack(Point pos)
 {
 	if (m_is_attack == true)
