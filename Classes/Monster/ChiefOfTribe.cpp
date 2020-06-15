@@ -1,4 +1,4 @@
-#include "ChiefOfTribe.h"
+﻿#include "ChiefOfTribe.h"
 
 bool ChiefOfTribe::init()
 {
@@ -11,6 +11,8 @@ bool ChiefOfTribe::init()
 	auto gun = MonsterGun::create();
 	gun->setPosition(this->getPosition());
 	setMonsterWeapon(gun);
+	gun->setDamage(2);
+	gun->setAttackSpeed(1.5f);
 	this->bindSprite(Sprite::create(this->getResTrack()), 0.8f, 0.8f);
 	this->addChild(gun, 1);
 	m_isAlive = true;

@@ -18,6 +18,7 @@ public:
 	virtual void flipped(bool status);
 	virtual bool isCloseWeapon()const override;
 	int getDamage()const;
+	void setDamage(int damage);
 	void setIsHit(bool status);
 	bool isHit()const;
 protected:
