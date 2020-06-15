@@ -110,5 +110,6 @@ void SettingLayer::menuMusicToggleCallback(cocos2d::Ref* pSender)
 
 void SettingLayer::menuOkCallback(cocos2d::Ref* pSender)
 {
+	//this->removeFromParentAndCleanup(true);
 	Director::getInstance()->popScene();
 }
