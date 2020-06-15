@@ -51,7 +51,6 @@ void Shop::showFlowWordFirstMeet()
 {
 	CCDictionary* pDictionary = (CCDictionary*)CCDictionary::createWithContentsOfFile("ChineseCharacters.plist");
 	auto str = pDictionary->valueForKey("ShopFirstMeet")->getCString();
-	pDictionary->removeObjectForKey("ShopLackMoney");
 	m_flowWord->showShopWord(str);
 }
 

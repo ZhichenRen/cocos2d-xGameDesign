@@ -4,6 +4,8 @@
 #include "cocos2d.h"
 #include "Scene/PlayerChoose.h"
 #include "Scene/PauseScene.h"
+#include "Scene/SettingScene.h"
+#include "Scene/HomeScene.h"
 #include "editor-support/cocostudio/CCSGUIReader.h"
 #include "ui/CocosGUI.h"
 using namespace cocos2d::ui;

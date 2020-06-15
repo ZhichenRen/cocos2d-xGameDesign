@@ -8,5 +8,11 @@
 	<string>您的金币不足，请下次再来！</string>
 	<key>ShopEnoughMoney</key>
 	<string>谢谢惠顾，您会更加强大！</string>
+	<key>StatueFirstMeet</key>
+	<string>供奉此雕像 15</string>
+	<key>StatueLackMoney</key>
+	<string>金币不足！</string>
+	<key>StatueEnoughMoney</key>
+	<string>属性提升了！</string>
 </dict>
 </plist>

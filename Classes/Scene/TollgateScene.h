@@ -10,6 +10,7 @@
 #include "Monster/MonsterManager.h"
 #include "Bonus/Shop.h"
 #include "Bonus/Chest.h"
+#include "Bonus/Statue.h"
 
 #include "editor-support/cocostudio/CCSGUIReader.h"
 #include "ui/CocosGUI.h"

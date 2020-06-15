@@ -5,10 +5,10 @@
 
 #define EMPTY 0
 #define BEGIN 1
-#define BONUS 2
+#define CHEST 2
 #define SHOP 3
 #define ENEMY 4
-#define BOSS 5
+#define STATUE 5
 #define END 6
 
 #define ROOM_NUM 7
@@ -17,6 +17,7 @@
 #include "Entity/Blue/Blue.h"
 #include "Entity/Red/Red.h"
 #include "Entity/BlueMedicine/BlueMedicine.h"
+#include "Bonus/Statue.h"
 
 class Shop;
 class Chest;
@@ -33,6 +34,7 @@ private:
 	cocos2d::TMXLayer* m_road;
 	Chest* m_chest;
 	Shop* m_shop;
+	Statue* m_statue;
 	cocos2d::Sprite* m_portal;
 
 	std::map<cocos2d::Vec2, int>m_rooms;
@@ -54,6 +56,7 @@ public:
 	inline cocos2d::TMXLayer* getRoad() { return m_road; }
 	inline Chest* getChest() { return m_chest; }
 	inline Shop* getShop() { return m_shop; }
+	inline Statue* getStatue() { return m_statue; }
 	inline cocos2d::Sprite* getPortal() { return m_portal; }
 	inline std::vector<Coin*> getCoinList() { return m_coinList; }
 	inline std::vector<Blue*> getBlueList() { return m_blueList; }
