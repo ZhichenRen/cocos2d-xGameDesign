@@ -86,9 +86,7 @@ bool TollgateScene::init()
 	loadMap();
 	addPlayer();
 	loadMonsters();
-	addWeapon();
 	loadController();
-	loadListeners();
 	return true;
 }
 
@@ -97,11 +95,20 @@ void TollgateScene::onEnter()
 	Layer::onEnter();
 	this->scheduleUpdate();
 	loadUI();
+	addWeapon();
+	loadListeners();
+}
+
+void TollgateScene::onExit()
+{
+	Layer::onExit();
+	Director::getInstance()->getEventDispatcher()->removeEventListener(m_keyboard_listener);
+	this->removeChildByTag(0);
 }
 
 void TollgateScene::loadUI()
 {
-	auto UI = cocostudio::GUIReader::getInstance()->widgetFromJsonFile("INGAME_1.ExportJson");
+	UI = cocostudio::GUIReader::getInstance()->widgetFromJsonFile("INGAME_1.ExportJson");
 	this->addChild(UI, 0, 0);
 	m_cdBar = (LoadingBar*)Helper::seekWidgetByName(UI, "ability_loading_bar");
 	m_hpBar = (LoadingBar*)Helper::seekWidgetByName(UI, "HP_bar");

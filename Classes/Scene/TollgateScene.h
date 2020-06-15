@@ -23,6 +23,7 @@ public:
 	static Scene* createScene();
 	virtual bool init();
 	virtual void onEnter();
+	virtual void onExit();
 	void addPlayer();
 	void loadUI();
 	void loadMonstersInNewRoom(int giantNum);
@@ -59,4 +60,5 @@ private:
 	AdventureMapLayer* m_map;
 	MonsterManager* m_monsterMgr;
 	EventListenerKeyboard* m_keyboard_listener = NULL;
+	Widget* UI = NULL;
 };
