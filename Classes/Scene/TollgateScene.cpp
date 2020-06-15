@@ -83,24 +83,20 @@ bool TollgateScene::init()
 {
 	if (!Layer::init())
 		return false;
-
-	this->scheduleUpdate();
-
 	loadMap();
 	addPlayer();
-	loadController();
 	loadMonsters();
+	addWeapon();
+	loadController();
 	loadListeners();
-
 	return true;
 }
 
 void TollgateScene::onEnter()
 {
 	Layer::onEnter();
+	this->scheduleUpdate();
 	loadUI();
-	addWeapon();
-	loadListeners();
 }
 
 void TollgateScene::loadUI()
@@ -193,12 +189,12 @@ void TollgateScene::loadMonsters()
 
 void TollgateScene::loadListeners()
 {
-	auto pause_listener = EventListenerKeyboard::create();
-	pause_listener->onKeyPressed = [](EventKeyboard::KeyCode key, Event* event)
+	m_keyboard_listener = EventListenerKeyboard::create();
+	m_keyboard_listener->onKeyPressed = [](EventKeyboard::KeyCode key, Event* event)
 	{
 		return true;
 	};
-	pause_listener->onKeyReleased = [=](EventKeyboard::KeyCode key, Event* event)
+	m_keyboard_listener->onKeyReleased = [=](EventKeyboard::KeyCode key, Event* event)
 	{
 		switch (key)
 		{
@@ -312,7 +308,7 @@ void TollgateScene::loadListeners()
 			break;
 		}
 	};
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(pause_listener, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(m_keyboard_listener, this);
 }
 
 

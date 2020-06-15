@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "cocos2d.h"
 #include "typeinfo"
 #include "AuxiliaryClass/AnimationUtil/AnimationUtil.h"
@@ -58,4 +58,5 @@ private:
 	Player* m_player;
 	AdventureMapLayer* m_map;
 	MonsterManager* m_monsterMgr;
+	EventListenerKeyboard* m_keyboard_listener = NULL;
 };
