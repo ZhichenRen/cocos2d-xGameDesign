@@ -83,29 +83,32 @@ bool TollgateScene::init()
 {
 	if (!Layer::init())
 		return false;
-
-	this->scheduleUpdate();
-
 	loadMap();
 	addPlayer();
-	loadController();
 	loadMonsters();
-	loadListeners();
-
+	loadController();
 	return true;
 }
 
 void TollgateScene::onEnter()
 {
 	Layer::onEnter();
+	this->scheduleUpdate();
 	loadUI();
 	addWeapon();
 	loadListeners();
 }
 
+void TollgateScene::onExit()
+{
+	Layer::onExit();
+	Director::getInstance()->getEventDispatcher()->removeEventListener(m_keyboard_listener);
+	this->removeChildByTag(0);
+}
+
 void TollgateScene::loadUI()
 {
-	auto UI = cocostudio::GUIReader::getInstance()->widgetFromJsonFile("INGAME_1.ExportJson");
+	UI = cocostudio::GUIReader::getInstance()->widgetFromJsonFile("INGAME_1.ExportJson");
 	this->addChild(UI, 0, 0);
 	m_cdBar = (LoadingBar*)Helper::seekWidgetByName(UI, "ability_loading_bar");
 	m_hpBar = (LoadingBar*)Helper::seekWidgetByName(UI, "HP_bar");
@@ -193,12 +196,12 @@ void TollgateScene::loadMonsters()
 
 void TollgateScene::loadListeners()
 {
-	auto pause_listener = EventListenerKeyboard::create();
-	pause_listener->onKeyPressed = [](EventKeyboard::KeyCode key, Event* event)
+	m_keyboard_listener = EventListenerKeyboard::create();
+	m_keyboard_listener->onKeyPressed = [](EventKeyboard::KeyCode key, Event* event)
 	{
 		return true;
 	};
-	pause_listener->onKeyReleased = [=](EventKeyboard::KeyCode key, Event* event)
+	m_keyboard_listener->onKeyReleased = [=](EventKeyboard::KeyCode key, Event* event)
 	{
 		switch (key)
 		{
@@ -312,7 +315,7 @@ void TollgateScene::loadListeners()
 			break;
 		}
 	};
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(pause_listener, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(m_keyboard_listener, this);
 }
 
 

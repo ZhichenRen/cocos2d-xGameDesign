@@ -1,4 +1,4 @@
-
+﻿
 #include "Entity\Weapons\CloseWeapon.h"
 
 bool CloseWeapon::init()
@@ -94,6 +94,11 @@ bool CloseWeapon::isCloseWeapon()const
 int CloseWeapon::getDamage()const
 {
 	return m_damage;
+}
+
+void CloseWeapon::setDamage(int damage)
+{
+	m_damage = damage;
 }
 
 void CloseWeapon::setIsHit(bool status)

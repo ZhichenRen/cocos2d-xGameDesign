@@ -1,4 +1,4 @@
-#ifndef __Long_rangeH__
+﻿#ifndef __Long_rangeH__
 #define __Long_rangeH__
 
 #include "Entity\Weapons\Weapon.h"
@@ -17,6 +17,7 @@ public:
 	bool isAttacking();
 	std::vector<Bullet*> getBullet()const;
 	int getDamage()const;
+	void setDamage(int damage);
 	virtual void flipped(bool status);
 	virtual void setRotationByPos(Point pos);
 	virtual void update(float dt);

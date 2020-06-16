@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "cocos2d.h"
 #include "typeinfo"
 #include "AuxiliaryClass/AnimationUtil/AnimationUtil.h"
@@ -23,6 +23,7 @@ public:
 	static Scene* createScene();
 	virtual bool init();
 	virtual void onEnter();
+	virtual void onExit();
 	void addPlayer();
 	void loadUI();
 	void loadMonstersInNewRoom(int giantNum);
@@ -58,4 +59,6 @@ private:
 	Player* m_player;
 	AdventureMapLayer* m_map;
 	MonsterManager* m_monsterMgr;
+	EventListenerKeyboard* m_keyboard_listener = NULL;
+	Widget* UI = NULL;
 };
