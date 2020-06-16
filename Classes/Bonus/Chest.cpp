@@ -2,6 +2,7 @@
 #include "Entity/Weapons/CandyGun.h"
 #include "Entity/Weapons/RPG.h"
 #include "Entity/Weapons/Shotgun.h"
+#include "Entity/Weapons/GoldenSword.h"
 
 Chest::Chest()
 {
@@ -28,8 +29,12 @@ void Chest::setWeapon(int num)
 	{
 		m_weapon = Shotgun::create();
 	}
-	else
+	else if (num == 3)
 	{
 		m_weapon = CandyGun::create();
+	}
+	else
+	{
+		m_weapon = GoldenSword::create();
 	}
 }

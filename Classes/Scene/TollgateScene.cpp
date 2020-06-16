@@ -24,15 +24,18 @@ Scene* TollgateScene::createScene()
 
 void TollgateScene::loadMap()
 {
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	auto origin = Director::getInstance()->getVisibleOrigin();
 	m_map = AdventureMapLayer::create();
-	this->addChild(m_map, 0, 100);//娓告垙鍦板浘 tag涓?00
-
+	this->addChild(m_map, 0, 100);
+	m_map->getMiniMap()->setPosition(Vec2(origin.x + visibleSize.width - 300, origin.y + visibleSize.height - 400));
+	this->addChild(m_map->getMiniMap(), 0, 10101);
 }
 
 void TollgateScene::addPlayer()
 {
-	TMXObjectGroup* group = m_map->getMap()->getObjectGroup("objects");//鑾峰彇瀵硅薄灞?
-	ValueMap spawnPoint = group->getObject("hero");//鏍规嵁hero瀵硅薄鐨勪綅缃斁缃簿鐏?
+	TMXObjectGroup* group = m_map->getMap()->getObjectGroup("objects");
+	ValueMap spawnPoint = group->getObject("hero");
 	float x = spawnPoint["x"].asFloat();
 	float y = spawnPoint["y"].asFloat();
 	m_player = Ranger::create();
@@ -71,7 +74,7 @@ void TollgateScene::loadController()
 	this->addChild(playerController);
 	m_player->setController(playerController);
 	playerController->setPlayer(m_player);
-	playerController->setIsRanger(typeid(*m_player) == typeid(Ranger));//浠ュ悗涓巑emberSelect缁撳悎
+	playerController->setIsRanger(typeid(*m_player) == typeid(Ranger));
 	playerController->setStandAnimate(animate);
 
 }
@@ -80,29 +83,32 @@ bool TollgateScene::init()
 {
 	if (!Layer::init())
 		return false;
-
-	this->scheduleUpdate();
-
 	loadMap();
 	addPlayer();
-	loadController();
 	loadMonsters();
-	loadListeners();
-
+	loadController();
 	return true;
 }
 
 void TollgateScene::onEnter()
 {
 	Layer::onEnter();
+	this->scheduleUpdate();
 	loadUI();
 	addWeapon();
 	loadListeners();
 }
 
+void TollgateScene::onExit()
+{
+	Layer::onExit();
+	Director::getInstance()->getEventDispatcher()->removeEventListener(m_keyboard_listener);
+	this->removeChildByTag(0);
+}
+
 void TollgateScene::loadUI()
 {
-	auto UI = cocostudio::GUIReader::getInstance()->widgetFromJsonFile("INGAME_1.ExportJson");
+	UI = cocostudio::GUIReader::getInstance()->widgetFromJsonFile("INGAME_1.ExportJson");
 	this->addChild(UI, 0, 0);
 	m_cdBar = (LoadingBar*)Helper::seekWidgetByName(UI, "ability_loading_bar");
 	m_hpBar = (LoadingBar*)Helper::seekWidgetByName(UI, "HP_bar");
@@ -190,12 +196,12 @@ void TollgateScene::loadMonsters()
 
 void TollgateScene::loadListeners()
 {
-	auto pause_listener = EventListenerKeyboard::create();
-	pause_listener->onKeyPressed = [](EventKeyboard::KeyCode key, Event* event)
+	m_keyboard_listener = EventListenerKeyboard::create();
+	m_keyboard_listener->onKeyPressed = [](EventKeyboard::KeyCode key, Event* event)
 	{
 		return true;
 	};
-	pause_listener->onKeyReleased = [=](EventKeyboard::KeyCode key, Event* event)
+	m_keyboard_listener->onKeyReleased = [=](EventKeyboard::KeyCode key, Event* event)
 	{
 		switch (key)
 		{
@@ -204,10 +210,33 @@ void TollgateScene::loadListeners()
 			if (ccpDistance(m_player->getPosition(), m_map->getChest()->getPosition()) < 20.0f && m_map->getChest()->isVisible())
 			{
 				m_map->getChest()->setVisible(false);
-				m_map->getChest()->setWeapon(rand() % 3 + 1);
+				m_map->getChest()->setWeapon(rand() % 4 + 1);
 				std::string str = m_map->getChest()->getWeapon()->getWeaponName();
 				m_player->setWeapon(str);
 				m_player->determineWhichWeapon();
+			}
+			else if (ccpDistance(m_player->getPosition(), m_map->getStatue()->getPosition()) < 20.0f)
+			{
+				if (m_map->getStatue()->getInteractionNum() == 1)//第一次互动
+				{
+					m_map->getStatue()->setInteractionNum(2);
+					m_map->getStatue()->showFlowWordFirstMeet();
+				}
+				else
+				{
+					if (GameData::getCoinNum() >= m_map->getStatue()->getPrice())
+					{
+						GameData::setCoinNum(GameData::getCoinNum() - 15);
+						m_map->getStatue()->showFlowWordEnoughMoney();
+						//player获得buff加成
+						//player->getBuff(rand()%3)
+					}
+					else
+					{
+						m_map->getStatue()->showFlowWordLackMoney();
+					}
+					m_map->getStatue()->setInteractionNum(1);
+				}
 			}
 			else if (ccpDistance(m_player->getPosition(), m_map->getShop()->getPosition()) < 20.0f)
 			{
@@ -221,8 +250,8 @@ void TollgateScene::loadListeners()
 					if (GameData::getCoinNum() >= m_map->getShop()->getPrice())
 					{
 						GameData::setCoinNum(GameData::getCoinNum() - 20);
-						m_map->getShop()->setWeapon(rand() % 3 + 1);
-						std::string str = m_map->getChest()->getWeapon()->getWeaponName();
+						m_map->getShop()->setWeapon(rand() % 4 + 1);
+						std::string str = m_map->getShop()->getWeapon()->getWeaponName();
 						m_player->setWeapon(str);
 						m_player->determineWhichWeapon();
 						m_map->getShop()->showFlowWordEnoughMoney();
@@ -237,17 +266,16 @@ void TollgateScene::loadListeners()
 			if (ccpDistance(m_player->getPosition(), m_map->getPortal()->getPosition()) < 20.0f)
 			{
 				this->unscheduleUpdate();
-				if (GameData::getLevel() != 2)
+				if (GameData::getLevel() != 2)//传送到下一关
 				{
 					GameData::setLastRoomCoord(Vec2(2, 2));
 					GameData::setLevel(GameData::getLevel() + 1);
 					auto scene = TollgateScene::createScene();
 					Director::getInstance()->replaceScene(scene);
 				}
-				else
+				else//结束冒险
 				{
 					GameData::setLastRoomCoord(Vec2(2, 2));
-					GameData::setLevel(1);
 					auto scene = HomeMenuLayer::createScene();
 					Director::getInstance()->replaceScene(scene);
 				}
@@ -287,21 +315,17 @@ void TollgateScene::loadListeners()
 			break;
 		}
 	};
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(pause_listener, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(m_keyboard_listener, this);
 }
 
 
 
 void TollgateScene::updateMiniMap(TMXTiledMap* miniMap)
 {
-	auto visibleSize = Director::getInstance()->getVisibleSize();
-	auto origin = Director::getInstance()->getVisibleOrigin();
 
 	auto miniMapLayer = miniMap->getLayer("miniMapLayer");
 	auto playerPos = m_player->getPosition();
 	auto roomCoord = m_map->roomCoordFromPosition(playerPos);
-
-	miniMap->setPosition(m_map->convertToNodeSpace(this->getPosition()) + Vec2(700, 400));
 
 	if (roomCoord == Vec2(-1, -1))
 	{
@@ -323,21 +347,6 @@ void TollgateScene::updateMiniMap(TMXTiledMap* miniMap)
 		}
 	}
 	GameData::setLastRoomCoord(Vec2(roomCoord.y, roomCoord.x));
-}
-
-void TollgateScene::updateCoinNum()
-{
-	//auto visibleSize = Director::getInstance()->getVisibleSize();
-	//auto n = this->getChildByTag(101);
-	//if (n)
-	//{
-	//	this->removeChildByTag(101);
-	//}
-	//auto num = __String::createWithFormat("%d", GameData::getCoinNum());
-	//auto coinLabel = Label::createWithTTF(num->getCString(), "fonts/arial.ttf", 30);
-
-	//coinLabel->setPosition(Vec2(visibleSize.width - 50, visibleSize.height - 600));
-	//this->addChild(coinLabel, 20, 101);
 }
 
 void TollgateScene::update(float dt)
@@ -365,10 +374,8 @@ void TollgateScene::update(float dt)
 	auto roadPairs = m_map->getRoadPairs();
 	updateMiniMap(miniMap);
 
-	updateCoinNum();
-
-	auto roomCoord = m_map->roomCoordFromPosition(playerPos);//鎴块棿鍧愭爣
-	auto roomNum = roomCoord.x * 5 + roomCoord.y;//鎴块棿搴忓彿
+	auto roomCoord = m_map->roomCoordFromPosition(playerPos);
+	auto roomNum = roomCoord.x * 5 + roomCoord.y;
 
 	if (m_map->isMonsterRoom(roomCoord)	//首先它得是个怪物房间
 		&& !m_monsterMgr->isRoomVisited(roomCoord))//其次它没有被到访过
@@ -376,9 +383,9 @@ void TollgateScene::update(float dt)
 		m_monsterMgr->setCurRoom(roomCoord);
 		loadMonstersInNewRoom(2);
 	}
-	Vec2 dir[4] = { {0,1},{0,-1},{1,0},{-1,0} };//鍥涗釜鏂瑰悜
+	Vec2 dir[4] = { {0,1},{0,-1},{1,0},{-1,0} };
 
-	if (true)//杩涘叆鏈夋€墿鐨勬埧闂达紝寮€濮嬫垬鏂?
+	if (true)
 	{
 		miniMap->setVisible(false);
 		std::vector<int>dirVec;
@@ -397,8 +404,7 @@ void TollgateScene::update(float dt)
 		{
 			AdventureMapLayer::switchGate(wall, barrier, roomNum, elem, true);
 		}
-		//auto t = time(nullptr);
-		if (m_monsterMgr->isGameOver())//缁撴潫鎴樻枟
+		if (m_monsterMgr->isGameOver())
 		{
 			for (auto elem : dirVec)
 			{

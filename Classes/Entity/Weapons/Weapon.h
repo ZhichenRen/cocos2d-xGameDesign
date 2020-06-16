@@ -1,4 +1,4 @@
-#ifndef __Weapon_H__
+﻿#ifndef __Weapon_H__
 #define __Weapon_H__
 
 #include <string>
@@ -22,7 +22,10 @@ public:
 	int getRange()const;
 	void bindMap(AdventureMapLayer* map);
 	void setCritRate(float crit_rate);
-	virtual float getAttackSpeed()const;
+	float getAttackSpeed()const;
+	void setAttackSpeed(float speed);
+	virtual int getDamage()const;
+	virtual void setDamage(int damage);
 	void resetPosition();
 	virtual void flipped(bool status/*true for flipped and false for not flipped*/);
 	virtual void setRotationByPos(Point pos);

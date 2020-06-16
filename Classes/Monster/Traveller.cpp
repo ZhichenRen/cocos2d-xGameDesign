@@ -1,4 +1,4 @@
-#include "Traveller.h"
+﻿#include "Traveller.h"
 
 bool Traveller::init()
 {
@@ -12,8 +12,10 @@ bool Traveller::init()
 	auto sword = MonsterSword::create();
 	auto swordSize = sword->getContentSize();
 	sword->setContentSize(swordSize * 2);
-	sword->getSprite()->setContentSize(sword->getSprite()->getContentSize() * 2);
+	sword->getSprite()->setContentSize(sword->getSprite()->getContentSize() * 3);
 	sword->setRange(sword->getRange() * 3);
+	sword->setDamage(3);
+	sword->setAttackSpeed(1.5f);
 	//sword->setPosition(this->getPosition());
 	setMonsterWeapon(sword);
 	this->addChild(sword, 1);

@@ -105,9 +105,13 @@ void AdventureMapLayer::createRandomMap()
 					m_rooms[nextRoom + offset] = END;
 					break;
 				}
+				else if (roomCnt == ROOM_NUM - 3)
+				{
+					m_rooms[nextRoom + offset] = STATUE;
+				}
 				else if (roomCnt == ROOM_NUM - 2)
 				{
-					m_rooms[nextRoom + offset] = BONUS;
+					m_rooms[nextRoom + offset] = CHEST;
 
 				}
 				else if (roomCnt == ROOM_NUM - 1)
@@ -265,24 +269,27 @@ void AdventureMapLayer::buildBonus()
 	{
 		for (int j = 0; j < 5; j++)
 		{
-			if (m_rooms[Vec2(i, j)] == BONUS)
+			if (m_rooms[Vec2(i, j)] == CHEST)
 			{
 				m_chest = Chest::create();
-				//m_chest->setPosition(m_ground->getPositionAt(Vec2(coord[5 * i + j][0], coord[5 * i + j][1])));
 				m_chest->setPosition(m_ground->getPositionAt(GameData::getCoord()[5 * i + j]));
 				this->addChild(m_chest);
+			}
+			else if (m_rooms[Vec2(i, j)] == STATUE)
+			{
+				m_statue = Statue::create();
+				m_statue->setPosition(m_ground->getPositionAt(GameData::getCoord()[5 * i + j]));
+				this->addChild(m_statue);
 			}
 			else if (m_rooms[Vec2(i, j)] == SHOP)
 			{
 				m_shop = Shop::create();
-				//m_shop->setPosition(m_ground->getPositionAt(Vec2(coord[5 * i + j][0], coord[5 * i + j][1])));
 				m_shop->setPosition(m_ground->getPositionAt(GameData::getCoord()[5 * i + j]));
 				this->addChild(m_shop);
 			}
 			else if (m_rooms[Vec2(i, j)] == END)
 			{
 				m_portal = Sprite::create("portal.png");
-				//m_portal->setPosition(m_ground->getPositionAt(Vec2(coord[5 * i + j][0], coord[5 * i + j][1])));
 				m_portal->setPosition(m_ground->getPositionAt(GameData::getCoord()[5 * i + j]));
 				this->addChild(m_portal);
 			}
