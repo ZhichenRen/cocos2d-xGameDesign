@@ -1,6 +1,7 @@
 ﻿#include "Scene\PauseScene.h"
 #include "Scene\HomeScene.h"
 #include "Scene\SettingScene.h"
+#include "GameData.h"
 
 bool PauseScene::init()
 {
@@ -33,7 +34,10 @@ void PauseScene::backToHomeMenu(Ref*, TouchEventType type)
 	{
 	case TOUCH_EVENT_ENDED:
 		Director::getInstance()->popScene();
-		Director::getInstance()->pushScene(HomeMenuLayer::createScene());
+		GameData::setCoinNum(0);
+		GameData::setLastRoomCoord(Vec2(2, 2));
+		GameData::setLevel(1);
+		Director::getInstance()->replaceScene(HomeMenuLayer::createScene());
 		break;
 	}
 }

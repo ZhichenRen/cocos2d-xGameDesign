@@ -9,8 +9,10 @@
 #include "Entity/Weapons/Shotgun.h"
 #include "GameData.h"
 #include "Scene/DeathScene.h"
+#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
+using namespace CocosDenshion;
 
 
 Scene* TollgateScene::createScene()
@@ -79,6 +81,24 @@ void TollgateScene::loadController()
 
 }
 
+void TollgateScene::loadEditBox()
+{
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	auto origin = Director::getInstance()->getVisibleOrigin();
+	m_editBox = EditBox::create(Size(400, 50), "editBox.png");
+	m_editBox->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height - 600));
+	m_editBox->setFontColor(Color3B::WHITE);
+	m_editBox->setVisible(false);
+	m_editBox->setEnabled(false);
+	this->addChild(m_editBox);
+
+	m_flowWord = FlowWord::create();
+	m_flowWord->setPosition(Vec2(250, 200));
+	this->addChild(m_flowWord);
+
+	this->schedule(schedule_selector(TollgateScene::compare), 0.1f);
+}
+
 bool TollgateScene::init()
 {
 	if (!Layer::init())
@@ -87,6 +107,7 @@ bool TollgateScene::init()
 	addPlayer();
 	loadMonsters();
 	loadController();
+	loadEditBox();
 	return true;
 }
 
@@ -99,11 +120,28 @@ void TollgateScene::onEnter()
 	loadListeners();
 }
 
+void TollgateScene::onEnterTransitionDidFinish()
+{
+	Layer::onEnterTransitionDidFinish();
+	SimpleAudioEngine::getInstance()->playBackgroundMusic("bgm/advBgm.mp3", true);
+}
+
 void TollgateScene::onExit()
 {
 	Layer::onExit();
 	Director::getInstance()->getEventDispatcher()->removeEventListener(m_keyboard_listener);
 	this->removeChildByTag(0);
+}
+
+void TollgateScene::onExitTransitionDidStart()
+{
+	Layer::onExitTransitionDidStart();
+}
+
+void TollgateScene::cleanup()
+{
+	Layer::cleanup();
+	SimpleAudioEngine::getInstance()->stopBackgroundMusic("bgm/advBgm.mp3");
 }
 
 void TollgateScene::loadUI()
@@ -305,6 +343,21 @@ void TollgateScene::loadListeners()
 				}
 			}
 			break;
+		case EventKeyboard::KeyCode::KEY_ENTER:
+			if (!m_editBox->isVisible())
+			{
+				m_editBox->setVisible(true);
+				m_editBox->setEnabled(true);
+				this->schedule(schedule_selector(TollgateScene::compare), 0.1f);
+			}
+			else
+			{
+				m_editBox->setText("");
+				m_editBox->setVisible(false);
+				m_editBox->setEnabled(false);
+				this->unschedule(schedule_selector(TollgateScene::compare));
+			}
+			break;
 		case EventKeyboard::KeyCode::KEY_ESCAPE:
 			Size visible_size = Director::getInstance()->getVisibleSize();
 			CCRenderTexture* background = CCRenderTexture::create(visible_size.width, visible_size.height);
@@ -317,6 +370,8 @@ void TollgateScene::loadListeners()
 	};
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(m_keyboard_listener, this);
 }
+
+
 
 
 
@@ -347,6 +402,18 @@ void TollgateScene::updateMiniMap(TMXTiledMap* miniMap)
 		}
 	}
 	GameData::setLastRoomCoord(Vec2(roomCoord.y, roomCoord.x));
+}
+
+void TollgateScene::compare(float dt)
+{
+	if (strcmp(m_editBox->getText(), "greedy") == 0)
+	{
+		GameData::setCoinNum(GameData::getCoinNum() + 100);
+		CCDictionary* pDictionary = (CCDictionary*)CCDictionary::createWithContentsOfFile("ChineseCharacters.plist");
+		auto str = pDictionary->valueForKey("GreedyCheat")->getCString();
+		m_flowWord->showShopWord(str);
+		this->unschedule(schedule_selector(TollgateScene::compare));
+	}
 }
 
 void TollgateScene::update(float dt)
