@@ -2,7 +2,7 @@
 #include "SafeMapScene.h"
 #include "AdventureMapScene.h"
 #include "SettingScene.h"
-#include "Scene/TollgateScene.h"
+#include "TollgateScene.h"
 
 
 USING_NS_CC;

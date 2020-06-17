@@ -1,3 +1,4 @@
+#pragma once
 #ifndef __HOME_SCENE_H__
 #define __HOME_SCENE_H__
 

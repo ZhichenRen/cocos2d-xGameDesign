@@ -1,5 +1,5 @@
 ﻿#include "SafeMapScene.h"
-#include "AdventureMapScene.h"
+#include "Scene/AdventureMapScene.h"
 #include "Scene/TollgateScene.h"
 #include "Scene/PlayerChoose.h"
 #pragma execution_character_set("utf-8")

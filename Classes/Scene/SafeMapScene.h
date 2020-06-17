@@ -1,3 +1,4 @@
+#pragma once
 #ifndef __SAFE_MAP_SCENE_H__
 #define __SAFE_MAP_SCENE_H__
 
