@@ -1,4 +1,4 @@
-#include "Entity\Weapons\LongRange.h"
+﻿#include "Entity\Weapons\LongRange.h"
 #include "Entity\Weapons\Bullets\ExplosiveBullet.h"
 #include <cmath>
 #define PI 3.1415926
@@ -110,6 +110,11 @@ std::vector<Bullet*> LongRange::getBullet()const
 int LongRange::getDamage()const
 {
 	return m_bullet_damage;
+}
+
+void LongRange::setDamage(int damage)
+{
+	m_bullet_damage = damage;
 }
 
 void LongRange::update(float dt)

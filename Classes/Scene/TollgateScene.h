@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "cocos2d.h"
 #include "typeinfo"
 #include "AuxiliaryClass/AnimationUtil/AnimationUtil.h"
@@ -10,6 +10,7 @@
 #include "Monster/MonsterManager.h"
 #include "Bonus/Shop.h"
 #include "Bonus/Chest.h"
+#include "Bonus/Statue.h"
 
 #include "editor-support/cocostudio/CCSGUIReader.h"
 #include "ui/CocosGUI.h"
@@ -22,6 +23,7 @@ public:
 	static Scene* createScene();
 	virtual bool init();
 	virtual void onEnter();
+	virtual void onExit();
 	void addPlayer();
 	void loadUI();
 	void loadMonstersInNewRoom(int giantNum);
@@ -34,7 +36,6 @@ public:
 	void switchWeapon(Ref*, TouchEventType type);
 
 	void updateMiniMap(TMXTiledMap* miniMap);
-	void updateCoinNum();
 
 	virtual void update(float dt);
 	void menuOkCallback(Ref* pSender);
@@ -58,4 +59,6 @@ private:
 	Player* m_player;
 	AdventureMapLayer* m_map;
 	MonsterManager* m_monsterMgr;
+	EventListenerKeyboard* m_keyboard_listener = NULL;
+	Widget* UI = NULL;
 };

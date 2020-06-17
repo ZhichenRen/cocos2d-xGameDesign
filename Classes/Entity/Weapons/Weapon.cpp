@@ -1,4 +1,4 @@
-#include "Entity\Weapons\Weapon.h"
+﻿#include "Entity\Weapons\Weapon.h"
 #define PI 3.1415926
 
 Weapon::Weapon()
@@ -53,9 +53,24 @@ float Weapon::getAttackSpeed()const
 	return m_attack_speed;
 }
 
+void Weapon::setAttackSpeed(float speed)
+{
+	m_attack_speed = speed;
+}
+
 void Weapon::resetPosition()
 {
 	getSprite()->setRotation(0.0f);
+}
+
+void Weapon::setDamage(int damage)
+{
+
+}
+
+int Weapon::getDamage()const
+{
+	return 0;
 }
 
 void Weapon::setRotationByPos(Point pos)

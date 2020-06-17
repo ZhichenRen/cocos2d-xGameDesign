@@ -1,7 +1,6 @@
 ﻿#include "SafeMapScene.h"
 #include "Scene/AdventureMapScene.h"
 #include "Scene/TollgateScene.h"
-#include "Scene/PlayerChoose.h"
 #pragma execution_character_set("utf-8")
 USING_NS_CC;
 
@@ -31,11 +30,17 @@ bool SafeMapLayer::init()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     auto origin = Director::getInstance()->getVisibleOrigin();
 
-    MenuItemFont* text = MenuItemFont::create("选择你的英雄");
-    text->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height - 200));
-
     MenuItemImage* settingItem = MenuItemImage::create("menu/SettingNormal.png", "menu/SettingSelected.png", CC_CALLBACK_1(SafeMapLayer::menuItemSettingCallback, this));
     settingItem->setPosition(Vec2(origin.x + visibleSize.width - 100, origin.y + visibleSize.height - 50));
+
+    Menu* menu1 = Menu::create(settingItem, nullptr);
+
+    menu1->setPosition(Vec2::ZERO);
+    auto pos123 = menu1->getPosition();
+    this->addChild(menu1, 0, 10085);
+
+    MenuItemFont* text = MenuItemFont::create("选择你的英雄");
+    text->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height - 200));
 
     MenuItemImage* rangerItem = MenuItemImage::create("ranger_image.png", "ranger_image.png", CC_CALLBACK_1(SafeMapLayer::menuItemRangerCallback, this));
     rangerItem->setPosition(Vec2(origin.x + visibleSize.width / 2 - 200, origin.y + visibleSize.height / 2 - 200));
@@ -43,10 +48,10 @@ bool SafeMapLayer::init()
     MenuItemImage* mageItem = MenuItemImage::create("mage_image.png", "mage_image.png", CC_CALLBACK_1(SafeMapLayer::menuItemMageCallback, this));
     mageItem->setPosition(Vec2(origin.x + visibleSize.width / 2 + 200, origin.y + visibleSize.height / 2 - 200));
 
-    Menu* menu = Menu::create(text,settingItem, rangerItem, mageItem, nullptr);
+    Menu* menu2 = Menu::create(text, rangerItem, mageItem, nullptr);
 
-    menu->setPosition(Vec2::ZERO);
-    this->addChild(menu, 0, 10086);
+    menu2->setPosition(Vec2::ZERO);
+    this->addChild(menu2, 0, 10086);
 
     return true;
 }
@@ -79,7 +84,6 @@ void SafeMapLayer::onEnterTransitionDidFinish()
 void SafeMapLayer::onExit()
 {
     Layer::onExit();
-    Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
 }
 
 void SafeMapLayer::onExitTransitionDidStart()
@@ -90,6 +94,7 @@ void SafeMapLayer::onExitTransitionDidStart()
 void SafeMapLayer::cleanup()
 {
     Layer::cleanup();
+    Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
 }
 
 void SafeMapLayer::setPlayer(int playerNum)
@@ -105,15 +110,15 @@ void SafeMapLayer::setPlayer(int playerNum)
     case 1:
         m_player = Sprite::create("Ranger/RangerIni.png");
         m_player->setPosition(Vec2(x, y));
-        this->addChild(m_player);//游戏人物
+        m_tileMap->addChild(m_player);//游戏人物
         this->removeChildByTag(10086);
         m_heroName = "Ranger";
         this->scheduleUpdate();
         break;
     case 2:
-        m_player = Sprite::create("mage_image.PNG");
+        m_player = Sprite::create("Priest/PriestIni.PNG");
         m_player->setPosition(Vec2(x, y));
-        this->addChild(m_player);//游戏人物
+        m_tileMap->addChild(m_player);//游戏人物
         this->removeChildByTag(10086);
         m_heroName = "Mage";
         this->scheduleUpdate();
@@ -131,6 +136,8 @@ void SafeMapLayer::menuItemSettingCallback(cocos2d::Ref* pSender)
     this->visit();
     background->end();
     Director::getInstance()->pushScene(PauseScene::createScene(background));
+    //auto scene = SettingLayer::createScene();
+    //Director::getInstance()->pushScene(scene);
 }
 
 void SafeMapLayer::menuItemRangerCallback(cocos2d::Ref* pSender)
@@ -240,5 +247,5 @@ void SafeMapLayer::setViewpointCenter(cocos2d::Vec2 position)
 
     Vec2 offset = centerPoint - position;//偏移量
 
-    this->setPosition(offset);
+    m_tileMap->setPosition(offset);
 }
