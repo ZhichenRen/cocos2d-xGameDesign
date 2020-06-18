@@ -74,7 +74,7 @@ void SettingLayer::onEnter()
 void SettingLayer::onEnterTransitionDidFinish()
 {
 	Layer::onEnterTransitionDidFinish();
-	SimpleAudioEngine::getInstance()->playBackgroundMusic("bgm/SafeMapBgm.mp3", true);//开始播放
+	SimpleAudioEngine::getInstance()->playBackgroundMusic("bgm/safeBgm.mp3", true);//开始播放
 	SimpleAudioEngine::getInstance()->setBackgroundMusicVolume(0.5f);//设置音量
 }
 
@@ -91,7 +91,7 @@ void SettingLayer::onExitTransitionDidStart()
 void SettingLayer::cleanup()
 {
 	Layer::cleanup();
-	SimpleAudioEngine::getInstance()->stopBackgroundMusic("bgm/SafeMapBgm.mp3");//停止播放
+	SimpleAudioEngine::getInstance()->stopBackgroundMusic("bgm/safeBgm.mp3");//停止播放
 }
 
 void SettingLayer::menuMusicToggleCallback(cocos2d::Ref* pSender)
@@ -100,11 +100,11 @@ void SettingLayer::menuMusicToggleCallback(cocos2d::Ref* pSender)
 
 	if (musicToggleMenuItem->getSelectedIndex() == 1)
 	{
-		SimpleAudioEngine::getInstance()->stopBackgroundMusic("bgm/SafeMapBgm.mp3");
+		SimpleAudioEngine::getInstance()->stopBackgroundMusic("bgm/safeBgm.mp3");
 	}
 	else
 	{
-		SimpleAudioEngine::getInstance()->playBackgroundMusic("bgm/SafeMapBgm.mp3");
+		SimpleAudioEngine::getInstance()->playBackgroundMusic("bgm/safeBgm.mp3");
 	}
 }
 

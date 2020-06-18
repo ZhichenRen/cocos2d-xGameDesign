@@ -1,6 +1,6 @@
-﻿#include "Scene/WeaponInfoScene.h"
+#include "Scene/MonsterInfoScene.h"
 
-bool WeaponInfoScene::init()
+bool MonsterInfoScene::init()
 {
 	if (!Layer::init())
 	{
@@ -10,10 +10,10 @@ bool WeaponInfoScene::init()
 	return true;
 }
 
-Scene* WeaponInfoScene::createScene(CCRenderTexture* background)
+Scene* MonsterInfoScene::createScene(CCRenderTexture* background)
 {
 	Scene* scene = Scene::create();
-	auto layer = WeaponInfoScene::create();
+	auto layer = MonsterInfoScene::create();
 	scene->addChild(layer, 1);
 
 	Size visible_size = Director::getInstance()->getVisibleSize();
@@ -25,15 +25,15 @@ Scene* WeaponInfoScene::createScene(CCRenderTexture* background)
 	return scene;
 }
 
-void WeaponInfoScene::loadUI()
+void MonsterInfoScene::loadUI()
 {
-	m_ui= cocostudio::GUIReader::getInstance()->widgetFromJsonFile("WeaponInfo_1.ExportJson");
+	m_ui = cocostudio::GUIReader::getInstance()->widgetFromJsonFile("MonsterInfo_1.ExportJson");
 	m_back_button = (Button*)Helper::seekWidgetByName(m_ui, "back_button");
-	m_back_button->addTouchEventListener(this, toucheventselector(WeaponInfoScene::back));
+	m_back_button->addTouchEventListener(this, toucheventselector(MonsterInfoScene::back));
 	this->addChild(m_ui);
 }
 
-void WeaponInfoScene::back(Ref*, TouchEventType type)
+void MonsterInfoScene::back(Ref*, TouchEventType type)
 {
 	switch (type)
 	{
