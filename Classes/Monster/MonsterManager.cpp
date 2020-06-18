@@ -126,9 +126,9 @@ void MonsterManager::bulkUpRandMons(int totalNum)
 void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 {
 	//随机生成巨大化敌人
-	auto randVec = createRandomNums(5, totalNum - 5);
+	auto randVec = createRandomNums(giantNum, totalNum - 5);
 	this->m_bulkMonsterNum = giantNum;
-	if (giantNum > totalNum - 4)
+	if (giantNum > totalNum - 5)
 	{
 		assert("too much giant monsters");
 	}
@@ -413,6 +413,28 @@ void MonsterManager::update(float dt)
 	}
 
 
+}
+
+void MonsterManager::killMonsters()
+{
+	for (auto monster : m_monsterList)
+	{
+		monster->die();
+	}
+	m_fGameOver = 1;
+}
+
+void MonsterManager::killWoodWall()
+{
+	for (auto woodWall : m_woodWallList)
+	{
+		woodWall->die();
+		auto curPos = woodWall->getPosition();
+		Vec2 blockOccupied = ccp(static_cast<int>(curPos.x) / 21, static_cast<int>(curPos.y) / 21);
+		m_monsPosMap[blockOccupied] = 0;//清除位置信息
+		m_map->getCollidable()->setTileGID(2, Vec2(0, -1) +
+			m_map->tileCoordFromPosition(woodWall->getPosition()));
+	}
 }
 
 

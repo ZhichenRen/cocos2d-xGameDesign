@@ -16,5 +16,9 @@
 	<string>属性提升了！</string>
 	<key>GreedyCheat</key>
 	<string>作弊成功！金币+100</string>
+	<key>SlaughterCheat</key>
+	<string>颤抖着滚开吧杂鱼们！</string>
+	<key>WoodWallCheat</key>
+	<string>我最讨厌的就是木墙了！</string>
 </dict>
 </plist>

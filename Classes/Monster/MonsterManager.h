@@ -21,7 +21,7 @@ class MonsterManager : public Node {
 public:
 	//void createMonsters();
 	void createMonsterPos();
-	void createMonstersWithGiantNum(int giantNum = 3, int totalNum = 10);
+	void createMonstersWithGiantNum(int giantNum = 5, int totalNum = 10);
 	void createWoodWalls(int woodWallsNum = 15);
 	CREATE_FUNC(MonsterManager);
 	void bindMap(AdventureMapLayer* map);
@@ -32,8 +32,8 @@ public:
 	void bindMapForWeapon();
 	virtual bool init();
 	virtual void update(float dt);
-	void resetWallPos();
-
+	void killMonsters();
+	void killWoodWall();
 	bool resetAllMons();
 	bool isGameOver();
 

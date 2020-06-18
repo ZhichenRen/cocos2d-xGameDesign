@@ -414,6 +414,22 @@ void TollgateScene::compare(float dt)
 		m_flowWord->showShopWord(str);
 		this->unschedule(schedule_selector(TollgateScene::compare));
 	}
+	if (strcmp(m_editBox->getText(), "slaughter") == 0)
+	{
+		m_monsterMgr->killMonsters();
+		CCDictionary* pDictionary = (CCDictionary*)CCDictionary::createWithContentsOfFile("ChineseCharacters.plist");
+		auto str = pDictionary->valueForKey("SlaughterCheat")->getCString();
+		m_flowWord->showShopWord(str);
+		this->unschedule(schedule_selector(TollgateScene::compare));
+	}
+	if (strcmp(m_editBox->getText(), "hatewood") == 0)
+	{
+		m_monsterMgr->killWoodWall();
+		CCDictionary* pDictionary = (CCDictionary*)CCDictionary::createWithContentsOfFile("ChineseCharacters.plist");
+		auto str = pDictionary->valueForKey("WoodWallCheat")->getCString();
+		m_flowWord->showShopWord(str);
+		this->unschedule(schedule_selector(TollgateScene::compare));
+	}
 }
 
 void TollgateScene::update(float dt)
