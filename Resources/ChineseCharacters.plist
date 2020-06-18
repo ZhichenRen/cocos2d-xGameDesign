@@ -14,5 +14,7 @@
 	<string>金币不足！</string>
 	<key>StatueEnoughMoney</key>
 	<string>属性提升了！</string>
+	<key>GreedyCheat</key>
+	<string>作弊成功！金币+100</string>
 </dict>
 </plist>
