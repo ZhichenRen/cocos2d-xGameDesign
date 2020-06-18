@@ -2,6 +2,7 @@
 #include "Scene/SafeMapScene.h"
 #include "Entity/Item/Player/Player.h"
 #include "Scene/AboutAuthor.h"
+#include "GameData.h"
 
 bool DeathScene::init()
 {
@@ -50,6 +51,9 @@ void DeathScene::backToHomeMenu(Ref*, TouchEventType type)
 	{
 	case TOUCH_EVENT_ENDED:
 		Director::getInstance()->popScene();
+		GameData::setCoinNum(0);
+		GameData::setLastRoomCoord(Vec2(2, 2));
+		GameData::setLevel(1);
 		Director::getInstance()->replaceScene(SafeMapLayer::createScene());
 		break;
 	}

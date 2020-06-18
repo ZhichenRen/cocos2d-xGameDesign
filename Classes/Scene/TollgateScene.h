@@ -23,7 +23,10 @@ public:
 	static Scene* createScene();
 	virtual bool init();
 	virtual void onEnter();
+	virtual void onEnterTransitionDidFinish();
 	virtual void onExit();
+	virtual void onExitTransitionDidStart();
+	virtual void cleanup();
 	void addPlayer();
 	void loadUI();
 	void loadMonstersInNewRoom(int giantNum);
@@ -32,11 +35,12 @@ public:
 	void loadController();
 	void loadMonsters();
 	void loadListeners();
+	void loadEditBox();
 	void pauseEvent(Ref*, TouchEventType type);
 	void switchWeapon(Ref*, TouchEventType type);
 
 	void updateMiniMap(TMXTiledMap* miniMap);
-
+	void compare(float dt);
 	virtual void update(float dt);
 	void menuOkCallback(Ref* pSender);
 
@@ -45,6 +49,8 @@ public:
 
 
 private:
+	cocos2d::ui::EditBox* m_editBox;
+	FlowWord* m_flowWord;
 	LoadingBar* m_cdBar = NULL;
 	LoadingBar* m_hpBar = NULL;
 	LoadingBar* m_mpBar = NULL;

@@ -50,6 +50,8 @@ void Shop::setWeapon(int num)
 void Shop::showFlowWordFirstMeet()
 {
 	CCDictionary* pDictionary = (CCDictionary*)CCDictionary::createWithContentsOfFile("ChineseCharacters.plist");
+	//pDictionary->removeAllObjects();
+	//pDictionary->writeToFile("ChineseCharacters.plist");
 	auto str = pDictionary->valueForKey("ShopFirstMeet")->getCString();
 	m_flowWord->showShopWord(str);
 }
