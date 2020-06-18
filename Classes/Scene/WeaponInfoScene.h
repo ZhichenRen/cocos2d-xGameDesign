@@ -10,7 +10,7 @@ class WeaponInfoScene :public Layer
 {
 public:
 	virtual bool init();
-	static Scene* createScene();
+	static Scene* createScene(CCRenderTexture* background);
 	CREATE_FUNC(WeaponInfoScene);
 	void back(Ref*, TouchEventType type);
 private:

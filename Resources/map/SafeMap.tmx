@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="32" height="24" tilewidth="32" tileheight="32" nextobjectid="4">
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="32" height="24" tilewidth="32" tileheight="32" nextobjectid="9">
  <tileset firstgid="1" source="material.tsx"/>
  <layer name="lobby" width="32" height="24">
   <data encoding="base64" compression="zlib">
@@ -13,5 +13,7 @@
  </layer>
  <objectgroup name="objects">
   <object id="1" name="hero" x="496" y="352" width="32" height="32"/>
+  <object id="4" name="monsterInfo" x="768" y="0" width="153" height="96"/>
+  <object id="7" name="weaponInfo" x="256" y="0" width="153" height="96"/>
  </objectgroup>
 </map>

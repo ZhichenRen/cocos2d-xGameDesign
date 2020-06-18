@@ -10,11 +10,18 @@ bool WeaponInfoScene::init()
 	return true;
 }
 
-Scene* WeaponInfoScene::createScene()
+Scene* WeaponInfoScene::createScene(CCRenderTexture* background)
 {
 	Scene* scene = Scene::create();
 	auto layer = WeaponInfoScene::create();
 	scene->addChild(layer, 1);
+
+	Size visible_size = Director::getInstance()->getVisibleSize();
+	Sprite* background_picture = Sprite::createWithTexture(background->getSprite()->getTexture());
+	background_picture->setPosition(visible_size.width / 2, visible_size.height / 2);
+	background_picture->setFlippedY(true);
+	scene->addChild(background_picture, 0);
+
 	return scene;
 }
 
@@ -31,7 +38,7 @@ void WeaponInfoScene::back(Ref*, TouchEventType type)
 	switch (type)
 	{
 	case TOUCH_EVENT_ENDED:
-		this->removeFromParentAndCleanup(true);
+		Director::getInstance()->popScene();
 		break;
 	}
 }
