@@ -1,8 +1,13 @@
-﻿#include "SafeMapScene.h"
+﻿#include "Scene/SafeMapScene.h"
 #include "Scene/AdventureMapScene.h"
 #include "Scene/TollgateScene.h"
+#include "SimpleAudioEngine.h"
+#include "extensions\cocos-ext.h"
 #pragma execution_character_set("utf-8")
+
+USING_NS_CC_EXT;
 USING_NS_CC;
+using namespace CocosDenshion;
 
 cocos2d::Scene* SafeMapLayer::createScene()
 {
@@ -27,6 +32,24 @@ bool SafeMapLayer::init()
 
     m_collidable = m_tileMap->getLayer("barrier");//获取判断碰撞的障碍层
 
+    TMXObjectGroup* group = m_tileMap->getObjectGroup("objects");//获取对象层
+    ValueMap spawnPointWeaponInfo = group->getObject("weaponInfo");
+    ValueMap spawnPointMonsterInfo = group->getObject("monsterInfo");
+
+    float x = spawnPointWeaponInfo["x"].asFloat();
+    float y = spawnPointWeaponInfo["y"].asFloat();
+
+    m_weaponInfo = Sprite::create("weaponInfo.png");
+    m_weaponInfo->setPosition(Vec2(x, y));
+    m_tileMap->addChild(m_weaponInfo);
+
+    x = spawnPointMonsterInfo["x"].asFloat();
+    y = spawnPointMonsterInfo["y"].asFloat();
+
+    m_monsterInfo = Sprite::create("monsterInfo.png");
+    m_monsterInfo->setPosition(Vec2(x, y));
+    m_tileMap->addChild(m_monsterInfo);
+
     auto visibleSize = Director::getInstance()->getVisibleSize();
     auto origin = Director::getInstance()->getVisibleOrigin();
 
@@ -36,8 +59,7 @@ bool SafeMapLayer::init()
     Menu* menu1 = Menu::create(settingItem, nullptr);
 
     menu1->setPosition(Vec2::ZERO);
-    auto pos123 = menu1->getPosition();
-    this->addChild(menu1, 0, 10085);
+    this->addChild(menu1, 0, 10085);//设置菜单
 
     MenuItemFont* text = MenuItemFont::create("选择你的英雄");
     text->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height - 200));
@@ -51,7 +73,7 @@ bool SafeMapLayer::init()
     Menu* menu2 = Menu::create(text, rangerItem, mageItem, nullptr);
 
     menu2->setPosition(Vec2::ZERO);
-    this->addChild(menu2, 0, 10086);
+    this->addChild(menu2, 0, 10086);//选人菜单
 
     return true;
 }
@@ -60,30 +82,62 @@ void SafeMapLayer::onEnter()
 {
     Layer::onEnter();
 
-    auto listener = EventListenerKeyboard::create();//创建监听事件
+    m_listener = EventListenerKeyboard::create();//创建监听事件
 
-    listener->onKeyPressed = [=](EventKeyboard::KeyCode keycode, Event* event)
+    m_listener->onKeyPressed = [=](EventKeyboard::KeyCode keycode, Event* event)
     {
         m_keyMap[keycode] = true;
+        if (keycode == EventKeyboard::KeyCode::KEY_E)
+        {
+            if (ccpDistance(m_player->getPosition(), m_weaponInfo->getPosition()) < 50.0f)//武器图鉴
+            {
+                m_keyMap[EventKeyboard::KeyCode::KEY_W] = false;
+                m_keyMap[EventKeyboard::KeyCode::KEY_A] = false;
+                m_keyMap[EventKeyboard::KeyCode::KEY_S] = false;
+                m_keyMap[EventKeyboard::KeyCode::KEY_D] = false;
+                Size visible_size = Director::getInstance()->getVisibleSize();
+                CCRenderTexture* background = CCRenderTexture::create(visible_size.width, visible_size.height);
+                background->begin();
+                this->visit();
+                background->end();
+                Director::getInstance()->pushScene(WeaponInfoScene::createScene(background));
+            }
+            else if (ccpDistance(m_player->getPosition(), m_monsterInfo->getPosition()) < 50.0f)//怪物图鉴
+            {
+                m_keyMap[EventKeyboard::KeyCode::KEY_W] = false;
+                m_keyMap[EventKeyboard::KeyCode::KEY_A] = false;
+                m_keyMap[EventKeyboard::KeyCode::KEY_S] = false;
+                m_keyMap[EventKeyboard::KeyCode::KEY_D] = false;
+                Size visible_size = Director::getInstance()->getVisibleSize();
+                CCRenderTexture* background = CCRenderTexture::create(visible_size.width, visible_size.height);
+                background->begin();
+                this->visit();
+                background->end();
+                Director::getInstance()->pushScene(MonsterInfoScene::createScene(background));
+            }
+        }
     };
 
-    listener->onKeyReleased = [=](EventKeyboard::KeyCode keycode, Event* event)
+    m_listener->onKeyReleased = [=](EventKeyboard::KeyCode keycode, Event* event)
     {
         m_keyMap[keycode] = false;
     };
 
     EventDispatcher* eventDispatcher = Director::getInstance()->getEventDispatcher();
-    eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+    eventDispatcher->addEventListenerWithSceneGraphPriority(m_listener, this);
 }
 
 void SafeMapLayer::onEnterTransitionDidFinish()
 {
     Layer::onEnterTransitionDidFinish();
+    SimpleAudioEngine::getInstance()->playBackgroundMusic("bgm/safeBgm.mp3",true);
 }
 
 void SafeMapLayer::onExit()
 {
     Layer::onExit();
+    this->unschedule(schedule_selector(SafeMapLayer::update));
+    Director::getInstance()->getEventDispatcher()->removeEventListener(m_listener);
 }
 
 void SafeMapLayer::onExitTransitionDidStart()
@@ -94,7 +148,7 @@ void SafeMapLayer::onExitTransitionDidStart()
 void SafeMapLayer::cleanup()
 {
     Layer::cleanup();
-    Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
+    SimpleAudioEngine::getInstance()->stopBackgroundMusic("bgm/safeBgm.mp3");
 }
 
 void SafeMapLayer::setPlayer(int playerNum)
@@ -112,7 +166,6 @@ void SafeMapLayer::setPlayer(int playerNum)
         m_player->setPosition(Vec2(x, y));
         m_tileMap->addChild(m_player);//游戏人物
         this->removeChildByTag(10086);
-        m_heroName = "Ranger";
         this->scheduleUpdate();
         break;
     case 2:
@@ -120,7 +173,6 @@ void SafeMapLayer::setPlayer(int playerNum)
         m_player->setPosition(Vec2(x, y));
         m_tileMap->addChild(m_player);//游戏人物
         this->removeChildByTag(10086);
-        m_heroName = "Mage";
         this->scheduleUpdate();
     }
     auto animation = AnimationUtil::createWithFrameNameAndNumUsingPlist("Ranger/RangerWalk/", "RangerWalk", 4, 0.12, -1);
@@ -136,8 +188,6 @@ void SafeMapLayer::menuItemSettingCallback(cocos2d::Ref* pSender)
     this->visit();
     background->end();
     Director::getInstance()->pushScene(PauseScene::createScene(background));
-    //auto scene = SettingLayer::createScene();
-    //Director::getInstance()->pushScene(scene);
 }
 
 void SafeMapLayer::menuItemRangerCallback(cocos2d::Ref* pSender)
