@@ -2,10 +2,12 @@
 #include "SafeMapScene.h"
 #include "AdventureMapScene.h"
 #include "SettingScene.h"
-#include "TollgateScene.h"
+#include "Scene/TollgateScene.h"
+#include "SimpleAudioEngine.h"
 
 
 USING_NS_CC;
+using namespace CocosDenshion;
 
 Scene* HomeMenuLayer::createScene()
 {
@@ -48,6 +50,33 @@ bool HomeMenuLayer::init()
 	this->addChild(menu);
 
 	return true;
+}
+
+void HomeMenuLayer::onEnter()
+{
+	Layer::onEnter();
+}
+
+void HomeMenuLayer::onEnterTransitionDidFinish()
+{
+	Layer::onEnterTransitionDidFinish();
+	SimpleAudioEngine::getInstance()->playBackgroundMusic("bgm/safeBgm.mp3",true);
+}
+
+void HomeMenuLayer::onExit()
+{
+	Layer::onExit();
+}
+
+void HomeMenuLayer::onExitTransitionDidStart()
+{
+	Layer::onExitTransitionDidStart();
+}
+
+void HomeMenuLayer::cleanup()
+{
+	Layer::cleanup();
+	SimpleAudioEngine::getInstance()->stopBackgroundMusic("bgm/safeBgm.mp3");
 }
 
 void HomeMenuLayer::menuItemStartCallback(cocos2d::Ref* pSender)
