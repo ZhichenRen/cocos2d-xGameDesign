@@ -5,9 +5,7 @@
 class WoodWall : public Monster {
 public:
 	virtual bool init();
-	//void resetPropoties();
 	virtual void hit(int damage, float flyingDegree, bool isCriticalStrike);
-	//void cancelPreRec();
 	CREATE_FUNC(WoodWall);
 private:
 	static const int m_initHp = 35;

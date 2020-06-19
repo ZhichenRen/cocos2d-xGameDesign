@@ -147,7 +147,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 		pig->bindMonsMgr(this);
 		this->addChild(pig,1);
 		m_monsterList.push_back(pig);
-		m_shortMonsterList.push_back(pig);
+		
 	}
 
 	for (int i = 0; i < randVec[1] + 1; i++)
@@ -158,7 +158,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 		duck->bindMonsMgr(this);
 		this->addChild(duck,1);
 		m_monsterList.push_back(duck);
-		m_shortMonsterList.push_back(duck);
+		
 	}
 
 	for (int i = 0; i < randVec[2] + 1; i++)
@@ -169,7 +169,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 		slime->getMonsterWeapon()->bindMap(m_map);
 		slime->bindMonsMgr(this);
 		m_monsterList.push_back(slime);
-		m_longMonsterList.push_back(slime);
+		
 	}
 
 	for (int i = 0; i < randVec[3] + 1; i++)
@@ -180,7 +180,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 		chiefOfTribe->getMonsterWeapon()->bindMap(m_map);
 		chiefOfTribe->bindMonsMgr(this);
 		m_monsterList.push_back(chiefOfTribe);
-		m_longMonsterList.push_back(chiefOfTribe);
+		
 	}
 	for (int i = 0; i < randVec[4] + 1; i++)
 	{
@@ -190,7 +190,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 		traveller->getMonsterWeapon()->bindMap(m_map);
 		traveller->bindMonsMgr(this);
 		m_monsterList.push_back(traveller);
-		m_longMonsterList.push_back(traveller);
+		
 	}
 }
 
@@ -288,7 +288,7 @@ bool MonsterManager::resetAllMons()
 	return true;
 }
 
-bool MonsterManager::isGameOver()
+bool MonsterManager::isGameOver()const
 {
 	if (!m_fIsInited)
 		return true;
@@ -302,7 +302,7 @@ void MonsterManager::setInited()
 }
 
 
-bool MonsterManager::getInited()
+bool MonsterManager::getInited()const
 {
 	return m_fIsInited;
 }
@@ -477,12 +477,12 @@ void MonsterManager::setCurRoom(Vec2 curRoom)
 	m_curRoom = curRoom;
 }
 
-Vec2 MonsterManager::getCurRoom()
+Vec2 MonsterManager::getCurRoom()const
 {
 	return m_curRoom;
 }
 
-void MonsterManager::markRoomVisited(Vec2 room)
+void MonsterManager::setRoomVisited(Vec2 room)
 {
 	m_visitedRoom[room] = true;
 }

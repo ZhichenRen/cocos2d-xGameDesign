@@ -35,8 +35,8 @@ public:
 	//void showWords();
 	//void dieWithNothing();
 	void setMonsTaunted();
-	bool isAlive();
-	bool isTaunted();
+	bool isAlive()const;
+	bool isTaunted()const;
 	bool setTaunted(bool flag);
 	bool mySetPosition(Vec2 target);
 	void bulkUp();

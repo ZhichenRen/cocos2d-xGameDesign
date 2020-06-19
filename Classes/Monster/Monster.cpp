@@ -45,12 +45,12 @@ void Monster::hide()
 }
 
 
-bool Monster::isAlive()
+bool Monster::isAlive()const
 {
 	return m_isAlive;
 }
 
-bool Monster::isTaunted()
+bool Monster::isTaunted()const
 {
 	return m_fIsTaunted;
 }

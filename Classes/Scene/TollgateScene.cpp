@@ -194,7 +194,7 @@ void TollgateScene::switchWeapon(Ref*, TouchEventType type)
 void TollgateScene::loadMonstersInNewRoom(int giantNum = -1)
 {
 	auto roomCoord = m_monsterMgr->getCurRoom();
-	m_monsterMgr->markRoomVisited(roomCoord);
+	m_monsterMgr->setRoomVisited(roomCoord);
 	auto midPoint = GameData::getCoord()[static_cast<int>(5 * roomCoord.x + roomCoord.y)];
 	midPoint.y = 186 - midPoint.y;
 	auto LUPoint = (midPoint + ccp(-10, -10)) * 32;
