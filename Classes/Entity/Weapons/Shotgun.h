@@ -1,4 +1,4 @@
-﻿#ifndef __Shotgun_H__
+#ifndef __Shotgun_H__
 #define __Shotgun_H__
 
 #include "Entity\Weapons\LongRange.h"

@@ -1,4 +1,5 @@
-﻿#include "Entity/Weapons/Pistol.h"
+
+#include "Entity/Weapons/Pistol.h"
 
 bool Pistol::init()
 {
@@ -22,6 +23,7 @@ bool Pistol::init()
 
 void Pistol::upgrade()
 {
+	isUpgrate = true;
 	m_power_cost = 0;
 	m_bullet_damage = 5;
 	m_bullet_speed = 500;

@@ -1,4 +1,4 @@
-﻿#include "Scene/WeaponInfoScene.h"
+#include "Scene/WeaponInfoScene.h"
 
 bool WeaponInfoScene::init()
 {
@@ -27,7 +27,7 @@ Scene* WeaponInfoScene::createScene(CCRenderTexture* background)
 
 void WeaponInfoScene::loadUI()
 {
-	m_ui= cocostudio::GUIReader::getInstance()->widgetFromJsonFile("WeaponInfo_1.ExportJson");
+	m_ui = cocostudio::GUIReader::getInstance()->widgetFromJsonFile("WeaponInfo_1.ExportJson");
 	m_back_button = (Button*)Helper::seekWidgetByName(m_ui, "back_button");
 	m_back_button->addTouchEventListener(this, toucheventselector(WeaponInfoScene::back));
 	this->addChild(m_ui);

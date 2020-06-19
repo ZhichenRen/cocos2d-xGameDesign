@@ -1,4 +1,4 @@
-#include "FlowWord.h"
+#include "FlowWord/FlowWord.h"
 
 bool FlowWord::init()
 {
@@ -56,15 +56,15 @@ void FlowWord::showShopWord(const char* text)
 }
 
 
-void FlowWord::showMonsDmg(const char* text, float ySize)
+void FlowWord::showMonsDmg(const char* text, float ySize, float time)
 {
 	m_message->setString(text);
 	m_message->setPosition(getPosition() + ccp(0, 5 + ySize));
 	m_message->setColor(Color3B(220, 20, 60));
 	m_message->setVisible(true);
 	m_message->stopAllActions();
-	auto scaleUp = ScaleBy::create(0.2f, 1.2);
-	auto scaleDown = ScaleTo::create(0.2f, 1);
+	auto scaleUp = ScaleBy::create(time, 1.2);
+	auto scaleDown = ScaleTo::create(time, 1);
 
 	auto callBack = CallFunc::create
 	(
@@ -79,15 +79,15 @@ void FlowWord::showMonsDmg(const char* text, float ySize)
 	this->runAction(actions);
 }
 
-void FlowWord::showCritDmg(const char* text, float ySize)
+void FlowWord::showCritDmg(const char* text, float ySize, float time)
 {
 	m_message->setString(text);
 	m_message->setColor(Color3B(255, 0, 0));
 	m_message->setPosition(getPosition() + ccp(0, 5 + ySize));
 	m_message->setVisible(true);
 	//auto rewindToStdSize = ScaleTo::create(0.2f, 1);
-	auto scaleUp = ScaleBy::create(0.2f, 2.0);
-	auto scaleDown = ScaleTo::create(0.3f, 1);
+	auto scaleUp = ScaleBy::create(time, 2.0);
+	auto scaleDown = ScaleTo::create(time + 0.1, 1);
 
 	auto callBack = CallFunc::create
 	(

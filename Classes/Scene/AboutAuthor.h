@@ -1,4 +1,4 @@
-﻿#ifndef __AboutAuthor_H__
+#ifndef __AboutAuthor_H__
 #define __AboutAuthor_H__
 #include "cocos2d.h"
 #include "editor-support/cocostudio/CCSGUIReader.h"
