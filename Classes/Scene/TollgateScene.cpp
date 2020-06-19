@@ -1,10 +1,19 @@
+﻿#include <string>
 #include "Scene/TollgateScene.h"
 #include "Scene/PauseScene.h"
+#include "Scene/HomeScene.h"
+#include "Entity/Item/Player/Priest/Priest.h"
 #include "Entity/Weapons/Bullets/ExplosiveBullet.h"
 #include "Entity/Weapons/RPG.h"
+#include "Entity\Weapons\GoldenSword.h"
 #include "Entity/Weapons/Shotgun.h"
+#include "GameData.h"
+#include "Scene/DeathScene.h"
+#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
+using namespace CocosDenshion;
+
 
 Scene* TollgateScene::createScene()
 {
@@ -17,15 +26,18 @@ Scene* TollgateScene::createScene()
 
 void TollgateScene::loadMap()
 {
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	auto origin = Director::getInstance()->getVisibleOrigin();
 	m_map = AdventureMapLayer::create();
-	this->addChild(m_map, 0, 100);//游戏地图 tag为100
-
+	this->addChild(m_map, 0, 100);
+	m_map->getMiniMap()->setPosition(Vec2(origin.x + visibleSize.width - 300, origin.y + visibleSize.height - 400));
+	this->addChild(m_map->getMiniMap(), 0, 10101);
 }
 
 void TollgateScene::addPlayer()
 {
-	TMXObjectGroup* group = m_map->getMap()->getObjectGroup("objects");//获取对象层
-	ValueMap spawnPoint = group->getObject("hero");//根据hero对象的位置放置精灵
+	TMXObjectGroup* group = m_map->getMap()->getObjectGroup("objects");
+	ValueMap spawnPoint = group->getObject("hero");
 	float x = spawnPoint["x"].asFloat();
 	float y = spawnPoint["y"].asFloat();
 	m_player = Ranger::create();
@@ -33,12 +45,26 @@ void TollgateScene::addPlayer()
 
 	m_player->setTiledMap(m_map);
 	m_player->setCdBar(m_cdBar);
-	m_map->addChild(m_player, 2, 200);
+	m_player->setHpBar(m_hpBar);
+	m_player->setMpBar(m_mpBar);
+	m_player->setArmorBar(m_armorBar);
+	m_map->addChild(m_player, 3, 200);
 }
 
-void TollgateScene::addLongRangeWeapon()
+void TollgateScene::addWeapon()
 {
-	m_player->setLongRange(Shotgun::create());
+	std::string str = "CandyGun!";
+	m_player->setWeapon(str);
+	m_player->determineWhichWeapon();
+	str = "Fist_of_Heaven";
+	m_player->setWeapon(str);
+	m_player->determineWhichWeapon();
+	str = "GoldenSword!";
+	m_player->setWeapon(str);
+	m_player->determineWhichWeapon();
+	str = "CandyGun!";
+	/*m_player->setWeapon(str);
+	m_player->determineWhichWeapon();*/
 }
 
 void TollgateScene::loadController()
@@ -50,73 +76,288 @@ void TollgateScene::loadController()
 	this->addChild(playerController);
 	m_player->setController(playerController);
 	playerController->setPlayer(m_player);
-	playerController->setIsRanger(typeid(*m_player) == typeid(Ranger));//以后与memberSelect结合
+	playerController->setIsRanger(typeid(*m_player) == typeid(Ranger));
 	playerController->setStandAnimate(animate);
 
+}
+
+void TollgateScene::loadEditBox()
+{
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	auto origin = Director::getInstance()->getVisibleOrigin();
+	m_editBox = EditBox::create(Size(400, 50), "editBox.png");
+	m_editBox->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height - 600));
+	m_editBox->setFontColor(Color3B::WHITE);
+	m_editBox->setVisible(false);
+	m_editBox->setEnabled(false);
+	this->addChild(m_editBox);
+
+	m_flowWord = FlowWord::create();
+	m_flowWord->setPosition(Vec2(250, 200));
+	this->addChild(m_flowWord);
+
+	this->schedule(schedule_selector(TollgateScene::compare), 0.1f);
 }
 
 bool TollgateScene::init()
 {
 	if (!Layer::init())
 		return false;
-
-	this->scheduleUpdate();
-
 	loadMap();
-	loadUI();
 	addPlayer();
-	//addLongRangeWeapon();
-	loadController();
 	loadMonsters();
-	loadListeners();
-
+	loadController();
+	loadEditBox();
 	return true;
 }
 
 void TollgateScene::onEnter()
 {
 	Layer::onEnter();
+	this->scheduleUpdate();
 	loadUI();
-	addLongRangeWeapon();
-	//loadListeners();
+	addWeapon();
+	loadListeners();
+}
+
+void TollgateScene::onEnterTransitionDidFinish()
+{
+	Layer::onEnterTransitionDidFinish();
+	SimpleAudioEngine::getInstance()->playBackgroundMusic("bgm/advBgm.mp3", true);
+}
+
+void TollgateScene::onExit()
+{
+	Layer::onExit();
+	Director::getInstance()->getEventDispatcher()->removeEventListener(m_keyboard_listener);
+	this->removeChildByTag(0);
+}
+
+void TollgateScene::onExitTransitionDidStart()
+{
+	Layer::onExitTransitionDidStart();
+}
+
+void TollgateScene::cleanup()
+{
+	Layer::cleanup();
+	SimpleAudioEngine::getInstance()->stopBackgroundMusic("bgm/advBgm.mp3");
 }
 
 void TollgateScene::loadUI()
 {
-	auto UI = cocostudio::GUIReader::getInstance()->widgetFromJsonFile("INGAME_1.ExportJson");
+	UI = cocostudio::GUIReader::getInstance()->widgetFromJsonFile("INGAME_1.ExportJson");
 	this->addChild(UI, 0, 0);
 	m_cdBar = (LoadingBar*)Helper::seekWidgetByName(UI, "ability_loading_bar");
+	m_hpBar = (LoadingBar*)Helper::seekWidgetByName(UI, "HP_bar");
+	m_mpBar = (LoadingBar*)Helper::seekWidgetByName(UI, "magic_bar");
+	m_armorBar = (LoadingBar*)Helper::seekWidgetByName(UI, "armor_bar");
+	m_hp = (Text*)Helper::seekWidgetByName(UI, "HP_label");
+	m_armor = (Text*)Helper::seekWidgetByName(UI, "armor_label");
+	m_mp = (Text*)Helper::seekWidgetByName(UI, "magic_label");
+	m_coin = (Text*)Helper::seekWidgetByName(UI, "coin_num");
+	m_mp_cost = (Text*)Helper::seekWidgetByName(UI, "weapon_mp_label");
+	m_weapon_image = (ImageView*)Helper::seekWidgetByName(UI, "weapon_image");
+	m_weapon_button = (Button*)Helper::seekWidgetByName(UI, "weapon_button");
+	m_weapon_button->addTouchEventListener(this, toucheventselector(TollgateScene::switchWeapon));
 
-	/*auto pause_button = (Button*)Helper::seekWidgetByName(UI, "pause_button");
-	pause_button->addTouchEventListener(this, toucheventselector(HelloWorld::pauseEvent));*/
+	auto pause_button = (Button*)Helper::seekWidgetByName(UI, "pause_button");
+	pause_button->addTouchEventListener(this, toucheventselector(TollgateScene::pauseEvent));
+}
+
+void TollgateScene::pauseEvent(Ref*, TouchEventType type)
+{
+	switch (type)
+	{
+	case TOUCH_EVENT_ENDED:
+		Size visible_size = Director::getInstance()->getVisibleSize();
+		CCRenderTexture* background = CCRenderTexture::create(visible_size.width, visible_size.height);
+		background->begin();
+		this->visit();
+		background->end();
+		Director::getInstance()->pushScene(DeathScene::createScene(background, m_player));
+		break;
+	}
+}
+
+void TollgateScene::switchWeapon(Ref*, TouchEventType type)
+{
+	switch (type)
+	{
+	case TOUCH_EVENT_ENDED:
+		m_player->changeWeapon();
+		break;
+	}
+
+}
+
+void TollgateScene::loadMonstersInNewRoom(int giantNum = -1)
+{
+	auto roomCoord = m_monsterMgr->getCurRoom();
+	m_monsterMgr->markRoomVisited(roomCoord);
+	auto midPoint = GameData::getCoord()[static_cast<int>(5 * roomCoord.x + roomCoord.y)];
+	midPoint.y = 186 - midPoint.y;
+	auto LUPoint = (midPoint + ccp(-10, -10)) * 32;
+	m_monsterMgr->setPosition(LUPoint);
+
+	if (giantNum != -1)
+		m_monsterMgr->setBulkMonsterNum(giantNum);
+	if (!m_monsterMgr->getInited())
+	{
+		m_monsterMgr->createMonstersWithGiantNum();
+		m_monsterMgr->createMonsterPos();
+		m_monsterMgr->createWoodWalls();
+		m_monsterMgr->setInited();
+		return;
+	}
+	m_monsterMgr->reviveAllMonsters();
 }
 
 
 void TollgateScene::loadMonsters()
 {
-	monsterMgr = MonsterManager::create();
-	monsterMgr->bindMap(m_map);
-	monsterMgr->bindPlayer((Sprite*)(this->m_player));
-	auto playerPos = this->convertToNodeSpace(m_player->getPosition());
+	auto playerPos = m_player->getPosition();
+	auto roomCoord = m_map->roomCoordFromPosition(playerPos);
+	//绑定房间
+	m_monsterMgr = MonsterManager::create();
+	//设置位置
+	auto midPoint = GameData::getCoord()[static_cast<int>(5 * roomCoord.x + roomCoord.y)];
+	midPoint.y = 186 - midPoint.y;
+	auto LUPoint = (midPoint + ccp(-10, -10)) * 32;
+	m_monsterMgr->setPosition(LUPoint);
 
-	playerPos.x -=   10 * 32;
-	playerPos.y -=  10 * 32;
-
-	monsterMgr->setPosition(playerPos);
-	m_map->addChild(monsterMgr, 2);
+	//初始化工作
+	m_monsterMgr->bindMap(m_map);
+	m_monsterMgr->bindPlayer(static_cast<Entity*>(this->m_player));
+	m_map->addChild(m_monsterMgr, 1);
 }
 
 void TollgateScene::loadListeners()
 {
-	auto pause_listener = EventListenerKeyboard::create();
-	pause_listener->onKeyPressed = [](EventKeyboard::KeyCode key, Event* event)
+	m_keyboard_listener = EventListenerKeyboard::create();
+	m_keyboard_listener->onKeyPressed = [](EventKeyboard::KeyCode key, Event* event)
 	{
 		return true;
 	};
-	pause_listener->onKeyReleased = [=](EventKeyboard::KeyCode key, Event* event)
+	m_keyboard_listener->onKeyReleased = [=](EventKeyboard::KeyCode key, Event* event)
 	{
 		switch (key)
 		{
+		case EventKeyboard::KeyCode::KEY_E:
+			GameData::setCoinNum(GameData::getCoinNum() + 1);
+			if (ccpDistance(m_player->getPosition(), m_map->getChest()->getPosition()) < 20.0f && m_map->getChest()->isVisible())
+			{
+				m_map->getChest()->setVisible(false);
+				m_map->getChest()->setWeapon(rand() % 4 + 1);
+				std::string str = m_map->getChest()->getWeapon()->getWeaponName();
+				m_player->setWeapon(str);
+				m_player->determineWhichWeapon();
+			}
+			else if (ccpDistance(m_player->getPosition(), m_map->getStatue()->getPosition()) < 20.0f)
+			{
+				if (m_map->getStatue()->getInteractionNum() == 1)//第一次互动
+				{
+					m_map->getStatue()->setInteractionNum(2);
+					m_map->getStatue()->showFlowWordFirstMeet();
+				}
+				else
+				{
+					if (GameData::getCoinNum() >= m_map->getStatue()->getPrice())
+					{
+						GameData::setCoinNum(GameData::getCoinNum() - 15);
+						m_map->getStatue()->showFlowWordEnoughMoney();
+						//player获得buff加成
+						//player->getBuff(rand()%3)
+					}
+					else
+					{
+						m_map->getStatue()->showFlowWordLackMoney();
+					}
+					m_map->getStatue()->setInteractionNum(1);
+				}
+			}
+			else if (ccpDistance(m_player->getPosition(), m_map->getShop()->getPosition()) < 20.0f)
+			{
+				if (m_map->getShop()->getInteractionNum() == 1)//第一次互动
+				{
+					m_map->getShop()->setInteractionNum(2);
+					m_map->getShop()->showFlowWordFirstMeet();
+				}
+				else
+				{
+					if (GameData::getCoinNum() >= m_map->getShop()->getPrice())
+					{
+						GameData::setCoinNum(GameData::getCoinNum() - 20);
+						m_map->getShop()->setWeapon(rand() % 4 + 1);
+						std::string str = m_map->getShop()->getWeapon()->getWeaponName();
+						m_player->setWeapon(str);
+						m_player->determineWhichWeapon();
+						m_map->getShop()->showFlowWordEnoughMoney();
+					}
+					else
+					{
+						m_map->getShop()->showFlowWordLackMoney();
+					}
+					m_map->getShop()->setInteractionNum(1);
+				}
+			}
+			if (ccpDistance(m_player->getPosition(), m_map->getPortal()->getPosition()) < 20.0f)
+			{
+				this->unscheduleUpdate();
+				if (GameData::getLevel() != 2)//传送到下一关
+				{
+					GameData::setLastRoomCoord(Vec2(2, 2));
+					GameData::setLevel(GameData::getLevel() + 1);
+					auto scene = TollgateScene::createScene();
+					Director::getInstance()->replaceScene(scene);
+				}
+				else//结束冒险
+				{
+					GameData::setLastRoomCoord(Vec2(2, 2));
+					auto scene = HomeMenuLayer::createScene();
+					Director::getInstance()->replaceScene(scene);
+				}
+			}
+			for (auto redMedicine : m_map->getRedMedicineList())
+			{
+				if (redMedicine->isUsed())
+				{
+					continue;
+				}
+				if (ccpDistance(m_player->getPosition(), redMedicine->getPosition()) < 20.0f && redMedicine->isVisible())
+				{
+					m_player->setiNowHp(m_player->getiNowHp() + redMedicine->getRedValue());
+					redMedicine->disappear();
+				}
+			}
+			for (auto blueMedicine : m_map->getBlueMedicineList())
+			{
+				if (blueMedicine->isUsed())
+				{
+					continue;
+				}
+				if (ccpDistance(m_player->getPosition(), blueMedicine->getPosition()) < 20.0f && blueMedicine->isVisible())
+				{
+					m_player->setiNowMp(m_player->getiNowMp() + blueMedicine->getBlueMedicineValue());
+					blueMedicine->disappear();
+				}
+			}
+			break;
+		case EventKeyboard::KeyCode::KEY_ENTER:
+			if (!m_editBox->isVisible())
+			{
+				m_editBox->setVisible(true);
+				m_editBox->setEnabled(true);
+				this->schedule(schedule_selector(TollgateScene::compare), 0.1f);
+			}
+			else
+			{
+				m_editBox->setText("");
+				m_editBox->setVisible(false);
+				m_editBox->setEnabled(false);
+				this->unschedule(schedule_selector(TollgateScene::compare));
+			}
+			break;
 		case EventKeyboard::KeyCode::KEY_ESCAPE:
 			Size visible_size = Director::getInstance()->getVisibleSize();
 			CCRenderTexture* background = CCRenderTexture::create(visible_size.width, visible_size.height);
@@ -127,66 +368,97 @@ void TollgateScene::loadListeners()
 			break;
 		}
 	};
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(pause_listener, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(m_keyboard_listener, this);
 }
 
-const int coord[25][2] = {
-		{11,11},{52,11},{93,11},{134,11},{175,11},
-		{11,52},{52,52},{93,52},{134,52},{175,52},
-		{11,93},{52,93},{93,93},{134,93},{175,93},
-		{11,134},{52,134},{93,134},{134,134},{175,134},
-		{11,175},{52,175},{93,175},{134,175},{175,175} };
 
-Vec2 lastRoomCoord(2, 2);
+
+
 
 void TollgateScene::updateMiniMap(TMXTiledMap* miniMap)
 {
+
 	auto miniMapLayer = miniMap->getLayer("miniMapLayer");
 	auto playerPos = m_player->getPosition();
 	auto roomCoord = m_map->roomCoordFromPosition(playerPos);
-
-	miniMap->setPosition(playerPos + Vec2(200, 50));
 
 	if (roomCoord == Vec2(-1, -1))
 	{
 		return;
 	}
 
-	miniMapLayer->setTileGID(2, 2 * lastRoomCoord);//原房间浅灰
-	miniMapLayer->setTileGID(1, 2 * Vec2(roomCoord.y, roomCoord.x));//现房间深灰
+	miniMapLayer->setTileGID(2, 2 * GameData::getLastRoomCoord());//浅灰
+	miniMapLayer->setTileGID(1, 2 * Vec2(roomCoord.y, roomCoord.x));//深灰
 
-	if (lastRoomCoord != Vec2(roomCoord.y, roomCoord.x))
+	if (GameData::getLastRoomCoord() != Vec2(roomCoord.y, roomCoord.x))
 	{
-		if (lastRoomCoord.x == roomCoord.y)//上下相连
+		if (GameData::getLastRoomCoord().x == roomCoord.y)//上下相连
 		{
-			miniMapLayer->setTileGID(4, lastRoomCoord + Vec2(roomCoord.y, roomCoord.x));
+			miniMapLayer->setTileGID(4, GameData::getLastRoomCoord() + Vec2(roomCoord.y, roomCoord.x));
 		}
 		else//左右相连
 		{
-			miniMapLayer->setTileGID(3, lastRoomCoord + Vec2(roomCoord.y, roomCoord.x));
+			miniMapLayer->setTileGID(3, GameData::getLastRoomCoord() + Vec2(roomCoord.y, roomCoord.x));
 		}
 	}
-	lastRoomCoord = Vec2(roomCoord.y, roomCoord.x);
+	GameData::setLastRoomCoord(Vec2(roomCoord.y, roomCoord.x));
+}
+
+void TollgateScene::compare(float dt)
+{
+	if (strcmp(m_editBox->getText(), "greedy") == 0)
+	{
+		GameData::setCoinNum(GameData::getCoinNum() + 100);
+		CCDictionary* pDictionary = (CCDictionary*)CCDictionary::createWithContentsOfFile("ChineseCharacters.plist");
+		auto str = pDictionary->valueForKey("GreedyCheat")->getCString();
+		m_flowWord->showShopWord(str);
+		this->unschedule(schedule_selector(TollgateScene::compare));
+	}
+	if (strcmp(m_editBox->getText(), "infinitypower") == 0)
+	{
+		m_player->setiNowMp(m_player->getiTotalMp());
+	}
 }
 
 void TollgateScene::update(float dt)
 {
+	(m_cdBar)->setPercent(m_player->getiNowCD() /
+		static_cast<float>(m_player->getiTotalCD()) * 100);
+	(m_armorBar)->setPercent(m_player->getiNowArmor() /
+		static_cast<float>(m_player->getiTotalArmor()) * 100);
+	(m_hpBar)->setPercent(m_player->getiNowHp() /
+		static_cast<float>(m_player->getiTotalHp()) * 100);
+	(m_mpBar)->setPercent(m_player->getiNowMp() /
+		static_cast<float>(m_player->getiTotalMp()) * 100);
+	m_weapon_image->loadTexture(m_player->getWeaponFileName());
+	m_mp_cost->setText(std::to_string(m_player->getWeaponPowerCost()));
+
+	m_hp->setText(std::to_string(m_player->getiNowHp()) + "/" + std::to_string(m_player->getiTotalHp()));
+	m_armor->setText(std::to_string(m_player->getiNowArmor()) + "/" + std::to_string(m_player->getiTotalArmor()));
+	m_mp->setText(std::to_string(m_player->getiNowMp()) + "/" + std::to_string(m_player->getiTotalMp()));
+	m_coin->setText(std::to_string(GameData::getCoinNum()));
 	auto playerPos = m_player->getPosition();
 	auto barrier = m_map->getCollidable();
 	auto map = m_map->getMap();
 	auto miniMap = m_map->getMiniMap();
 	auto wall = m_map->getWall();
 	auto roadPairs = m_map->getRoadPairs();
-
 	updateMiniMap(miniMap);
 
-	auto roomCoord = m_map->roomCoordFromPosition(playerPos);//房间坐标
-	auto roomNum = roomCoord.x * 5 + roomCoord.y;//房间序号
+	auto roomCoord = m_map->roomCoordFromPosition(playerPos);
+	auto roomNum = roomCoord.x * 5 + roomCoord.y;
 
-	Vec2 dir[4] = { {0,1},{0,-1},{1,0},{-1,0} };//四个方向
-
-	if (true)//进入有怪物的房间，开始战斗
+	if (m_map->isMonsterRoom(roomCoord)	//首先它得是个怪物房间
+		&& !m_monsterMgr->isRoomVisited(roomCoord))//其次它没有被到访过
 	{
+		m_monsterMgr->setCurRoom(roomCoord);
+		loadMonstersInNewRoom(2);
+	}
+	Vec2 dir[4] = { {0,1},{0,-1},{1,0},{-1,0} };
+
+	if (true)
+	{
+		miniMap->setVisible(false);
 		std::vector<int>dirVec;
 		for (int i = 0; i < 4; i++)
 		{
@@ -203,56 +475,81 @@ void TollgateScene::update(float dt)
 		{
 			AdventureMapLayer::switchGate(wall, barrier, roomNum, elem, true);
 		}
-		auto t = time(nullptr);
-		if (t % 2)//结束战斗
+		if (m_monsterMgr->isGameOver())
 		{
 			for (auto elem : dirVec)
 			{
 				AdventureMapLayer::switchGate(wall, barrier, roomNum, elem, false);
 			}
+			miniMap->setVisible(true);
 		}
 	}
 
-	//��ײ���
+	//碰撞检测
 	auto player_bullet = m_player->getBullet();
-	auto monsters_bullet = monsterMgr->getMonsterBullets();
-	auto monsters = monsterMgr->getMonster();
-
+	auto monsters_bullet = m_monsterMgr->getMonsterBullets();
+	auto monsters = m_monsterMgr->getMonster();
+	auto woodWalls = m_monsterMgr->getWoodWall();
+	for (auto woodWall : woodWalls)
+	{
+		monsters.push_back(woodWall);
+	}
 	//player bullet
 	for (auto bullet : player_bullet)
 	{
-		//cocos2d::Point bullet_pos = convertToWorldSpace(bullet->getPosition());
-		//if (m_map->isBarrier(bullet_pos))
-		//{
-		//	if (typeid(*bullet) == typeid(ExplosiveBullet))
-		//	{
-		//		auto explosive_bullet = dynamic_cast<ExplosiveBullet*>(bullet);
-		//		explosive_bullet->explode();
-		//		for (auto unlucky_monster : monsters)
-		//		{
-		//			if (unlucky_monster->isAlive())
-		//			{
-		//				cocos2d::Point explosive_origin_point = convertToWorldSpace(explosive_bullet->getPosition());
-		//				if (unlucky_monster->getBoundingBox().intersectsCircle(explosive_origin_point, explosive_bullet->getExplosionRange()))
-		//				{
-		//					unlucky_monster->hit(explosive_bullet->getExplosionDamage());
-		//				}
-		//			}
-		//		}
-		//	}
-		//	bullet->setIsUsed(true);
-		//}
+		if (bullet->isUsed())
+		{
+			continue;
+		}
+		cocos2d::Point bullet_pos = bullet->getPosition();
+		if (m_map->isBarrier(bullet_pos))
+		{
+			if (typeid(*bullet) == typeid(ExplosiveBullet))
+			{
+				auto explosive_bullet = dynamic_cast<ExplosiveBullet*>(bullet);
+				if (!explosive_bullet->isUsed() && !explosive_bullet->isExplode())
+				{
+					explosive_bullet->explode();
+				}
+				for (auto unlucky_monster : monsters)
+				{
+					if (unlucky_monster->isAlive())
+					{
+						cocos2d::Point explosive_origin_point = m_map->convertToWorldSpace(explosive_bullet->getPosition());
+						if (unlucky_monster->getBoundingBox().intersectsCircle(explosive_origin_point, explosive_bullet->getExplosionRange()))
+						{
+							unlucky_monster->hit(explosive_bullet->getExplosionDamage(), bullet->getDegree(), 0);
+						}
+					}
+				}
+
+			}
+			else bullet->setIsUsed(true);
+		}
 		for (auto monster : monsters)
 		{
 			if (monster->isAlive())
 			{
 				if (bullet->isCollideWith(monster))
 				{
-					monster->hit(bullet->getDamage());
+
+					int damage = bullet->getDamage();
+					if (CCRANDOM_0_1() < bullet->getCritRate())
+					{
+						damage *= 2;
+						monster->hit(damage, bullet->getDegree(), 1);
+					}
+					else
+						monster->hit(damage, bullet->getDegree(), 0);
+
+
 					if (typeid(*bullet) == typeid(ExplosiveBullet))
 					{
 						auto explosive_bullet = dynamic_cast<ExplosiveBullet*>(bullet);
-						explosive_bullet->explode();
+						if (!explosive_bullet->isUsed() && !explosive_bullet->isExplode())
+						{
+							explosive_bullet->explode();
+						}
 						for (auto unlucky_monster : monsters)
 						{
 							if (unlucky_monster->isAlive())
@@ -260,24 +557,120 @@ void TollgateScene::update(float dt)
 								cocos2d::Point explosive_origin_point = m_map->convertToWorldSpace(explosive_bullet->getPosition());
 								if (unlucky_monster->getBoundingBox().intersectsCircle(explosive_origin_point, explosive_bullet->getExplosionRange()))
 								{
-									unlucky_monster->hit(explosive_bullet->getExplosionDamage());
+									unlucky_monster->hit(explosive_bullet->getExplosionDamage(), explosive_bullet->getDegree(), 1);
 								}
 							}
 						}
 					}
-					bullet->setIsUsed(true);
+					else bullet->setIsUsed(true);
 				}
 			}
-		}			
+		}
+	}
+
+	if (m_player->isAttackingWithCloseWeapon())
+	{
+		auto weapon = m_player->getCloseWeapon();
+		if (!weapon->isHit())
+		{
+			for (auto monster : monsters)
+			{
+				if (weapon->isCollideWith(monster))
+				{
+					int damage = weapon->getDamage();
+					if (CCRANDOM_0_1() < weapon->getCritRate())
+					{
+						damage *= 2;
+						monster->hit(damage, 0.0f, 1);
+					}
+					else
+						monster->hit(damage, 0.0f, 0);
+				}
+			}
+			weapon->setIsHit(true);
+		}
 	}
 
 	//monster bullet
 	for (auto bullet : monsters_bullet)
 	{
+		if (bullet->isUsed())
+		{
+			continue;
+		}
+		cocos2d::Point bullet_pos = bullet->getPosition();
+		if (m_map->isBarrier(bullet_pos))
+		{
+			bullet->setIsUsed(true);
+		}
 		if (bullet->isCollideWith(m_player))
 		{
 			m_player->hit(bullet->getDamage());
 			bullet->setIsUsed(true);
 		}
+		for (auto woodwall : woodWalls)
+		{
+			if (bullet->isCollideWith(woodwall))
+			{
+				woodwall->hit(bullet->getDamage());
+			}
+		}
 	}
+
+	for (auto monster : monsters)
+	{
+		Weapon* weapon = monster->getMonsterWeapon();
+		if (weapon)
+		{
+			if (weapon->isCloseWeapon())
+			{
+				auto close_weapon = dynamic_cast<CloseWeapon*>(weapon);
+				if (!close_weapon->isHit())
+				{
+					if (close_weapon->isCollideWith(m_player))
+					{
+						m_player->hit(close_weapon->getDamage());
+					}
+				}
+				close_weapon->setIsHit(true);
+			}
+		}
+	}
+
+	//小金币和小蓝的自动拾取
+	for (auto coin : m_map->getCoinList())
+	{
+		if (coin->isUsed())
+		{
+			continue;
+		}
+		if (ccpDistance(coin->getPosition(), m_player->getPosition()) < 100.0f && coin->isVisible())
+		{
+			auto moveBy = MoveBy::create(1.0f / 60.0f, (m_player->getPosition() - coin->getPosition()) / 5.0f);
+			coin->runAction(moveBy);
+			if (ccpDistance(coin->getPosition(), m_player->getPosition()) < 20.0f)
+			{
+				coin->disappear();
+				GameData::setCoinNum(GameData::getCoinNum() + coin->getPrice());
+			}
+		}
+	}
+	for (auto blue : m_map->getBlueList())
+	{
+		if (blue->isUsed())
+		{
+			continue;
+		}
+		if (ccpDistance(blue->getPosition(), m_player->getPosition()) < 100.0f && blue->isVisible())
+		{
+			auto moveBy = MoveBy::create(1.0f / 60.0f, (m_player->getPosition() - blue->getPosition()) / 5.0f);
+			blue->runAction(moveBy);
+			if (ccpDistance(blue->getPosition(), m_player->getPosition()) < 20.0f)
+			{
+				m_player->setiNowMp(m_player->getiNowMp() + blue->getBlueValue());
+				blue->disappear();
+			}
+		}
+	}
+
 }

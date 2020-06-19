@@ -28,18 +28,17 @@ bool AdventureMapLayer::init()
 	}
 
 	createRandomMap();
-	this->addChild(m_tileMap, 0, 100);//游戏地图 tag为100
 
 	m_miniMap = TMXTiledMap::create("map/miniMap.tmx");
-	this->addChild(m_miniMap, 0, 300);
+	//this->addChild(m_miniMap, 0, 300);
 
+	this->scheduleUpdate();
 	//loadMonsters();
 	return true;
 }
 
-
 //像素坐标转换为瓦片坐标
-cocos2d::Vec2 AdventureMapLayer::tileCoordFromPosition(cocos2d::Vec2 pos)
+cocos2d::Vec2 AdventureMapLayer::tileCoordFromPosition(Vec2 pos)
 {
 	int x = pos.x / m_tileMap->getTileSize().width;
 	int y = ((m_tileMap->getMapSize().height * m_tileMap->getTileSize().height) - pos.y) / m_tileMap->getTileSize().height;
@@ -48,7 +47,7 @@ cocos2d::Vec2 AdventureMapLayer::tileCoordFromPosition(cocos2d::Vec2 pos)
 }
 
 
-cocos2d::Point AdventureMapLayer::convertToMapSpace(const cocos2d::Point& point)
+cocos2d::Point AdventureMapLayer::convertToMapSpace(const Point& point)
 {
 	return convertToNodeSpace(point);
 }
@@ -58,7 +57,7 @@ std::map<Vec2, bool> AdventureMapLayer::getBarrierMap()
 	return this->m_barrierMap;
 }
 
-bool AdventureMapLayer::isBarrier(cocos2d::Vec2 position)
+bool AdventureMapLayer::isBarrier(Vec2 position)
 {
 	Vec2 tileCoord = this->tileCoordFromPosition(position);//像素坐标转换为瓦片坐标
 
@@ -71,4 +70,64 @@ bool AdventureMapLayer::isBarrier(cocos2d::Vec2 position)
 		return valueMap["Collidable"].asBool();
 	}
 	return false;
+}
+
+bool AdventureMapLayer::isMonsterRoom(Vec2 roomCoord)
+{
+	return m_rooms[roomCoord] == ENEMY;
+}
+
+void AdventureMapLayer::update(float dt)
+{
+	for (auto it = m_blueList.begin(); it != m_blueList.end();)
+	{
+		if ((*it)->isUsed())
+		{
+			(*it)->removeFromParent();
+			it = m_blueList.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+
+	for (auto it = m_redList.begin(); it != m_redList.end();)
+	{
+		if ((*it)->isUsed())
+		{
+			(*it)->removeFromParent();
+			it = m_redList.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+
+	for (auto it = m_blueMedicineList.begin(); it != m_blueMedicineList.end();)
+	{
+		if ((*it)->isUsed())
+		{
+			(*it)->removeFromParent();
+			it = m_blueMedicineList.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+
+	for (auto it = m_coinList.begin(); it != m_coinList.end();)
+	{
+		if ((*it)->isUsed())
+		{
+			(*it)->removeFromParent();
+			it = m_coinList.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
 }

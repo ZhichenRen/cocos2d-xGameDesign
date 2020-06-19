@@ -3,7 +3,7 @@
 #include "Entity/Item/Player/Player.h"
 #include "cocos2d.h"
 using namespace cocos2d;
-class Ranger:public Player
+class Ranger :public Player
 {
 public:
 	Ranger();
@@ -13,9 +13,10 @@ public:
 public:
 	virtual Animate* walk()override;
 	virtual void skill()override;
+	virtual void skillDuration() override{ return; }
 	virtual void skillEnd()override;
 	virtual void die()override;
 	virtual Animate* stand()override;
-	virtual Point& getSkillDirection()override;
+	virtual Point getSkillDirection()override;
 protected:
 };

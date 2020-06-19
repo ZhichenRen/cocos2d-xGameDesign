@@ -1,86 +1,218 @@
-#include "SafeMapScene.h"
-#include "AdventureMapScene.h"
+ï»¿#include "Scene/SafeMapScene.h"
+#include "Scene/AdventureMapScene.h"
 #include "Scene/TollgateScene.h"
+#include "SimpleAudioEngine.h"
+#include "extensions\cocos-ext.h"
+#pragma execution_character_set("utf-8")
 
+USING_NS_CC_EXT;
 USING_NS_CC;
+using namespace CocosDenshion;
 
 cocos2d::Scene* SafeMapLayer::createScene()
 {
-	auto scene = Scene::create();
+    auto scene = Scene::create();
 
-	auto layer = SafeMapLayer::create();
+    auto layer = SafeMapLayer::create();
 
-	scene->addChild(layer);
+    scene->addChild(layer);
 
-	return scene;
+    return scene;
 }
 
 bool SafeMapLayer::init()
 {
-	if (!Layer::init())
-	{
-		return false;
-	}
+    if (!Layer::init())
+    {
+        return false;
+    }
 
-	this->scheduleUpdate();
+    m_tileMap = TMXTiledMap::create("map/SafeMap.tmx");//åˆ›å»ºåœ°å›¾
+    this->addChild(m_tileMap);
 
-	m_tileMap = TMXTiledMap::create("map/SafeMap.tmx");//´´½¨µØÍ¼
-	this->addChild(m_tileMap);
+    m_collidable = m_tileMap->getLayer("barrier");//èŽ·å–åˆ¤æ–­ç¢°æ’žçš„éšœç¢å±‚
 
-    m_collidable = m_tileMap->getLayer("barrier");//»ñÈ¡ÅÐ¶ÏÅö×²µÄÕÏ°­²ã
+    TMXObjectGroup* group = m_tileMap->getObjectGroup("objects");//èŽ·å–å¯¹è±¡å±‚
+    ValueMap spawnPointWeaponInfo = group->getObject("weaponInfo");
+    ValueMap spawnPointMonsterInfo = group->getObject("monsterInfo");
 
-	TMXObjectGroup* group = m_tileMap->getObjectGroup("objects");//»ñÈ¡¶ÔÏó²ã
-	ValueMap spawnPoint = group->getObject("hero");//¸ù¾Ýhero¶ÔÏóµÄÎ»ÖÃ·ÅÖÃ¾«Áé
+    float x = spawnPointWeaponInfo["x"].asFloat();
+    float y = spawnPointWeaponInfo["y"].asFloat();
 
-	float x = spawnPoint["x"].asFloat();
-	float y = spawnPoint["y"].asFloat();
+    m_weaponInfo = Sprite::create("weaponInfo.png");
+    m_weaponInfo->setPosition(Vec2(x, y));
+    m_tileMap->addChild(m_weaponInfo);
 
-	m_player = Sprite::create("map/hero.png");
-	m_player->setPosition(Vec2(x, y));
-	this->addChild(m_player);//ÓÎÏ·ÈËÎï
+    x = spawnPointMonsterInfo["x"].asFloat();
+    y = spawnPointMonsterInfo["y"].asFloat();
 
-	return true;
+    m_monsterInfo = Sprite::create("monsterInfo.png");
+    m_monsterInfo->setPosition(Vec2(x, y));
+    m_tileMap->addChild(m_monsterInfo);
+
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    auto origin = Director::getInstance()->getVisibleOrigin();
+
+    MenuItemImage* settingItem = MenuItemImage::create("menu/SettingNormal.png", "menu/SettingSelected.png", CC_CALLBACK_1(SafeMapLayer::menuItemSettingCallback, this));
+    settingItem->setPosition(Vec2(origin.x + visibleSize.width - 100, origin.y + visibleSize.height - 50));
+
+    Menu* menu1 = Menu::create(settingItem, nullptr);
+
+    menu1->setPosition(Vec2::ZERO);
+    this->addChild(menu1, 0, 10085);//è®¾ç½®èœå•
+
+    MenuItemFont* text = MenuItemFont::create("é€‰æ‹©ä½ çš„è‹±é›„");
+    text->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height - 200));
+
+    MenuItemImage* rangerItem = MenuItemImage::create("ranger_image.png", "ranger_image.png", CC_CALLBACK_1(SafeMapLayer::menuItemRangerCallback, this));
+    rangerItem->setPosition(Vec2(origin.x + visibleSize.width / 2 - 200, origin.y + visibleSize.height / 2 - 200));
+
+    MenuItemImage* mageItem = MenuItemImage::create("mage_image.png", "mage_image.png", CC_CALLBACK_1(SafeMapLayer::menuItemMageCallback, this));
+    mageItem->setPosition(Vec2(origin.x + visibleSize.width / 2 + 200, origin.y + visibleSize.height / 2 - 200));
+
+    Menu* menu2 = Menu::create(text, rangerItem, mageItem, nullptr);
+
+    menu2->setPosition(Vec2::ZERO);
+    this->addChild(menu2, 0, 10086);//é€‰äººèœå•
+
+    return true;
 }
 
 void SafeMapLayer::onEnter()
 {
-	Layer::onEnter();
+    Layer::onEnter();
 
-    auto listener = EventListenerKeyboard::create();//´´½¨¼àÌýÊÂ¼þ
+    m_listener = EventListenerKeyboard::create();//åˆ›å»ºç›‘å¬äº‹ä»¶
 
-    listener->onKeyPressed = [=](EventKeyboard::KeyCode keycode, Event* event)
+    m_listener->onKeyPressed = [=](EventKeyboard::KeyCode keycode, Event* event)
     {
         m_keyMap[keycode] = true;
+        if (keycode == EventKeyboard::KeyCode::KEY_E)
+        {
+            if (ccpDistance(m_player->getPosition(), m_weaponInfo->getPosition()) < 50.0f)//æ­¦å™¨å›¾é‰´
+            {
+                m_keyMap[EventKeyboard::KeyCode::KEY_W] = false;
+                m_keyMap[EventKeyboard::KeyCode::KEY_A] = false;
+                m_keyMap[EventKeyboard::KeyCode::KEY_S] = false;
+                m_keyMap[EventKeyboard::KeyCode::KEY_D] = false;
+                Size visible_size = Director::getInstance()->getVisibleSize();
+                CCRenderTexture* background = CCRenderTexture::create(visible_size.width, visible_size.height);
+                background->begin();
+                this->visit();
+                background->end();
+                Director::getInstance()->pushScene(WeaponInfoScene::createScene(background));
+            }
+            else if (ccpDistance(m_player->getPosition(), m_monsterInfo->getPosition()) < 50.0f)//æ€ªç‰©å›¾é‰´
+            {
+                m_keyMap[EventKeyboard::KeyCode::KEY_W] = false;
+                m_keyMap[EventKeyboard::KeyCode::KEY_A] = false;
+                m_keyMap[EventKeyboard::KeyCode::KEY_S] = false;
+                m_keyMap[EventKeyboard::KeyCode::KEY_D] = false;
+                Size visible_size = Director::getInstance()->getVisibleSize();
+                CCRenderTexture* background = CCRenderTexture::create(visible_size.width, visible_size.height);
+                background->begin();
+                this->visit();
+                background->end();
+                Director::getInstance()->pushScene(MonsterInfoScene::createScene(background));
+            }
+        }
     };
 
-    listener->onKeyReleased = [=](EventKeyboard::KeyCode keycode, Event* event)
+    m_listener->onKeyReleased = [=](EventKeyboard::KeyCode keycode, Event* event)
     {
         m_keyMap[keycode] = false;
     };
 
     EventDispatcher* eventDispatcher = Director::getInstance()->getEventDispatcher();
-    eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+    eventDispatcher->addEventListenerWithSceneGraphPriority(m_listener, this);
 }
 
 void SafeMapLayer::onEnterTransitionDidFinish()
 {
-	Layer::onEnterTransitionDidFinish();
+    Layer::onEnterTransitionDidFinish();
+    SimpleAudioEngine::getInstance()->playBackgroundMusic("bgm/safeBgm.mp3",true);
 }
 
 void SafeMapLayer::onExit()
 {
-	Layer::onExit();
-    Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
+    Layer::onExit();
+    this->unschedule(schedule_selector(SafeMapLayer::update));
+    Director::getInstance()->getEventDispatcher()->removeEventListener(m_listener);
 }
 
 void SafeMapLayer::onExitTransitionDidStart()
 {
-	Layer::onExitTransitionDidStart();
+    Layer::onExitTransitionDidStart();
 }
 
 void SafeMapLayer::cleanup()
 {
-	Layer::cleanup();
+    Layer::cleanup();
+    SimpleAudioEngine::getInstance()->stopBackgroundMusic("bgm/safeBgm.mp3");
+}
+
+void SafeMapLayer::setPlayer(int playerNum)
+{
+    TMXObjectGroup* group = m_tileMap->getObjectGroup("objects");//èŽ·å–å¯¹è±¡å±‚
+    ValueMap spawnPoint = group->getObject("hero");//æ ¹æ®heroå¯¹è±¡çš„ä½ç½®æ”¾ç½®ç²¾çµ
+
+    float x = spawnPoint["x"].asFloat();
+    float y = spawnPoint["y"].asFloat();
+
+    switch (playerNum)
+    {
+    case 1:
+        m_player = Sprite::create("Ranger/RangerIni.png");
+        m_player->setPosition(Vec2(x, y));
+        m_tileMap->addChild(m_player);//æ¸¸æˆäººç‰©
+        this->removeChildByTag(10086);
+        this->scheduleUpdate();
+        break;
+    case 2:
+        m_player = Sprite::create("Priest/PriestIni.PNG");
+        m_player->setPosition(Vec2(x, y));
+        m_tileMap->addChild(m_player);//æ¸¸æˆäººç‰©
+        this->removeChildByTag(10086);
+        this->scheduleUpdate();
+    }
+    auto animation = AnimationUtil::createWithFrameNameAndNumUsingPlist("Ranger/RangerWalk/", "RangerWalk", 4, 0.12, -1);
+    auto animate = Animate::create(animation);
+    m_player->runAction(animate);
+}
+
+void SafeMapLayer::menuItemSettingCallback(cocos2d::Ref* pSender)
+{
+    Size visible_size = Director::getInstance()->getVisibleSize();
+    CCRenderTexture* background = CCRenderTexture::create(visible_size.width, visible_size.height);
+    background->begin();
+    this->visit();
+    background->end();
+    Director::getInstance()->pushScene(PauseScene::createScene(background));
+}
+
+void SafeMapLayer::menuItemRangerCallback(cocos2d::Ref* pSender)
+{
+    auto layer = PlayerChoose::create();
+    layer->bindMap(this);
+    this->addChild(layer, 10000);
+}
+
+void SafeMapLayer::menuItemMageCallback(cocos2d::Ref* pSender)
+{
+    auto layer = PlayerChoose::create();
+    layer->bindMap(this);
+    PlayerInfomation mage = {
+        3,
+        5,
+        210,
+        "æ³•å¸ˆ",
+        "å¥¥æœ¯é—ªç”µ",
+        "é‡Šæ”¾å¼ºå¤§çš„é—ªç”µ\næ”»å‡»æ•Œäººï¼ï¼",
+        "mage_image.png",
+        "mage_ability.png"
+    };
+    layer->setPlayerInformation(mage);
+    this->addChild(layer, 10001);
 }
 
 void SafeMapLayer::update(float dt)
@@ -90,8 +222,8 @@ void SafeMapLayer::update(float dt)
     auto moveLeft = EventKeyboard::KeyCode::KEY_A;
     auto moveRight = EventKeyboard::KeyCode::KEY_D;
 
-    Vec2 offset(0, 0);//Æ«ÒÆÁ¿
-    //Ã¿Ö¡ÒÆ¶¯Á½¸öÏñËØ
+    Vec2 offset(0, 0);//åç§»é‡
+    //æ¯å¸§ç§»åŠ¨ä¸¤ä¸ªåƒç´ 
     if (m_keyMap[moveUp])
     {
         offset.y = 4;
@@ -103,18 +235,20 @@ void SafeMapLayer::update(float dt)
     if (m_keyMap[moveLeft])
     {
         offset.x = -4;
+        m_player->runAction(FlipX::create(true));
     }
     if (m_keyMap[moveRight])
     {
         offset.x = 4;
+        m_player->runAction(FlipX::create(false));
     }
 
     auto playerPos = m_player->getPosition();
     this->setPlayerPosition(playerPos + offset, offset.x, offset.y);
 
-    Vec2 a = { 512-32,768 };
-    Vec2 b = { 512+32,768-32 };
-    if (m_player->getPosition().x >= a.x && m_player->getPosition().x <= b.x && 
+    Vec2 a = { 512 - 32,768 };
+    Vec2 b = { 512 + 32,768 - 32 };
+    if (m_player->getPosition().x >= a.x && m_player->getPosition().x <= b.x &&
         m_player->getPosition().y <= a.y && m_player->getPosition().y >= b.y)
     {
         auto scene = TollgateScene::createScene();
@@ -124,28 +258,28 @@ void SafeMapLayer::update(float dt)
 
 void SafeMapLayer::setPlayerPosition(Vec2 position, int dx, int dy)
 {
-    Vec2 tileCoord = this->tileCoordFromPosition(position);//ÏñËØ×ø±ê×ª»»ÎªÍßÆ¬×ø±ê
+    Vec2 tileCoord = this->tileCoordFromPosition(position);//åƒç´ åæ ‡è½¬æ¢ä¸ºç“¦ç‰‡åæ ‡
 
-    int tileGid = m_collidable->getTileGIDAt(tileCoord);//»ñµÃÍßÆ¬µÄGID
+    int tileGid = m_collidable->getTileGIDAt(tileCoord);//èŽ·å¾—ç“¦ç‰‡çš„GID
 
-    if (tileGid != 0)//ÍßÆ¬ÊÇ·ñ´æÔÚ£¨²»´æÔÚÊ±tileGid==0£©
+    if (tileGid != 0)//ç“¦ç‰‡æ˜¯å¦å­˜åœ¨ï¼ˆä¸å­˜åœ¨æ—¶tileGid==0ï¼‰
     {
 
         auto prop = m_tileMap->getPropertiesForGID(tileGid);
         auto valueMap = prop.asValueMap();
         bool collision = valueMap["Collidable"].asBool();
-        if (collision)//Åö×²¼ì²â
+        if (collision)//ç¢°æ’žæ£€æµ‹
         {
-            m_player->setPosition(position - Vec2(dx, dy));//»Øµ¯£¬·ñÔò»á¿¨Ç½Àï
+            m_player->setPosition(position - Vec2(dx, dy));//å›žå¼¹ï¼Œå¦åˆ™ä¼šå¡å¢™é‡Œ
             return;
         }
     }
-    m_player->setPosition(position);//ÒÆ¶¯¾«Áé
+    m_player->setPosition(position);//ç§»åŠ¨ç²¾çµ
 
-    this->setViewpointCenter(m_player->getPosition());//¹ö¶¯µØÍ¼
+    this->setViewpointCenter(m_player->getPosition());//æ»šåŠ¨åœ°å›¾
 }
 
-//ÏñËØ×ø±ê×ª»»ÎªÍßÆ¬×ø±ê
+//åƒç´ åæ ‡è½¬æ¢ä¸ºç“¦ç‰‡åæ ‡
 cocos2d::Vec2 SafeMapLayer::tileCoordFromPosition(cocos2d::Vec2 pos)
 {
     int x = pos.x / m_tileMap->getTileSize().width;
@@ -154,14 +288,14 @@ cocos2d::Vec2 SafeMapLayer::tileCoordFromPosition(cocos2d::Vec2 pos)
     return Vec2(x, y);
 }
 
-//½«ÈËÎï±£³ÖÔÚÆÁÄ»ÖÐ¼ä
+//å°†äººç‰©ä¿æŒåœ¨å±å¹•ä¸­é—´
 void SafeMapLayer::setViewpointCenter(cocos2d::Vec2 position)
 {
     Size visibleSize = Director::getInstance()->getVisibleSize();
-    
-    Vec2 centerPoint = Vec2(visibleSize.width / 2, visibleSize.height / 2);//ÆÁÄ»µÄÖÐµã
 
-    Vec2 offset = centerPoint - position;//Æ«ÒÆÁ¿
+    Vec2 centerPoint = Vec2(visibleSize.width / 2, visibleSize.height / 2);//å±å¹•çš„ä¸­ç‚¹
 
-    this->setPosition(offset);
+    Vec2 offset = centerPoint - position;//åç§»é‡
+
+    m_tileMap->setPosition(offset);
 }

@@ -29,7 +29,7 @@ void Item::setTagPosition(const int x, const int y)
 	setPosition(Point(x, y));
 }
 
-Point Item::getTagPosition()const 
+Point Item::getTagPosition()const
 {
 	return getPosition();
 }

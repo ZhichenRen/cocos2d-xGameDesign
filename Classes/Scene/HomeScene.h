@@ -8,8 +8,13 @@ class HomeMenuLayer :public cocos2d::Layer
 {
 public:
 	static cocos2d::Scene* createScene();
-	
+
 	virtual bool init();
+	virtual void onEnter();
+	virtual void onEnterTransitionDidFinish();
+	virtual void onExit();
+	virtual void onExitTransitionDidStart();
+	virtual void cleanup();
 
 	void menuItemStartCallback(cocos2d::Ref* pSender);
 	void menuItemSettingCallback(cocos2d::Ref* pSender);

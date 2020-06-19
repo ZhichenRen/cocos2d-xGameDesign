@@ -5,6 +5,7 @@
 #include "Entity/Item/Player/Ranger/Ranger.h"
 #include "Controller/MyController.h"
 #include "Entity/Item/Player/Player.h"
+
 using namespace cocos2d;
 
 class PlayerController :public MyController
@@ -22,7 +23,7 @@ private:
 	bool m_isChangWeapon = false;
 	bool m_isRanger = false;
 	Player* m_player = NULL;
-	void isEncounterBarriers(const int x,const int y) ;
+	void isEncounterBarriers(const int x, const int y);
 	void registeControllerEvent();
 	void animateOperate();
 	void playerOperate()const;

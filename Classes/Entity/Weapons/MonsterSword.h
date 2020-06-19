@@ -7,6 +7,7 @@ class MonsterSword : public CloseWeapon
 {
 public:
 	virtual bool init();
+	void setRange(int range);
 	CREATE_FUNC(MonsterSword);
 };
 

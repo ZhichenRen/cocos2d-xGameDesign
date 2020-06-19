@@ -6,24 +6,41 @@ bool ExplosiveBullet::init()
 	{
 		return false;
 	}
+	m_is_explode = false;
 	return true;
+}
+
+void ExplosiveBullet::explosionCallback()
+{
+	m_is_used = true;
+	m_is_explode = false;
 }
 
 void ExplosiveBullet::explode()
 {
 	this->stopAllActions();
 	m_sprite->setVisible(false);
-	m_is_used = true;
 	auto explosion = ParticleMeteor::create();
 	explosion->setEmitterMode(ParticleSystem::Mode::RADIUS);
 	explosion->setPositionType(ParticleSystem::PositionType::RELATIVE);
+	explosion->setAutoRemoveOnFinish(true);
 	explosion->setTotalParticles(3000);
 	explosion->setPosition(0, 0);
 	explosion->setDuration(0.2f);
 	explosion->setStartRadius(30.0f);
 	explosion->setStartRadiusVar(20.0f);
 	explosion->setEndRadius(0.0f);
+	m_is_explode = true;
 	this->addChild(explosion);
+
+	auto callback = CallFunc::create(
+		[this]() {
+		this->explosionCallback();
+	}
+	);
+
+	auto explode_action = Sequence::create(DelayTime::create(2.0f), callback, NULL);
+	runAction(explode_action);
 }
 
 void ExplosiveBullet::setInfo(int range, int damage, int explosion_range, int explosion_damage)
@@ -42,4 +59,9 @@ int ExplosiveBullet::getExplosionDamage()const
 int ExplosiveBullet::getExplosionRange()const
 {
 	return m_explosion_range;
+}
+
+bool ExplosiveBullet::isExplode()const
+{
+	return m_is_explode;
 }

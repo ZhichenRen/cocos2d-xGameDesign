@@ -4,7 +4,7 @@
 
 Bullet::Bullet()
 {
-	
+
 }
 
 bool Bullet::init()
@@ -45,6 +45,7 @@ void Bullet::setIsUsed(bool status)
 	if (status == true)
 	{
 		getSprite()->setVisible(false);
+		stopAllActions();
 	}
 }
 
@@ -56,15 +57,36 @@ void Bullet::setOriginPos(const Point& pos)
 float Bullet::getDistance()const
 {
 	Point pos = getPosition();
-	float distance = sqrtf((pos.x - m_origin_pos.x)*(pos.x - m_origin_pos.x) + (pos.y - m_origin_pos.y)*(pos.y - m_origin_pos.y));
+	float distance = sqrtf((pos.x - m_origin_pos.x) * (pos.x - m_origin_pos.x) + (pos.y - m_origin_pos.y) * (pos.y - m_origin_pos.y));
 	return distance;
 }
 
 void Bullet::setBulletAction(float degree, int speed)
 {
-	auto move_action = MoveBy::create(1.0f, Vec2(speed*cos(degree / 180 * PI), speed*sin(degree / 180 * PI)));
+	auto move_action = MoveBy::create(1.0f, Vec2(speed * cos(degree / 180 * PI), speed * sin(degree / 180 * PI)));
 	auto attack_action = RepeatForever::create(move_action);
 	this->runAction(attack_action);
+	setDegree(degree);
+}
+
+void Bullet::setDegree(float degree)
+{
+	m_degree = degree;
+}
+
+float Bullet::getDegree() const
+{
+	return m_degree;
+}
+
+void Bullet::setCritRate(float rate)
+{
+	m_crit_rate = rate;
+}
+
+float Bullet::getCritRate()const
+{
+	return m_crit_rate;
 }
 
 Bullet::~Bullet()

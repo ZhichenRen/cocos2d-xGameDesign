@@ -14,14 +14,20 @@ bool Ranger::init()
 {
 	auto sprite = Sprite::create("Ranger/RangerIni.png");
 	bindSprite(sprite, 1.05, 1.05);
-	m_iNowHp = 3;
-	m_iTotalHp = 3;
+	m_iNowHp = 5;
+	m_iTotalHp = 5;
 	m_iNowMp = 180;
 	m_iTotalMp = 180;
 	m_iNowCD = 150;
 	m_iTotalCD = 150;
+	m_iArmorCd = 0;
+	m_iNowArmor = 3;
+	m_iTotalArmor = 3;
 	m_iNowSkillDuration = 1;
 	m_iTotalSkillDuration = 1;
+	m_numTotalWeapon = 3;
+	m_numWeapon = 0;
+	m_numLongRange = 0;
 	m_isInSkill = false;
 	return true;
 }
@@ -41,7 +47,7 @@ Animate* Ranger::walk()
 
 void Ranger::skill()
 {
-	if (getSprite() == NULL||getiNowCD()<getiTotalCD())
+	if (getSprite() == NULL || getiNowCD() < getiTotalCD())
 	{
 		return;
 	}
@@ -51,9 +57,8 @@ void Ranger::skill()
 	auto animate = Animate::create(animation);
 	stopAllActions();
 	m_sprite->runAction(animate);
-	
+
 	setiNowCD(0);
-	m_cdBar->setPercent(getiNowCD() / 150.0f * 100);
 }
 
 void Ranger::skillEnd()
@@ -84,7 +89,7 @@ Animate* Ranger::stand()
 	return animate;
 }
 
-Point& Ranger::getSkillDirection()
+Point Ranger::getSkillDirection()
 {
 	if (m_controller->getiXSpeed() == 0 && m_controller->getiYSpeed() == 0)
 	{

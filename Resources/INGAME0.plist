@@ -194,6 +194,63 @@
 				<key>offsetY</key>
 				<real>-2.5</real>
 			</dict>
+			<key>Coin.png</key>
+			<dict>
+				<key>width</key>
+				<integer>19</integer>
+				<key>height</key>
+				<integer>19</integer>
+				<key>originalWidth</key>
+				<integer>19</integer>
+				<key>originalHeight</key>
+				<integer>19</integer>
+				<key>x</key>
+				<integer>351</integer>
+				<key>y</key>
+				<integer>542</integer>
+				<key>offsetX</key>
+				<real>0</real>
+				<key>offsetY</key>
+				<real>0</real>
+			</dict>
+			<key>weapon.PNG</key>
+			<dict>
+				<key>width</key>
+				<integer>132</integer>
+				<key>height</key>
+				<integer>121</integer>
+				<key>originalWidth</key>
+				<integer>139</integer>
+				<key>originalHeight</key>
+				<integer>127</integer>
+				<key>x</key>
+				<integer>372</integer>
+				<key>y</key>
+				<integer>542</integer>
+				<key>offsetX</key>
+				<real>-1.5</real>
+				<key>offsetY</key>
+				<real>0</real>
+			</dict>
+			<key>nothing.png</key>
+			<dict>
+				<key>width</key>
+				<integer>1</integer>
+				<key>height</key>
+				<integer>1</integer>
+				<key>originalWidth</key>
+				<integer>380</integer>
+				<key>originalHeight</key>
+				<integer>204</integer>
+				<key>x</key>
+				<integer>506</integer>
+				<key>y</key>
+				<integer>542</integer>
+				<key>offsetX</key>
+				<real>189.5</real>
+				<key>offsetY</key>
+				<real>-101.5</real>
+			</dict>
 		</dict>
 		<key>metadata</key>
 		<dict>
