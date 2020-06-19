@@ -414,6 +414,10 @@ void TollgateScene::compare(float dt)
 		m_flowWord->showShopWord(str);
 		this->unschedule(schedule_selector(TollgateScene::compare));
 	}
+	if (strcmp(m_editBox->getText(), "infinitypower") == 0)
+	{
+		m_player->setiNowMp(m_player->getiTotalMp());
+	}
 }
 
 void TollgateScene::update(float dt)
