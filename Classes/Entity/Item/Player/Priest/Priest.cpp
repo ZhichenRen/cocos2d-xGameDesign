@@ -104,7 +104,12 @@ void Priest::skillEnd()
 
 void Priest::die()
 {
-	
+	m_isDeath = true;
+	auto m_addBloodMsg = FlowWord::create();
+	this->addChild(m_addBloodMsg);
+	std::string msg = "Revive!";
+	m_addBloodMsg->showCritDmg(msg.c_str(), this->getContentSize().height / 2, 1.0);
+	getSprite()->setOpacity(0);
 }
 
 Animate* Priest::stand()
