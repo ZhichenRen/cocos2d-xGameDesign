@@ -11,6 +11,7 @@
 #include "GameData.h"
 #include "Scene/DeathScene.h"
 #include "SimpleAudioEngine.h"
+#pragma execution_character_set("utf-8")
 
 USING_NS_CC;
 using namespace CocosDenshion;
@@ -534,11 +535,18 @@ void TollgateScene::compare(float dt)
 	if (strcmp(m_editBox->getText(), "infinitypower") == 0)
 	{
 		m_player->setiNowMp(m_player->getiTotalMp());
+		m_flowWord->showShopWord("无尽的魔力！");
 		this->unschedule(schedule_selector(TollgateScene::compare));
 	}
 	if (strcmp(m_editBox->getText(), "rcwtql") == 0)
 	{
 		m_player->setInvincible(15.0f);
+		m_flowWord->showShopWord("rcwtql!");
+		this->unschedule(schedule_selector(TollgateScene::compare));
+	}
+	if (strcmp(m_editBox->getText(), "sildenafil") == 0)
+	{
+		m_player->setDamageBonus(10, 15.0f);
 
 		this->unschedule(schedule_selector(TollgateScene::compare));
 	}
@@ -652,7 +660,7 @@ void TollgateScene::update(float dt)
 						cocos2d::Point explosive_origin_point = m_map->convertToWorldSpace(explosive_bullet->getPosition());
 						if (unlucky_monster->getBoundingBox().intersectsCircle(explosive_origin_point, explosive_bullet->getExplosionRange()))
 						{
-							unlucky_monster->hit(explosive_bullet->getExplosionDamage(), bullet->getDegree(), 0);
+							unlucky_monster->hit(explosive_bullet->getExplosionDamage() * m_player->getDamageBonus(), bullet->getDegree(), 0);
 						}
 					}
 				}
@@ -671,10 +679,10 @@ void TollgateScene::update(float dt)
 					if (CCRANDOM_0_1() < bullet->getCritRate())
 					{
 						damage *= 2;
-						monster->hit(damage, bullet->getDegree(), 1);
+						monster->hit(damage * m_player->getDamageBonus(), bullet->getDegree(), 1);
 					}
 					else
-						monster->hit(damage, bullet->getDegree(), 0);
+						monster->hit(damage * m_player->getDamageBonus(), bullet->getDegree(), 0);
 
 
 					if (typeid(*bullet) == typeid(ExplosiveBullet))
@@ -691,7 +699,7 @@ void TollgateScene::update(float dt)
 								cocos2d::Point explosive_origin_point = m_map->convertToWorldSpace(explosive_bullet->getPosition());
 								if (unlucky_monster->getBoundingBox().intersectsCircle(explosive_origin_point, explosive_bullet->getExplosionRange()))
 								{
-									unlucky_monster->hit(explosive_bullet->getExplosionDamage(), explosive_bullet->getDegree(), 1);
+									unlucky_monster->hit(explosive_bullet->getExplosionDamage() * m_player->getDamageBonus(), explosive_bullet->getDegree(), 1);
 								}
 							}
 						}
@@ -715,10 +723,10 @@ void TollgateScene::update(float dt)
 					if (CCRANDOM_0_1() < weapon->getCritRate())
 					{
 						damage *= 2;
-						monster->hit(damage, 0.0f, 1);
+						monster->hit(damage * m_player->getDamageBonus(), 0.0f, 1);
 					}
 					else
-						monster->hit(damage, 0.0f, 0);
+						monster->hit(damage * m_player->getDamageBonus(), 0.0f, 0);
 				}
 			}
 			weapon->setIsHit(true);
