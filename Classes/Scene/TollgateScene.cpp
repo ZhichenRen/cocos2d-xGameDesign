@@ -1,4 +1,4 @@
-#include <string>
+﻿#include <string>
 #include "Scene/TollgateScene.h"
 #include "Scene/SafeMapScene.h"
 #include "Scene/PauseScene.h"
@@ -185,6 +185,9 @@ void TollgateScene::loadUI()
 	m_weapon_image = (ImageView*)Helper::seekWidgetByName(UI, "weapon_image");
 	m_weapon_button = (Button*)Helper::seekWidgetByName(UI, "weapon_button");
 	m_weapon_button->addTouchEventListener(this, toucheventselector(TollgateScene::switchWeapon));
+	m_boss_name = (Text*)Helper::seekWidgetByName(UI, "boss_name");
+	m_boss_hp_bg = (LoadingBar*)Helper::seekWidgetByName(UI, "boss_hp_bar");
+	m_boss_hp = (LoadingBar*)Helper::seekWidgetByName(UI, "boss_hp");
 
 	auto pause_button = (Button*)Helper::seekWidgetByName(UI, "pause_button");
 	pause_button->addTouchEventListener(this, toucheventselector(TollgateScene::pauseEvent));
@@ -513,7 +516,6 @@ void TollgateScene::compare(float dt)
 		m_flowWord->showShopWord(str);
 		this->unschedule(schedule_selector(TollgateScene::compare));
 	}
-
 	if (strcmp(m_editBox->getText(), "slaughter") == 0)
 	{
 		m_monsterMgr->killMonsters();
@@ -528,7 +530,7 @@ void TollgateScene::compare(float dt)
 		CCDictionary* pDictionary = (CCDictionary*)CCDictionary::createWithContentsOfFile("ChineseCharacters.plist");
 		auto str = pDictionary->valueForKey("WoodWallCheat")->getCString();
 		m_flowWord->showShopWord(str);
-
+	}
 	if (strcmp(m_editBox->getText(), "infinitypower") == 0)
 	{
 		m_player->setiNowMp(m_player->getiTotalMp());
@@ -541,7 +543,9 @@ void TollgateScene::compare(float dt)
 		this->unschedule(schedule_selector(TollgateScene::compare));
 	}
 }
+
 int i = 0;
+
 void TollgateScene::update(float dt)
 {
 	(m_cdBar)->setPercent(m_player->getiNowCD() /
@@ -554,6 +558,7 @@ void TollgateScene::update(float dt)
 		static_cast<float>(m_player->getiTotalMp()) * 100);
 	m_weapon_image->loadTexture(m_player->getWeaponFileName());
 	m_mp_cost->setText(std::to_string(m_player->getWeaponPowerCost()));
+	m_boss_hp->setPercent(m_monsterMgr->getMonsterHpRate());
 
 	m_hp->setText(std::to_string(m_player->getiNowHp()) + "/" + std::to_string(m_player->getiTotalHp()));
 	m_armor->setText(std::to_string(m_player->getiNowArmor()) + "/" + std::to_string(m_player->getiTotalArmor()));
