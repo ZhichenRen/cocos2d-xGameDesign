@@ -1,8 +1,8 @@
-#include "Entity/Weapons/StoneSword.h"
+﻿#include "Entity/Weapons/StoneSword.h"
 
 bool StoneSword::init()
 {
-	m_damage = 8;
+	m_damage = 10;
 	m_range = 25;
 	m_attack_speed = 0.18f;
 	m_crit_rate = 0.05f;
@@ -15,7 +15,7 @@ bool StoneSword::init()
 void StoneSword::upgrade()
 {
 	isUpgrate = true;
-	m_damage = 15;
+	m_damage = 18;
 	m_range = 30;
 	m_attack_speed = 0.15f;
 	m_crit_rate = 0.1f;
