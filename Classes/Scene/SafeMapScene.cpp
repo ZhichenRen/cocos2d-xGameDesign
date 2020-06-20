@@ -160,7 +160,8 @@ void SafeMapLayer::setPlayer(int playerNum)
 
     float x = spawnPoint["x"].asFloat();
     float y = spawnPoint["y"].asFloat();
-
+	auto animation = AnimationUtil::createWithFrameNameAndNumUsingPlist("Ranger/RangerWalk/", "RangerWalk", 4, 0.12, -1);
+	auto animate = Animate::create(animation);
     switch (playerNum)
     {
     case 1:
@@ -168,18 +169,17 @@ void SafeMapLayer::setPlayer(int playerNum)
         m_player->setPosition(Vec2(x, y));
         m_tileMap->addChild(m_player);//游戏人物
         this->removeChildByTag(10086);
+		m_player->runAction(animate);
         this->scheduleUpdate();
         break;
     case 2:
         m_player = Sprite::create("Priest/PriestIni.PNG");
+		m_player->setScale(0.5);
         m_player->setPosition(Vec2(x, y));
         m_tileMap->addChild(m_player);//游戏人物
         this->removeChildByTag(10086);
         this->scheduleUpdate();
     }
-	auto animation = AnimationUtil::createWithFrameNameAndNumUsingPlist("Ranger/RangerWalk/", "RangerWalk", 4, 0.12, -1);
-	auto animate = Animate::create(animation);
-	m_player->runAction(animate);
 }
 
 void SafeMapLayer::menuItemSettingCallback(cocos2d::Ref* pSender)
@@ -189,7 +189,7 @@ void SafeMapLayer::menuItemSettingCallback(cocos2d::Ref* pSender)
     background->begin();
     this->visit();
     background->end();
-    Director::getInstance()->pushScene(PauseScene::createScene(background));
+    Director::getInstance()->pushScene(PauseScene::createScene(background, m_choose_player));
 }
 
 void SafeMapLayer::menuItemRangerCallback(cocos2d::Ref* pSender)
@@ -198,6 +198,7 @@ void SafeMapLayer::menuItemRangerCallback(cocos2d::Ref* pSender)
     layer->bindMap(this);
     this->addChild(layer, 10000);
 	SafeMapLayer::m_choose_player = 1;
+	setPlayer(1);
 }
 
 void SafeMapLayer::menuItemMageCallback(cocos2d::Ref* pSender)
@@ -217,6 +218,7 @@ void SafeMapLayer::menuItemMageCallback(cocos2d::Ref* pSender)
     layer->setPlayerInformation(priest);
     this->addChild(layer, 10001);
 	SafeMapLayer::m_choose_player = 2;
+	setPlayer(2);
 }
 
 void SafeMapLayer::update(float dt)

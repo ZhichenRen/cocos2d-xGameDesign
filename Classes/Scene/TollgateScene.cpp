@@ -200,7 +200,7 @@ void TollgateScene::pauseEvent(Ref*, TouchEventType type)
 		background->begin();
 		this->visit();
 		background->end();
-		Director::getInstance()->pushScene(PauseScene::createScene(background));
+		Director::getInstance()->pushScene(PauseScene::createScene(background, m_player->whichPlayer()));
 		break;
 	}
 }
@@ -445,7 +445,7 @@ void TollgateScene::loadListeners()
 			background->begin();
 			this->visit();
 			background->end();
-			Director::getInstance()->pushScene(PauseScene::createScene(background));
+			Director::getInstance()->pushScene(PauseScene::createScene(background, m_player->whichPlayer()));
 			break;
 		}
 	};
