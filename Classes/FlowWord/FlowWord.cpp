@@ -1,4 +1,4 @@
-#include "FlowWord/FlowWord.h"
+﻿#include "FlowWord/FlowWord.h"
 
 bool FlowWord::init()
 {
@@ -16,8 +16,7 @@ void FlowWord::showWord(const char* text, Point pos)
 	m_message->setString(text);
 
 	m_message->setVisible(true);
-	auto scaleUp = ScaleBy::create(0.2f, 1.2);
-	auto scaleDown = ScaleTo::create(0.2f, 1);
+	auto delay = DelayTime::create(0.5f);
 
 	auto callBack = CallFunc::create
 	(
@@ -27,7 +26,7 @@ void FlowWord::showWord(const char* text, Point pos)
 		m_message->removeFromParentAndCleanup(true);
 	}
 	);
-	auto actions = Sequence::create(scaleUp, scaleDown, callBack, NULL);
+	auto actions = Sequence::create(delay, callBack, NULL);
 
 	this->runAction(actions);
 }
