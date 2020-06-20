@@ -217,7 +217,6 @@ void TollgateScene::switchWeapon(Ref*, TouchEventType type)
 		m_player->changeWeapon();
 		break;
 	}
-
 }
 
 void TollgateScene::loadMonstersInNewRoom()
@@ -352,7 +351,7 @@ void TollgateScene::loadListeners()
 					m_map->getShop()->setInteractionNum(1);
 				}
 			}
-			if (ccpDistance(m_player->getPosition(), m_map->getPortal()->getPosition()) < 20.0f)
+			if (ccpDistance(m_player->getPosition(), m_map->getPortal()->getPosition()) < 20.0f && m_map->getPortal()->isVisible())
 			{
 				this->unscheduleUpdate();
 				if (GameData::getLevel() != 2)//传送到下一关
@@ -582,12 +581,13 @@ void TollgateScene::update(float dt)
 	auto roomCoord = m_map->roomCoordFromPosition(playerPos);
 	auto roomNum = roomCoord.x * 5 + roomCoord.y;
 
-	if (m_map->isMonsterRoom(roomCoord)	//首先它得是个怪物房间
+	if ((m_map->isMonsterRoom(roomCoord) || m_map->isBossRoom(roomCoord))	//首先它得是个怪物房间
 		&& !m_monsterMgr->isRoomVisited(roomCoord))//其次它没有被到访过
 	{
 		m_monsterMgr->setCurRoom(roomCoord);
-		if (!i++)//如果是boss房
+		if (m_map->isBossRoom(roomCoord))//如果是boss房
 		{
+			m_map->getPortal()->setVisible(false);
 			loadBoss();
 		}
 		else
@@ -597,33 +597,31 @@ void TollgateScene::update(float dt)
 	}
 	Vec2 dir[4] = { {0,1},{0,-1},{1,0},{-1,0} };
 
-	if (true)
+	miniMap->setVisible(false);
+	std::vector<int>dirVec;
+	for (int i = 0; i < 4; i++)
 	{
-		miniMap->setVisible(false);
-		std::vector<int>dirVec;
-		for (int i = 0; i < 4; i++)
+		for (auto elem : roadPairs)
 		{
-			for (auto elem : roadPairs)
+			if (elem.first == roomCoord && elem.second == dir[i] + roomCoord ||
+				elem.second == roomCoord && elem.first == dir[i] + roomCoord)
 			{
-				if (elem.first == roomCoord && elem.second == dir[i] + roomCoord ||
-					elem.second == roomCoord && elem.first == dir[i] + roomCoord)
-				{
-					dirVec.push_back(i);
-				}
+				dirVec.push_back(i);
 			}
 		}
+	}
+	for (auto elem : dirVec)
+	{
+		AdventureMapLayer::switchGate(wall, barrier, roomNum, elem, true);
+	}
+	if (m_monsterMgr->isGameOver())
+	{
 		for (auto elem : dirVec)
 		{
-			AdventureMapLayer::switchGate(wall, barrier, roomNum, elem, true);
+			AdventureMapLayer::switchGate(wall, barrier, roomNum, elem, false);
 		}
-		if (m_monsterMgr->isGameOver())
-		{
-			for (auto elem : dirVec)
-			{
-				AdventureMapLayer::switchGate(wall, barrier, roomNum, elem, false);
-			}
-			miniMap->setVisible(true);
-		}
+		m_map->getPortal()->setVisible(true);
+		miniMap->setVisible(true);
 	}
 
 	//碰撞检测
