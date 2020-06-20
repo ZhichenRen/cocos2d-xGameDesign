@@ -1,5 +1,7 @@
+
 #pragma once
 #ifndef __SAFE_MAP_SCENE_H__
+
 #define __SAFE_MAP_SCENE_H__
 
 #include "cocos2d.h"
@@ -50,8 +52,11 @@ public:
 	void setPlayerPosition(cocos2d::Vec2 position, int dx, int dy);
 	cocos2d::Vec2 tileCoordFromPosition(cocos2d::Vec2 position);
 	void setViewpointCenter(cocos2d::Vec2 position);
+	static int whichPlayer() { return m_choose_player; }
 
 	CREATE_FUNC(SafeMapLayer);
+
+	static int m_choose_player;
 };
 
 

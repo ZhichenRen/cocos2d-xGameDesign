@@ -1,4 +1,4 @@
-﻿#include "Entity\Weapons\RPG.h"
+#include "Entity\Weapons\RPG.h"
 
 #define PI 3.1415926
 
@@ -28,6 +28,7 @@ bool RPG::init()
 
 void RPG::upgrade()
 {
+	isUpgrate = true;
 	m_power_cost = 4;
 	m_bullet_damage = 5;
 	m_bullet_speed = 350;

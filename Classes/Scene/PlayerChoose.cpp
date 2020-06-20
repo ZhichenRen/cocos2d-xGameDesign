@@ -22,12 +22,12 @@ void PlayerChoose::loadUI()
 	choose_button->addTouchEventListener(this, toucheventselector(PlayerChoose::setPlayer));
 
 	m_hp = (Text*)Helper::seekWidgetByName(UI, "hp_label");
-	m_mp= (Text*)Helper::seekWidgetByName(UI, "magic_label");
-	m_armor= (Text*)Helper::seekWidgetByName(UI, "armor_label");
-	m_name= (Text*)Helper::seekWidgetByName(UI, "name_label");
-	m_ability_name= (Text*)Helper::seekWidgetByName(UI, "ability_name");
-	m_ability_discription= (Text*)Helper::seekWidgetByName(UI, "ability_description");
-	m_image_file=(ImageView*)Helper::seekWidgetByName(UI, "player_image");
+	m_mp = (Text*)Helper::seekWidgetByName(UI, "magic_label");
+	m_armor = (Text*)Helper::seekWidgetByName(UI, "armor_label");
+	m_name = (Text*)Helper::seekWidgetByName(UI, "name_label");
+	m_ability_name = (Text*)Helper::seekWidgetByName(UI, "ability_name");
+	m_ability_discription = (Text*)Helper::seekWidgetByName(UI, "ability_description");
+	m_image_file = (ImageView*)Helper::seekWidgetByName(UI, "player_image");
 	m_ability_image = (ImageView*)Helper::seekWidgetByName(UI, "ability_image");
 }
 
@@ -41,7 +41,6 @@ void PlayerChoose::setPlayer(Ref*, TouchEventType type)
 	switch (type)
 	{
 	case TOUCH_EVENT_ENDED:
-		m_safeMap->setPlayer(1);
 		this->removeFromParentAndCleanup(true);
 		break;
 	}

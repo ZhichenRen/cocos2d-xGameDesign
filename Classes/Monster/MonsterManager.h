@@ -77,11 +77,15 @@ private:
 	Boss* m_boss = NULL;
 	FlowWord* m_flowWord = NULL;
 	Entity* m_player = NULL;
+
 	AdventureMapLayer* m_map = NULL;
 	
+
 	const int m_allCheckPoint = 3;
 	int m_curCheckPoint;
+
 	int m_dirs[4][2] = { {1,0}, {0,1}, {0,-1} ,{-1,0}};
+
 	int m_deathMonsNum;
 	bool m_fGameOver = false;
 	Vec2 m_curRoom;

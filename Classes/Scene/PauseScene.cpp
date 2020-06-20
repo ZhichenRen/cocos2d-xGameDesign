@@ -9,14 +9,15 @@ bool PauseScene::init()
 	{
 		return false;
 	}
-	loadUI();
 	return true;
 }
 
-Scene* PauseScene::createScene(CCRenderTexture* background)
+Scene* PauseScene::createScene(CCRenderTexture* background, int player)
 {
 	Scene* scene = Scene::create();
-	Layer* layer = PauseScene::create();
+	PauseScene* layer = PauseScene::create();
+	layer->setPlayer(player);
+	layer->loadUI();
 	scene->addChild(layer, 1);
 
 	Size visible_size = Director::getInstance()->getVisibleSize();
@@ -77,6 +78,13 @@ void PauseScene::loadUI()
 	setting_button->addTouchEventListener(this, toucheventselector(PauseScene::goToSettingMenu));
 	auto player_image = (ImageView*)Helper::seekWidgetByName(UI, "player_image");
 
-	player_image->loadTexture("mage_image.png");
+	if (m_player == 2)
+	{
+		player_image->loadTexture("priest_image.jpg");
+	}
+}
 
+void PauseScene::setPlayer(int player)
+{
+	m_player = player;
 }

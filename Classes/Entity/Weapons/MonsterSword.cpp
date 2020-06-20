@@ -1,4 +1,4 @@
-﻿#include "Entity\Weapons\MonsterSword.h"
+#include "Entity\Weapons\MonsterSword.h"
 
 bool MonsterSword::init()
 {

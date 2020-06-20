@@ -1,4 +1,4 @@
-﻿#ifndef __WeaponInfoScene_H__
+#ifndef __WeaponInfoScene_H__
 #define __WeaponInfoScene_H__
 #include "cocos2d.h"
 #include "editor-support/cocostudio/CCSGUIReader.h"

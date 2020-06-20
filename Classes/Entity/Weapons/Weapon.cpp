@@ -1,4 +1,4 @@
-﻿#include "Entity\Weapons\Weapon.h"
+#include "Entity\Weapons\Weapon.h"
 #define PI 3.1415926
 
 Weapon::Weapon()
@@ -14,7 +14,7 @@ bool Weapon::init()
 	}
 	m_power_cost = 0;
 	m_range = 0;
-	m_attack_speed = 0.6f; 
+	m_attack_speed = 0.6f;
 	return true;
 }
 
@@ -96,4 +96,10 @@ bool Weapon::isCloseWeapon()const
 Weapon::~Weapon()
 {
 
+}
+
+void Weapon::disappear()
+{
+	m_sprite->setVisible(false);
+	m_is_used = true;
 }

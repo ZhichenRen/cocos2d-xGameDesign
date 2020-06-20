@@ -1,5 +1,6 @@
-﻿#include <string>
+#include <string>
 #include "Scene/TollgateScene.h"
+#include "Scene/SafeMapScene.h"
 #include "Scene/PauseScene.h"
 #include "Scene/HomeScene.h"
 #include "Entity/Item/Player/Priest/Priest.h"
@@ -13,7 +14,7 @@
 
 USING_NS_CC;
 using namespace CocosDenshion;
-
+restrorePlayer restore;
 
 Scene* TollgateScene::createScene()
 {
@@ -40,7 +41,10 @@ void TollgateScene::addPlayer()
 	ValueMap spawnPoint = group->getObject("hero");
 	float x = spawnPoint["x"].asFloat();
 	float y = spawnPoint["y"].asFloat();
-	m_player = Ranger::create();
+	if(SafeMapLayer::whichPlayer()==1)
+	    m_player = Ranger::create();
+	else if(SafeMapLayer::whichPlayer() == 2)
+		m_player = Priest::create();
 	m_player->setPosition(Vec2(x, y));
 
 	m_player->setTiledMap(m_map);
@@ -53,18 +57,38 @@ void TollgateScene::addPlayer()
 
 void TollgateScene::addWeapon()
 {
-	std::string str = "CandyGun!";
+	if (restore.num != 1)
+	{
+		m_player->setiTotalHp(restore.m_totalHp);
+		m_player->setiNowHp(restore.m_nowHp);
+		m_player->setiTotalArmor(restore.m_totalArmor);
+		m_player->setiNowArmor(restore.m_nowArmor);
+		m_player->setiTotalMp(restore.m_totalMp);
+		m_player->setiNowMp(restore.m_nowMp);
+
+		m_player->setIsUpgrate(restore.m_isUpgrate);
+		m_player->setWeaponList(restore.weapons);
+		m_player->setNumTotalWeapon(restore.m_numTotalWeapon);
+		m_player->setNumWeapon(restore.m_numWeapon);
+		m_player->setNumHasWeapon(restore.m_numHasWeapon);
+		m_player->setLongRange(0);
+		m_player->setLongRanges(restore.m_longRanges);
+		m_player->determineWhichWeapon();
+
+		return;
+	}
+	std::string str = "Pistol";
 	m_player->setWeapon(str);
 	m_player->determineWhichWeapon();
-	str = "Fist_of_Heaven";
+	/*str = "Fist_of_Heaven";
 	m_player->setWeapon(str);
 	m_player->determineWhichWeapon();
 	str = "GoldenSword!";
 	m_player->setWeapon(str);
-	m_player->determineWhichWeapon();
-	str = "CandyGun!";
-	/*m_player->setWeapon(str);
 	m_player->determineWhichWeapon();*/
+	str = "StoneSword";
+	m_player->setWeapon(str);
+	m_player->determineWhichWeapon();
 }
 
 void TollgateScene::loadController()
@@ -105,18 +129,20 @@ bool TollgateScene::init()
 		return false;
 	loadMap();
 	addPlayer();
-	loadMonsters();
+	addWeapon();
 	loadController();
+	loadEditBox();
+	loadMonsters();
 	loadEditBox();
 	return true;
 }
+
 
 void TollgateScene::onEnter()
 {
 	Layer::onEnter();
 	this->scheduleUpdate();
 	loadUI();
-	addWeapon();
 	loadListeners();
 }
 
@@ -137,7 +163,6 @@ void TollgateScene::onExitTransitionDidStart()
 {
 	Layer::onExitTransitionDidStart();
 }
-
 void TollgateScene::cleanup()
 {
 	Layer::cleanup();
@@ -175,7 +200,7 @@ void TollgateScene::pauseEvent(Ref*, TouchEventType type)
 		background->begin();
 		this->visit();
 		background->end();
-		Director::getInstance()->pushScene(DeathScene::createScene(background, m_player));
+		Director::getInstance()->pushScene(PauseScene::createScene(background, m_player->whichPlayer()));
 		break;
 	}
 }
@@ -263,10 +288,10 @@ void TollgateScene::loadListeners()
 	};
 	m_keyboard_listener->onKeyReleased = [=](EventKeyboard::KeyCode key, Event* event)
 	{
+		bool hasWeapon = false;
 		switch (key)
 		{
 		case EventKeyboard::KeyCode::KEY_E:
-			GameData::setCoinNum(GameData::getCoinNum() + 1);
 			if (ccpDistance(m_player->getPosition(), m_map->getChest()->getPosition()) < 20.0f && m_map->getChest()->isVisible())
 			{
 				m_map->getChest()->setVisible(false);
@@ -289,7 +314,7 @@ void TollgateScene::loadListeners()
 						GameData::setCoinNum(GameData::getCoinNum() - 15);
 						m_map->getStatue()->showFlowWordEnoughMoney();
 						//player获得buff加成
-						//player->getBuff(rand()%3)
+						m_player->getBuff(rand() % 3);
 					}
 					else
 					{
@@ -330,6 +355,26 @@ void TollgateScene::loadListeners()
 				{
 					GameData::setLastRoomCoord(Vec2(2, 2));
 					GameData::setLevel(GameData::getLevel() + 1);
+					if (restore.num == 1)
+					{
+						restore.m_player = m_player;
+						restore.weapons = m_player->getWeaponList();
+						restore.m_totalHp = m_player->getiTotalHp();
+						restore.m_nowHp = m_player->getiNowHp();
+						restore.m_totalArmor = m_player->getiTotalArmor();
+						restore.m_nowArmor = m_player->getiNowArmor();
+						restore.m_totalMp = m_player->getiTotalMp();
+						restore.m_nowMp = m_player->getiNowMp();
+
+						restore.m_isUpgrate = m_player->getIsUpgrate();
+						restore.weapons = m_player->getWeaponList();
+						restore.m_numWeapon = m_player->getNumWeapon();
+						restore.m_numHasWeapon = m_player->getNumHasWeapon();
+						restore.m_numTotalWeapon = m_player->getNumTotalWeapon();
+						restore.m_longRange = m_player->getLongRange();
+					//	restore.m_longRanges = m_player->getLongRanges();
+						restore.num++;
+					}
 					auto scene = TollgateScene::createScene();
 					Director::getInstance()->replaceScene(scene);
 				}
@@ -364,6 +409,42 @@ void TollgateScene::loadListeners()
 					blueMedicine->disappear();
 				}
 			}
+			for (auto longRange : m_map->getLongRangeList())
+			{
+				if (longRange->isUsed())
+				{
+					continue;
+				}
+				if (ccpDistance(m_player->getPosition(), longRange->getPosition()) < 40.0f && longRange->isVisible())
+				{
+					std::string str = longRange->getWeaponName();
+					bool isUpgrate = longRange->getIsUpgarte();
+					m_player->setWeapon(str, isUpgrate);
+					m_player->determineWhichWeapon();
+					longRange->disappear();
+					hasWeapon = true;
+					break;
+				}
+			}
+			if (hasWeapon == false)
+			{
+				for (auto closeWeapon : m_map->getCloseWeaponList())
+				{
+					if (closeWeapon->isUsed())
+					{
+						continue;
+					}
+					if (ccpDistance(m_player->getPosition(), closeWeapon->getPosition()) < 40.0f && closeWeapon->isVisible())
+					{
+						std::string str = closeWeapon->getWeaponName();
+						bool isUpgrate = closeWeapon->getIsUpgarte();
+						m_player->setWeapon(str, isUpgrate);
+						m_player->determineWhichWeapon();
+						closeWeapon->disappear();
+						break;
+					}
+				}
+			}
 			break;
 		case EventKeyboard::KeyCode::KEY_ENTER:
 			if (!m_editBox->isVisible())
@@ -386,16 +467,12 @@ void TollgateScene::loadListeners()
 			background->begin();
 			this->visit();
 			background->end();
-			Director::getInstance()->pushScene(PauseScene::createScene(background));
+			Director::getInstance()->pushScene(PauseScene::createScene(background, m_player->whichPlayer()));
 			break;
 		}
 	};
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(m_keyboard_listener, this);
 }
-
-
-
-
 
 void TollgateScene::updateMiniMap(TMXTiledMap* miniMap)
 {
@@ -436,6 +513,7 @@ void TollgateScene::compare(float dt)
 		m_flowWord->showShopWord(str);
 		this->unschedule(schedule_selector(TollgateScene::compare));
 	}
+
 	if (strcmp(m_editBox->getText(), "slaughter") == 0)
 	{
 		m_monsterMgr->killMonsters();
@@ -450,6 +528,16 @@ void TollgateScene::compare(float dt)
 		CCDictionary* pDictionary = (CCDictionary*)CCDictionary::createWithContentsOfFile("ChineseCharacters.plist");
 		auto str = pDictionary->valueForKey("WoodWallCheat")->getCString();
 		m_flowWord->showShopWord(str);
+
+	if (strcmp(m_editBox->getText(), "infinitypower") == 0)
+	{
+		m_player->setiNowMp(m_player->getiTotalMp());
+		this->unschedule(schedule_selector(TollgateScene::compare));
+	}
+	if (strcmp(m_editBox->getText(), "rcwtql") == 0)
+	{
+		m_player->setInvincible(15.0f);
+
 		this->unschedule(schedule_selector(TollgateScene::compare));
 	}
 }
@@ -646,7 +734,10 @@ void TollgateScene::update(float dt)
 		}
 		if (bullet->isCollideWith(m_player))
 		{
-			m_player->hit(bullet->getDamage());
+			if (!m_player->isInvincible())
+			{
+				m_player->hit(bullet->getDamage());
+			}
 			bullet->setIsUsed(true);
 		}
 		for (auto woodwall : woodWalls)
@@ -670,7 +761,10 @@ void TollgateScene::update(float dt)
 				{
 					if (close_weapon->isCollideWith(m_player))
 					{
-						m_player->hit(close_weapon->getDamage());
+						if (!m_player->isInvincible())
+						{
+							m_player->hit(close_weapon->getDamage());
+						}
 					}
 				}
 				close_weapon->setIsHit(true);
@@ -714,4 +808,13 @@ void TollgateScene::update(float dt)
 		}
 	}
 
+	if (m_player->getIsDeath())
+	{
+		Size visible_size = Director::getInstance()->getVisibleSize();
+		CCRenderTexture* background = CCRenderTexture::create(visible_size.width, visible_size.height);
+		background->begin();
+		this->visit();
+		background->end();
+		Director::getInstance()->pushScene(DeathScene::createScene(background, m_player));
+	}
 }

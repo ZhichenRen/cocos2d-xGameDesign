@@ -1,3 +1,4 @@
+
 #include "Monster/Boss.h"
 #include "Monster/Monster.h"
 bool Boss::init()
@@ -46,3 +47,4 @@ void Boss::hit(int damage, float flyingDegree, bool isCriticalStrike)
 	std::string msg = std::to_string(damage);
 	m_damageMsg->showMonsDmg(msg.c_str(), 200);
 }
+

@@ -148,7 +148,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 		pig->bindMap(m_map);
 		pig->getMonsterWeapon()->bindMap(m_map);
 		pig->bindMonsMgr(this);
-		this->addChild(pig,1);
+		this->addChild(pig, 1);
 		m_monsterList.push_back(pig);
 		
 	}
@@ -159,7 +159,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 		duck->bindMap(m_map);
 		duck->getMonsterWeapon()->bindMap(m_map);
 		duck->bindMonsMgr(this);
-		this->addChild(duck,1);
+		this->addChild(duck, 1);
 		m_monsterList.push_back(duck);
 		
 	}
@@ -167,7 +167,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 	for (int i = 0; i < randVec[2] + 1; i++)
 	{
 		slime = Slime::create();
-		this->addChild(slime,1);
+		this->addChild(slime, 1);
 		slime->bindMap(m_map);
 		slime->getMonsterWeapon()->bindMap(m_map);
 		slime->bindMonsMgr(this);
@@ -177,7 +177,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 	for (int i = 0; i < randVec[3] + 1; i++)
 	{
 		chiefOfTribe = ChiefOfTribe::create();
-		this->addChild(chiefOfTribe,1);
+		this->addChild(chiefOfTribe, 1);
 		chiefOfTribe->bindMap(m_map);
 		chiefOfTribe->getMonsterWeapon()->bindMap(m_map);
 		chiefOfTribe->bindMonsMgr(this);
@@ -201,8 +201,8 @@ void MonsterManager::createWoodWalls(int woodWallsNum)
 	for (int i = 0; i < woodWallsNum; i++)
 	{
 
-		auto randInt1 = rand() % 15 + 3 ;
-		auto randInt2 = rand() % 15 + 3 ;
+		auto randInt1 = rand() % 15 + 3;
+		auto randInt2 = rand() % 15 + 3;
 
 
 		auto monsterPos = 32 * ccp(randInt1, randInt2) + ccp(16.5, 0);
@@ -219,7 +219,7 @@ void MonsterManager::createWoodWalls(int woodWallsNum)
 
 		m_monsPosMap[tarBlock] = 1;
 		auto woodWall = WoodWall::create();
-		m_map->addChild(woodWall,0);
+		m_map->addChild(woodWall, 0);
 		//addChild(woodWall, -1);
 		woodWall->bindMonsMgr(this);
 		woodWall->bindMap(m_map);
