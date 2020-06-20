@@ -135,11 +135,14 @@ void Monster::bindMonsMgr(MonsterManager* monsMgr)
 
 void Monster::hit(int damage)
 {
+	if (!m_isAlive)
+		return;
 	setMonsTaunted();
 	this->m_Hp -= damage;
 	std::string msg = '-' + std::to_string(damage);
 	m_damageMsg->showMonsDmg(msg.c_str(), this->getContentSize().height / 2);
 }
+
 
 void Monster::hit(int damage, float flyingDegree, bool isCriticalStrike)
 {

@@ -23,7 +23,7 @@ class MonsterManager : public Node {
 public:
 	//void createMonsters();
 	void createMonsterPos();
-	void createMonstersWithGiantNum(int giantNum = 5, int totalNum = 10);
+	void createMonsters(int totalNum = 10);
 	
 	CREATE_FUNC(MonsterManager);
 	void bindMap(AdventureMapLayer* map);

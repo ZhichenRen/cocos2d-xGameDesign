@@ -189,7 +189,9 @@ void TollgateScene::loadUI()
 	m_boss_name = (Text*)Helper::seekWidgetByName(UI, "boss_name");
 	m_boss_hp_bg = (LoadingBar*)Helper::seekWidgetByName(UI, "boss_hp_bar");
 	m_boss_hp = (LoadingBar*)Helper::seekWidgetByName(UI, "boss_hp");
-
+	m_boss_name->setVisible(false);
+	//m_boss_hp_bg->setVisible(false);
+	m_boss_hp->setVisible(false);
 	auto pause_button = (Button*)Helper::seekWidgetByName(UI, "pause_button");
 	pause_button->addTouchEventListener(this, toucheventselector(TollgateScene::pauseEvent));
 }
@@ -231,7 +233,7 @@ void TollgateScene::loadMonstersInNewRoom()
 	
 	if (!m_monsterMgr->getInited() || !m_monsterMgr->getMonster().size())
 	{
-		m_monsterMgr->createMonstersWithGiantNum();
+		m_monsterMgr->createMonsters();
 		m_monsterMgr->createMonsterPos();
 		m_monsterMgr->createWoodWalls();
 		m_monsterMgr->setInited();
@@ -274,10 +276,16 @@ void TollgateScene::loadBoss()
 		m_monsterMgr->createBoss();
 		m_monsterMgr->createWoodWalls();
 		m_monsterMgr->setInited();
+		m_boss_name->setVisible(true);
+		//m_boss_hp_bg->setVisible(true);
+		m_boss_hp->setVisible(true);
 		return;
 	}
 	m_monsterMgr->createBoss();
 	m_monsterMgr->createWoodWalls();
+	m_boss_name->setVisible(true);
+	//m_boss_hp_bg->setVisible(true);
+	m_boss_hp->setVisible(true);
 	//m_monsterMgr->reviveAllMonsters();
 	
 }
