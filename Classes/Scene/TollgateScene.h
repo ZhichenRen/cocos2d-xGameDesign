@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "cocos2d.h"
 #include "typeinfo"
 #include "AuxiliaryClass/AnimationUtil/AnimationUtil.h"
@@ -29,11 +29,12 @@ public:
 	virtual void cleanup();
 	void addPlayer();
 	void loadUI();
-	void loadMonstersInNewRoom(int giantNum);
+	void loadMonstersInNewRoom();
 	void loadMap();
 	void addWeapon();
 	void loadController();
 	void loadMonsters();
+	void loadBoss();
 	void loadListeners();
 	void loadEditBox();
 	void pauseEvent(Ref*, TouchEventType type);
@@ -56,6 +57,9 @@ private:
 	LoadingBar* m_hpBar = NULL;
 	LoadingBar* m_mpBar = NULL;
 	LoadingBar* m_armorBar = NULL;
+	LoadingBar* m_boss_hp = NULL;
+	LoadingBar* m_boss_hp_bg = NULL;
+	Text* m_boss_name = NULL;
 	Text* m_hp = NULL;
 	Text* m_armor = NULL;
 	Text* m_mp = NULL;
