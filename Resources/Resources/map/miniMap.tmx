@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="9" height="9" tilewidth="32" tileheight="32" nextobjectid="1">
+ <tileset firstgid="1" source="miniMap.tsx"/>
+ <layer name="miniMapLayer" width="9" height="9">
+  <data encoding="base64" compression="zlib">
+   eJxjZWBgYB3FFGEABMcBlg==
+  </data>
+ </layer>
+</map>

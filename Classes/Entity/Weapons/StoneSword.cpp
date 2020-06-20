@@ -1,4 +1,4 @@
-﻿#include "Entity/Weapons/StoneSword.h"
+#include "Entity/Weapons/StoneSword.h"
 
 bool StoneSword::init()
 {
@@ -14,11 +14,12 @@ bool StoneSword::init()
 
 void StoneSword::upgrade()
 {
+	isUpgrate = true;
 	m_damage = 15;
 	m_range = 30;
 	m_attack_speed = 0.15f;
 	m_crit_rate = 0.1f;
-	bindSprite(Sprite::create("GoldenSword!.png"), 0.18f, 0.18f);
+	//bindSprite(Sprite::create("StoneSword.png"), 0.18f, 0.18f);
 	auto upgrade_effect = ParticleFlower::create();
 	upgrade_effect->setEmitterMode(ParticleSystem::Mode::RADIUS);
 	upgrade_effect->setPositionType(ParticleSystem::PositionType::RELATIVE);

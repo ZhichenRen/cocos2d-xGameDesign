@@ -1,4 +1,4 @@
-﻿#include "Entity/Weapons/TrackWeapon.h"
+#include "Entity/Weapons/TrackWeapon.h"
 #include "Entity/Weapons/Bullets/TrackBullet.h"
 #include "Entity/Item/Player/Player.h"
 bool TrackWeapon::init()

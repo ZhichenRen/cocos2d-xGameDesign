@@ -1,4 +1,4 @@
-﻿#include "Scene/DeathScene.h"
+#include "Scene/DeathScene.h"
 #include "Scene/SafeMapScene.h"
 #include "Entity/Item/Player/Player.h"
 #include "Scene/AboutAuthor.h"
@@ -59,14 +59,17 @@ void DeathScene::backToHomeMenu(Ref*, TouchEventType type)
 	}
 }
 
+
 void DeathScene::respawn(Ref*, TouchEventType type)
 {
 	switch (type)
 	{
 	case TOUCH_EVENT_ENDED:
-		//player do sth
+		m_player->setIsDeath(false);
+		m_player->getSprite()->setOpacity(255);
+		m_player->setiNowHp(m_player->getiTotalHp());
+		m_player->setiNowMp(m_player->getiTotalMp());
 		Director::getInstance()->popScene();
-		break;
 	}
 }
 

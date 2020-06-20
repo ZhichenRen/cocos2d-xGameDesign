@@ -1,4 +1,4 @@
-﻿#include "Entity\Weapons\LongRange.h"
+#include "Entity\Weapons\LongRange.h"
 #include "Entity\Weapons\Bullets\ExplosiveBullet.h"
 #include <cmath>
 #define PI 3.1415926

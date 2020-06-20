@@ -26,4 +26,3 @@ void WoodWall::hit(int damage, float flyingDegree, bool isCriticalStrike)
 	std::string msg = std::to_string(damage);
 	m_damageMsg->showMonsDmg(msg.c_str(), this->getContentSize().height / 2);
 }
-

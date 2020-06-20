@@ -1,4 +1,4 @@
-﻿#include "Entity\Weapons\MonsterGun.h"
+#include "Entity\Weapons\MonsterGun.h"
 
 MonsterGun::MonsterGun()
 {

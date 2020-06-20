@@ -1,4 +1,4 @@
-﻿#ifndef __DeathScene_H__
+#ifndef __DeathScene_H__
 #define __DeathScene_H__
 #include "cocos2d.h"
 #include "editor-support/cocostudio/CCSGUIReader.h"
