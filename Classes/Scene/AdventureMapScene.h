@@ -88,6 +88,7 @@ public:
 	std::vector<std::pair<cocos2d::Vec2, cocos2d::Vec2>> getRoadPairs() { return m_roadPairs; }
 	bool isBarrier(cocos2d::Vec2 position);
 	bool isMonsterRoom(cocos2d::Vec2 roomCoord);
+	bool isBossRoom(cocos2d::Vec2 roomCoord);
 
 	virtual void update(float dt);
 

@@ -69,7 +69,7 @@ bool SafeMapLayer::init()
     MenuItemImage* rangerItem = MenuItemImage::create("ranger_image.png", "ranger_image.png", CC_CALLBACK_1(SafeMapLayer::menuItemRangerCallback, this));
     rangerItem->setPosition(Vec2(origin.x + visibleSize.width / 2 - 200, origin.y + visibleSize.height / 2 - 200));
 
-    MenuItemImage* mageItem = MenuItemImage::create("priest_image.jpg", "priest_image.jpg", CC_CALLBACK_1(SafeMapLayer::menuItemMageCallback, this));
+    MenuItemImage* mageItem = MenuItemImage::create("priest_image.jpg", "priest_image.jpg", CC_CALLBACK_1(SafeMapLayer::menuItemPriestCallback, this));
     mageItem->setPosition(Vec2(origin.x + visibleSize.width / 2 + 200, origin.y + visibleSize.height / 2 - 200));
 
     Menu* menu2 = Menu::create(text, rangerItem, mageItem, nullptr);
@@ -194,15 +194,15 @@ void SafeMapLayer::menuItemSettingCallback(cocos2d::Ref* pSender)
 
 void SafeMapLayer::menuItemRangerCallback(cocos2d::Ref* pSender)
 {
+    SafeMapLayer::m_choose_player = 1;
     auto layer = PlayerChoose::create();
     layer->bindMap(this);
     this->addChild(layer, 10000);
-	SafeMapLayer::m_choose_player = 1;
-	setPlayer(1);
 }
 
-void SafeMapLayer::menuItemMageCallback(cocos2d::Ref* pSender)
+void SafeMapLayer::menuItemPriestCallback(cocos2d::Ref* pSender)
 {
+    SafeMapLayer::m_choose_player = 2;
     auto layer = PlayerChoose::create();
     layer->bindMap(this);
     PlayerInfomation priest = {
@@ -217,8 +217,6 @@ void SafeMapLayer::menuItemMageCallback(cocos2d::Ref* pSender)
     };
     layer->setPlayerInformation(priest);
     this->addChild(layer, 10001);
-	SafeMapLayer::m_choose_player = 2;
-	setPlayer(2);
 }
 
 void SafeMapLayer::update(float dt)

@@ -292,6 +292,10 @@ void AdventureMapLayer::buildBonus()
 				m_portal = Sprite::create("portal.png");
 				m_portal->setPosition(m_ground->getPositionAt(GameData::getCoord()[5 * i + j]));
 				this->addChild(m_portal);
+				if (GameData::getLevel() == 2)
+				{
+					m_portal->setVisible(false);
+				}
 			}
 		}
 	}
