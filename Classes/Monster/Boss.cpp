@@ -1,4 +1,4 @@
-
+﻿
 #include "Monster/Boss.h"
 #include "Monster/Monster.h"
 bool Boss::init()
@@ -15,7 +15,7 @@ bool Boss::init()
 	setMonsterWeapon(gun);
 	gun->setDamage(2);
 	gun->setAttackSpeed(1.5f);
-	this->bindSprite(Sprite::create(this->getResTrack()), 3.0f, 3.0f);
+	this->bindSprite(Sprite::create(this->getResTrack()), 2.0f, 2.0f);
 	setContentSize(Size(getContentSize().width * 3, getContentSize().height * 3));
 	this->addChild(gun, 1);
 	m_isAlive = true;
