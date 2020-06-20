@@ -201,7 +201,7 @@ void TollgateScene::loadMonstersInNewRoom()
 	m_monsterMgr->setPosition(LUPoint);
 
 	
-	if (!m_monsterMgr->getInited())
+	if (!m_monsterMgr->getInited() || !m_monsterMgr->getMonster().size())
 	{
 		m_monsterMgr->createMonstersWithGiantNum();
 		m_monsterMgr->createMonsterPos();

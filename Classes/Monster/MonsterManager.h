@@ -14,6 +14,8 @@
 #include "Monster/WoodWall.h"
 #include "Monster/Boss.h"
 #include "FlowWord/FlowWord.h"
+#include "Bonus/chest.h"
+
 
 USING_NS_CC;
 class Player;

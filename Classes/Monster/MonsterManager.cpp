@@ -300,6 +300,7 @@ bool MonsterManager::isGameOver()const
 void MonsterManager::setInited()
 {
 	m_fIsInited = 1;
+	m_fGameOver = 0;
 }
 
 
@@ -385,9 +386,20 @@ void MonsterManager::update(float dt)
 						m_map->addBlue(blue);
 					}
 				}
+				auto blueMedicine = BlueMedicine::create();
+				blueMedicine->setPosition(m_boss->getPosition() + getPosition());
+				blueMedicine->setRandomPosition();
+				m_map->addChild(blueMedicine, 2);
+				m_map->addBlueMedicine(blueMedicine);
+				auto redMedicine = Red::create();
+				redMedicine->setPosition(m_boss->getPosition() + getPosition());
+				redMedicine->setRandomPosition();
+				m_map->addChild(redMedicine, 2);
+				m_map->addRed(redMedicine);
 				CCDictionary* pDictionary = (CCDictionary*)CCDictionary::createWithContentsOfFile("ChineseCharacters.plist");
 				auto str = pDictionary->valueForKey("BossDeath")->getCString();
 				m_flowWord->showShopWord(str);
+				m_monsterList.pop_back();
 				return;
 			}
 			//¹¥»÷Ö÷½Ç
