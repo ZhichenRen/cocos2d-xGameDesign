@@ -47,7 +47,7 @@ public:
 
 	void menuItemSettingCallback(cocos2d::Ref* pSender);
 	void menuItemRangerCallback(cocos2d::Ref* pSender);
-	void menuItemMageCallback(cocos2d::Ref* pSender);
+	void menuItemPriestCallback(cocos2d::Ref* pSender);
 
 	void setPlayerPosition(cocos2d::Vec2 position, int dx, int dy);
 	cocos2d::Vec2 tileCoordFromPosition(cocos2d::Vec2 position);
