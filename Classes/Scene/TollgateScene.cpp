@@ -11,6 +11,7 @@
 #include "GameData.h"
 #include "Scene/DeathScene.h"
 #include "SimpleAudioEngine.h"
+#include "Scene/FinishScene.h"
 #pragma execution_character_set("utf-8")
 
 USING_NS_CC;
@@ -187,11 +188,8 @@ void TollgateScene::loadUI()
 	m_weapon_button = (Button*)Helper::seekWidgetByName(UI, "weapon_button");
 	m_weapon_button->addTouchEventListener(this, toucheventselector(TollgateScene::switchWeapon));
 	m_boss_name = (Text*)Helper::seekWidgetByName(UI, "boss_name");
-	m_boss_hp_bg = (LoadingBar*)Helper::seekWidgetByName(UI, "boss_hp_bar");
+	m_boss_hp_bg = (LoadingBar*)Helper::seekWidgetByName(UI, "boss_hp_bg");
 	m_boss_hp = (LoadingBar*)Helper::seekWidgetByName(UI, "boss_hp");
-	m_boss_name->setVisible(false);
-	//m_boss_hp_bg->setVisible(false);
-	m_boss_hp->setVisible(false);
 	auto pause_button = (Button*)Helper::seekWidgetByName(UI, "pause_button");
 	pause_button->addTouchEventListener(this, toucheventselector(TollgateScene::pauseEvent));
 }
@@ -276,9 +274,6 @@ void TollgateScene::loadBoss()
 		m_monsterMgr->createBoss();
 		m_monsterMgr->createWoodWalls();
 		m_monsterMgr->setInited();
-		m_boss_name->setVisible(true);
-		//m_boss_hp_bg->setVisible(true);
-		m_boss_hp->setVisible(true);
 		return;
 	}
 	m_monsterMgr->createBoss();
@@ -392,8 +387,12 @@ void TollgateScene::loadListeners()
 				else//结束冒险
 				{
 					GameData::setLastRoomCoord(Vec2(2, 2));
-					auto scene = HomeMenuLayer::createScene();
-					Director::getInstance()->replaceScene(scene);
+					Size visible_size = Director::getInstance()->getVisibleSize();
+					CCRenderTexture* background = CCRenderTexture::create(visible_size.width, visible_size.height);
+					background->begin();
+					this->visit();
+					background->end();
+					Director::getInstance()->pushScene(FinishScene::createScene(background, m_player->whichPlayer()));
 				}
 			}
 			for (auto redMedicine : m_map->getRedMedicineList())
@@ -547,10 +546,10 @@ void TollgateScene::compare(float dt)
 	}
 	if (strcmp(m_editBox->getText(), "rcwtql") == 0)
 	{
-		m_player->setInvincible(15.0f);
+		m_player->setInvincible(45.0f);
 		this->unschedule(schedule_selector(TollgateScene::compare));
 	}
-	if (strcmp(m_editBox->getText(), "sildenafil") == 0)
+	if (strcmp(m_editBox->getText(), "risinguppercut") == 0)
 	{
 		m_player->setDamageBonus(10, 15.0f);
 		m_flowWord->showShopWord("力量！！");
@@ -589,7 +588,13 @@ void TollgateScene::update(float dt)
 		m_boss_hp_bg->setVisible(false);
 		m_boss_hp->setVisible(false);
 	}
-	m_boss_hp->setPercent(m_monsterMgr->getMonsterHpRate());
+	else
+	{
+		m_boss_name->setVisible(true);
+		m_boss_hp_bg->setVisible(true);
+		m_boss_hp->setVisible(true);
+		m_boss_hp->setPercent(m_monsterMgr->getMonsterHpRate());
+	}
 
 	m_hp->setText(std::to_string(m_player->getiNowHp()) + "/" + std::to_string(m_player->getiTotalHp()));
 	m_armor->setText(std::to_string(m_player->getiNowArmor()) + "/" + std::to_string(m_player->getiTotalArmor()));
