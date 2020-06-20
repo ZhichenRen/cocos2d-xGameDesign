@@ -554,22 +554,6 @@ int i = 0;
 
 void TollgateScene::update(float dt)
 {
-	(m_cdBar)->setPercent(m_player->getiNowCD() /
-		static_cast<float>(m_player->getiTotalCD()) * 100);
-	(m_armorBar)->setPercent(m_player->getiNowArmor() /
-		static_cast<float>(m_player->getiTotalArmor()) * 100);
-	(m_hpBar)->setPercent(m_player->getiNowHp() /
-		static_cast<float>(m_player->getiTotalHp()) * 100);
-	(m_mpBar)->setPercent(m_player->getiNowMp() /
-		static_cast<float>(m_player->getiTotalMp()) * 100);
-	m_weapon_image->loadTexture(m_player->getWeaponFileName());
-	m_mp_cost->setText(std::to_string(m_player->getWeaponPowerCost()));
-	m_boss_hp->setPercent(m_monsterMgr->getMonsterHpRate());
-
-	m_hp->setText(std::to_string(m_player->getiNowHp()) + "/" + std::to_string(m_player->getiTotalHp()));
-	m_armor->setText(std::to_string(m_player->getiNowArmor()) + "/" + std::to_string(m_player->getiTotalArmor()));
-	m_mp->setText(std::to_string(m_player->getiNowMp()) + "/" + std::to_string(m_player->getiTotalMp()));
-	m_coin->setText(std::to_string(GameData::getCoinNum()));
 	auto playerPos = m_player->getPosition();
 	auto barrier = m_map->getCollidable();
 	auto map = m_map->getMap();
@@ -580,6 +564,30 @@ void TollgateScene::update(float dt)
 
 	auto roomCoord = m_map->roomCoordFromPosition(playerPos);
 	auto roomNum = roomCoord.x * 5 + roomCoord.y;
+	
+	(m_cdBar)->setPercent(m_player->getiNowCD() /
+		static_cast<float>(m_player->getiTotalCD()) * 100);
+	(m_armorBar)->setPercent(m_player->getiNowArmor() /
+		static_cast<float>(m_player->getiTotalArmor()) * 100);
+	(m_hpBar)->setPercent(m_player->getiNowHp() /
+		static_cast<float>(m_player->getiTotalHp()) * 100);
+	(m_mpBar)->setPercent(m_player->getiNowMp() /
+		static_cast<float>(m_player->getiTotalMp()) * 100);
+	m_weapon_image->loadTexture(m_player->getWeaponFileName());
+	m_mp_cost->setText(std::to_string(m_player->getWeaponPowerCost()));
+	if (!m_map->isBossRoom(roomCoord))
+	{
+		m_boss_name->setVisible(false);
+		m_boss_hp_bg->setVisible(false);
+		m_boss_hp->setVisible(false);
+	}
+	m_boss_hp->setPercent(m_monsterMgr->getMonsterHpRate());
+
+	m_hp->setText(std::to_string(m_player->getiNowHp()) + "/" + std::to_string(m_player->getiTotalHp()));
+	m_armor->setText(std::to_string(m_player->getiNowArmor()) + "/" + std::to_string(m_player->getiTotalArmor()));
+	m_mp->setText(std::to_string(m_player->getiNowMp()) + "/" + std::to_string(m_player->getiTotalMp()));
+	m_coin->setText(std::to_string(GameData::getCoinNum()));
+
 
 	if ((m_map->isMonsterRoom(roomCoord) || m_map->isBossRoom(roomCoord))	//首先它得是个怪物房间
 		&& !m_monsterMgr->isRoomVisited(roomCoord))//其次它没有被到访过
