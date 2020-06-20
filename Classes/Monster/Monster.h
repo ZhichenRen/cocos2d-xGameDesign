@@ -30,7 +30,7 @@ public:
 	void bindMap(AdventureMapLayer* map);
 	void bindMonsMgr(MonsterManager* monsMgr);
 	virtual void hit(int damage, float flyingDegree, bool isCriticalStrike);
-	void die();
+	virtual void die();
 	void wander();
 	//void showWords();
 	//void dieWithNothing();

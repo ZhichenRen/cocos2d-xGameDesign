@@ -169,7 +169,6 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 		slime->getMonsterWeapon()->bindMap(m_map);
 		slime->bindMonsMgr(this);
 		m_monsterList.push_back(slime);
-		
 	}
 
 	for (int i = 0; i < randVec[3] + 1; i++)
@@ -190,7 +189,6 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 		traveller->getMonsterWeapon()->bindMap(m_map);
 		traveller->bindMonsMgr(this);
 		m_monsterList.push_back(traveller);
-		
 	}
 }
 
@@ -307,6 +305,19 @@ bool MonsterManager::getInited()const
 	return m_fIsInited;
 }
 
+void MonsterManager::createBoss()
+{
+	m_fGameOver = 0;
+	m_deathMonsNum = m_monsterList.size();
+	m_boss = Boss::create();
+	m_boss->setPosition(10 * 32, 10 * 32);
+	m_boss->bindMap(m_map);
+	m_boss->getMonsterWeapon()->bindMap(m_map);
+	m_boss->bindMonsMgr(this);
+	m_boss->getChildByName("preRect")->setVisible(false);
+	m_monsterList.push_back(m_boss);
+	this->addChild(m_boss, 1);
+}
 
 void MonsterManager::update(float dt)
 {
@@ -314,13 +325,6 @@ void MonsterManager::update(float dt)
 		return;
 	Point playerPosition = m_player->getPosition() - getPosition();
 	//相对坐标的转化
-	//playerPosition = convertToNodeSpace(playerPosition);
-	if (m_deathMonsNum == m_monsterList.size())
-	{
-
-		resetAllMons();
-	}
-
 	for (auto woodWall : m_woodWallList)
 	{
 		auto curPos = woodWall->getPosition();
@@ -337,11 +341,63 @@ void MonsterManager::update(float dt)
 			woodWall->die();
 		}
 	}
-
+	
+	if (m_boss)
+	{
+		if (m_boss->isAlive())
+		{
+			if (m_boss->getHp() <= 0)
+			{
+				m_boss->die();
+				m_deathMonsNum++;
+				m_fGameOver = 1;
+				for (int i = 0; i < 100; i++)
+				{
+					auto ranF1 = CCRANDOM_0_1();
+					if (ranF1 < 0.6f)
+					{
+						auto coin = Coin::create();
+						coin->setPosition(m_boss->getPosition() + getPosition());
+						m_map->addChild(coin, 2);
+						coin->setRandomPosition();
+						m_map->addCoin(coin);
+					}
+				}
+				for (int i = 0; i < 20; i++)
+				{
+					auto ranF1 = CCRANDOM_0_1();
+					if (ranF1 < 0.6f)
+					{
+						auto blue = Blue::create();
+						blue->setPosition(m_boss->getPosition() + getPosition());
+						m_map->addChild(blue, 2);
+						blue->setRandomPosition();
+						m_map->addBlue(blue);
+					}
+				}
+				return;
+			}
+			//攻击主角
+			return;
+		}
+	}
 	if (m_fGameOver)//游戏结束了
 	{
 		return;
 	}
+
+
+	
+	if (m_deathMonsNum == m_monsterList.size())
+	{
+		resetAllMons();
+	}
+	if (m_fGameOver)//游戏结束了
+	{
+		return;
+	}
+
+	
 	for (auto monster : m_monsterList)
 	{
 		auto curPos = monster->getPosition();
@@ -421,6 +477,13 @@ void MonsterManager::killMonsters()
 	{
 		monster->die();
 	}
+	if (m_boss)
+	{
+		if (m_boss->isAlive())
+		{
+			m_boss->die();
+		}
+	}
 	m_fGameOver = 1;
 }
 
@@ -486,6 +549,8 @@ void MonsterManager::setRoomVisited(Vec2 room)
 {
 	m_visitedRoom[room] = true;
 }
+
+
 
 bool MonsterManager::isRoomVisited(Vec2 room)
 {

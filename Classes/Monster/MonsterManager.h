@@ -4,15 +4,15 @@
 
 #include "cocos2d.h"
 #include "GameData.h"
-#include "Monster\Monster.h"
-#include "Entity\Entity.h"
-#include "Monster\Slime.h"
-#include "Monster\Pig.h"
-#include "Monster\ChiefOfTribe.h"
-#include "Monster\Duck.h"
+#include "Monster/Monster.h"
+#include "Entity/Entity.h"
+#include "Monster/Slime.h"
+#include "Monster/Pig.h"
+#include "Monster/ChiefOfTribe.h"
+#include "Monster/Duck.h"
 #include "Monster/Traveller.h"
 #include "Monster/WoodWall.h"
-
+#include "Monster/Boss.h"
 
 
 USING_NS_CC;
@@ -48,17 +48,13 @@ public:
 	std::vector<Monster*> getMonster()const;
 	std::vector<Monster*> getWoodWall()const;
 	std::map<Vec2, bool> getMonsPosMap()const { return m_monsPosMap; }
+
 	void setPosMap(Vec2 pos, bool flag);
 	void setCurRoom(Vec2 curRoom);
 	void setBulkMonsterNum(int giantNum);
 	void setInited();
 	void setRoomVisited(Vec2 room);
-	
-	
-	
-	
-	
-	
+	void createBoss();
 private:
 
 	void showPreRec();
@@ -72,7 +68,7 @@ private:
 	std::vector<Monster*> m_woodWallList;
 	std::map<Vec2, bool> m_monsPosMap;
 	std::map<Vec2, bool> m_visitedRoom;
-
+	Boss* m_boss = NULL;
 
 	Entity* m_player = NULL;
 	AdventureMapLayer* m_map = NULL;

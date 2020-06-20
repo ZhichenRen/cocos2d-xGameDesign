@@ -191,7 +191,7 @@ void TollgateScene::switchWeapon(Ref*, TouchEventType type)
 
 }
 
-void TollgateScene::loadMonstersInNewRoom(int giantNum = -1)
+void TollgateScene::loadMonstersInNewRoom()
 {
 	auto roomCoord = m_monsterMgr->getCurRoom();
 	m_monsterMgr->setRoomVisited(roomCoord);
@@ -200,8 +200,7 @@ void TollgateScene::loadMonstersInNewRoom(int giantNum = -1)
 	auto LUPoint = (midPoint + ccp(-10, -10)) * 32;
 	m_monsterMgr->setPosition(LUPoint);
 
-	if (giantNum != -1)
-		m_monsterMgr->setBulkMonsterNum(giantNum);
+	
 	if (!m_monsterMgr->getInited())
 	{
 		m_monsterMgr->createMonstersWithGiantNum();
@@ -213,7 +212,7 @@ void TollgateScene::loadMonstersInNewRoom(int giantNum = -1)
 	m_monsterMgr->reviveAllMonsters();
 }
 
-
+ 
 void TollgateScene::loadMonsters()
 {
 	auto playerPos = m_player->getPosition();
@@ -230,6 +229,29 @@ void TollgateScene::loadMonsters()
 	m_monsterMgr->bindMap(m_map);
 	m_monsterMgr->bindPlayer(static_cast<Entity*>(this->m_player));
 	m_map->addChild(m_monsterMgr, 1);
+}
+
+void TollgateScene::loadBoss()
+{
+	auto roomCoord = m_monsterMgr->getCurRoom();
+	m_monsterMgr->setRoomVisited(roomCoord);
+	auto midPoint = GameData::getCoord()[static_cast<int>(5 * roomCoord.x + roomCoord.y)];
+	midPoint.y = 186 - midPoint.y;
+	auto LUPoint = (midPoint + ccp(-10, -10)) * 32;
+	m_monsterMgr->setPosition(LUPoint);
+
+
+	if (!m_monsterMgr->getInited())
+	{
+		m_monsterMgr->createBoss();
+		m_monsterMgr->createWoodWalls();
+		m_monsterMgr->setInited();
+		return;
+	}
+	m_monsterMgr->createBoss();
+	m_monsterMgr->createWoodWalls();
+	//m_monsterMgr->reviveAllMonsters();
+	
 }
 
 void TollgateScene::loadListeners()
@@ -464,7 +486,14 @@ void TollgateScene::update(float dt)
 		&& !m_monsterMgr->isRoomVisited(roomCoord))//其次它没有被到访过
 	{
 		m_monsterMgr->setCurRoom(roomCoord);
-		loadMonstersInNewRoom(2);
+		if (1)//如果是boss房
+		{
+			loadBoss();
+		}
+		else
+		{
+			loadMonstersInNewRoom();
+		}
 	}
 	Vec2 dir[4] = { {0,1},{0,-1},{1,0},{-1,0} };
 

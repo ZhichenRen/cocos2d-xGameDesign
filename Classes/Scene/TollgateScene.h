@@ -29,11 +29,12 @@ public:
 	virtual void cleanup();
 	void addPlayer();
 	void loadUI();
-	void loadMonstersInNewRoom(int giantNum);
+	void loadMonstersInNewRoom();
 	void loadMap();
 	void addWeapon();
 	void loadController();
 	void loadMonsters();
+	void loadBoss();
 	void loadListeners();
 	void loadEditBox();
 	void pauseEvent(Ref*, TouchEventType type);
