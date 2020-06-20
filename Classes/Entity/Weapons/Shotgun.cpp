@@ -1,4 +1,4 @@
-﻿#include "Entity\Weapons\Shotgun.h"
+#include "Entity\Weapons\Shotgun.h"
 #include "Entity\Weapons\Bullets\Bullet.h"
 #define PI 3.1415926
 
@@ -26,6 +26,7 @@ bool Shotgun::init()
 
 void Shotgun::upgrade()
 {
+	isUpgrate = true;
 	m_power_cost = 5;
 	m_bullet_damage = 8;
 	m_bullet_speed = 650;

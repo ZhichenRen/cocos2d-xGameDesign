@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ShopFirstMeet</key>
+	<string>这位勇士，您要花费20金币购买一把神秘武器吗？</string>
+	<key>ShopLackMoney</key>
+	<string>您的金币不足，请下次再来！</string>
+	<key>ShopEnoughMoney</key>
+	<string>谢谢惠顾，您会更加强大！</string>
+	<key>StatueFirstMeet</key>
+	<string>供奉此雕像 15</string>
+	<key>StatueLackMoney</key>
+	<string>金币不足！</string>
+	<key>StatueEnoughMoney</key>
+	<string>属性提升了！</string>
+	<key>GreedyCheat</key>
+	<string>作弊成功！金币+100</string>
+</dict>
+</plist>

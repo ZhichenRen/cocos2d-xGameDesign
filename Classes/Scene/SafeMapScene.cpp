@@ -130,7 +130,7 @@ void SafeMapLayer::onEnter()
 void SafeMapLayer::onEnterTransitionDidFinish()
 {
     Layer::onEnterTransitionDidFinish();
-    SimpleAudioEngine::getInstance()->playBackgroundMusic("bgm/safeBgm.mp3",true);
+    SimpleAudioEngine::getInstance()->playBackgroundMusic("bgm/safeBgm.mp3", true);
 }
 
 void SafeMapLayer::onExit()

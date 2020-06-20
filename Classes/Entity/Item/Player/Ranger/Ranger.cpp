@@ -1,5 +1,6 @@
 #include "Entity/Item/Player/Ranger/Ranger.h"
-
+#include "Entity/Weapons/CloseWeapon.h"
+#include "Entity/Weapons/LongRange.h"
 Ranger::Ranger()
 {
 
@@ -27,6 +28,7 @@ bool Ranger::init()
 	m_iTotalSkillDuration = 1;
 	m_numTotalWeapon = 3;
 	m_numWeapon = 0;
+	m_numHasWeapon = 0;
 	m_numLongRange = 0;
 	m_isInSkill = false;
 	return true;
@@ -64,17 +66,18 @@ void Ranger::skill()
 void Ranger::skillEnd()
 {
 	m_isInSkill = false;
+	m_skillDirectionX = 0;
+	m_skillDirectionY = 0;
 }
 
 void Ranger::die()
 {
-	if (getSprite() == NULL)
-	{
-		return;
-	}
-	auto animation = AnimationUtil::createWithFrameNameAndNumUsingPlist("Ranger/", "RangerDie", 1, 0.06, 1);
-	auto animate = Animate::create(animation);
-	m_sprite->runAction(animate);
+	m_isDeath = true;
+	auto m_addBloodMsg = FlowWord::create();
+	this->addChild(m_addBloodMsg);
+	std::string msg = "Revive!";
+	m_addBloodMsg->showCritDmg(msg.c_str(), this->getContentSize().height / 2, 1.0);
+	getSprite()->setOpacity(0);
 }
 
 Animate* Ranger::stand()

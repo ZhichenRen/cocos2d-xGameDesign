@@ -1,6 +1,7 @@
 #pragma once
 #include "AuxiliaryClass/AnimationUtil/AnimationUtil.h"
 #include "Entity/Item/Player/Player.h"
+#include "FlowWord/FlowWord.h"
 #include "cocos2d.h"
 using namespace cocos2d;
 class Priest :public Player

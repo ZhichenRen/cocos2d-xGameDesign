@@ -1,4 +1,4 @@
-﻿#include "Scene\PauseScene.h"
+#include "Scene\PauseScene.h"
 #include "Scene\HomeScene.h"
 #include "Scene\SettingScene.h"
 #include "GameData.h"

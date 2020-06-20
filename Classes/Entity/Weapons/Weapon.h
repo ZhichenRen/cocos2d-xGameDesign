@@ -1,4 +1,4 @@
-﻿#ifndef __Weapon_H__
+#ifndef __Weapon_H__
 #define __Weapon_H__
 
 #include <string>
@@ -22,7 +22,7 @@ public:
 	int getRange()const;
 	void bindMap(AdventureMapLayer* map);
 	void setCritRate(float crit_rate);
-	float getAttackSpeed()const;
+	virtual float getAttackSpeed()const;
 	void setAttackSpeed(float speed);
 	virtual int getDamage()const;
 	virtual void setDamage(int damage);
@@ -32,11 +32,16 @@ public:
 	virtual void upgrade();
 	virtual bool isCloseWeapon()const;
 	const std::string& getWeaponName() { return m_weaponName; }
+	inline bool getIsUpgarte() const { return isUpgrate; }
+	bool isUsed()const { return m_is_used; }
+	void disappear();
 protected:
 	int m_power_cost;
 	int m_range;
+	bool isUpgrate = false;
 	float m_crit_rate;
 	float m_attack_speed;
+	bool m_is_used = false;
 	std::string m_weaponName = "none";
 	AdventureMapLayer* m_map;
 };

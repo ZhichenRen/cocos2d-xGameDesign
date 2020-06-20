@@ -13,6 +13,7 @@ class PlayerController :public MyController
 public:
 	virtual bool init() override;
 	void onEnter();
+	void onExit();
 	CREATE_FUNC(PlayerController);
 	virtual void update(float dt) override;
 	void setPlayer(Player* player);
@@ -23,6 +24,7 @@ private:
 	bool m_isChangWeapon = false;
 	bool m_isRanger = false;
 	Player* m_player = NULL;
+	EventListenerKeyboard* m_listener = NULL;
 	void isEncounterBarriers(const int x, const int y);
 	void registeControllerEvent();
 	void animateOperate();

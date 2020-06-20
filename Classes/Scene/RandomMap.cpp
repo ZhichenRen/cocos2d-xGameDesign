@@ -414,3 +414,13 @@ void AdventureMapLayer::addBlueMedicine(BlueMedicine* blueMedicine)
 {
 	m_blueMedicineList.push_back(blueMedicine);
 }
+
+void AdventureMapLayer::addLongRange(LongRange* longRange)
+{
+	m_longRangeList.push_back(longRange);
+}
+
+void AdventureMapLayer::addCloseWeapon(CloseWeapon* closeWeapon)
+{
+	m_closeWeaponList.push_back(closeWeapon);
+}

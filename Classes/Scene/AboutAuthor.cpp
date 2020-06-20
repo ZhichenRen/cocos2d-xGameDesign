@@ -1,4 +1,4 @@
-ï»¿#include "Scene/AboutAuthor.h"
+#include "Scene/AboutAuthor.h"
 #pragma execution_character_set("utf-8")
 
 bool AboutAuthor::init()
@@ -21,8 +21,8 @@ void AboutAuthor::loadUI()
 	auto back_button = (Button*)Helper::seekWidgetByName(UI, "back_button");
 	back_button->addTouchEventListener(this, toucheventselector(AboutAuthor::back));
 	auto text = (Text*)Helper::seekWidgetByName(UI, "description");
-	text->setText("å››ä¸ªå—æ ¡åŒºçš„å€’éœ‰è›‹\n2.88å…ƒçš„æèµ å¯ä»¥è®©ä»–ä»¬\nä¸€äººåƒä¸Šä¸€ä¸ªå—è‹‘çš„è‚‰åŒ…");
-	
+	text->setText("ËÄ¸öÄÏĞ£ÇøµÄµ¹Ã¹µ°\n2.88ÔªµÄ¾èÔù¿ÉÒÔÈÃËûÃÇ\nÒ»ÈË³ÔÉÏÒ»¸öÄÏÔ·µÄÈâ°ü");
+
 }
 
 void AboutAuthor::back(Ref*, TouchEventType type)

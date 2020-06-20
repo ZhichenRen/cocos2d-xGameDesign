@@ -2,12 +2,11 @@
 #define __GAME_DATA__
 #include "cocos2d.h"
 USING_NS_CC;
-
+#include "Entity/Item/Player/Player.h"
 class GameData
 {
 private:
 	GameData();
-
 	static GameData* m_pData;
 	static int m_coinNum;
 	static int m_level;
