@@ -42,6 +42,9 @@ bool MonsterManager::init()
 	m_deathMonsNum = 0;
 	m_fGameOver = 0;
 	m_curRoom = ccp(-1, -1);
+	m_flowWord = FlowWord::create();
+	addChild(m_flowWord, 5);
+
 	return true;
 }
 
@@ -123,15 +126,11 @@ void MonsterManager::bulkUpRandMons(int totalNum)
 	}
 }
 
-void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
+void MonsterManager::createMonsters(int totalNum)
 {
 	//随机生成巨大化敌人
-	auto randVec = createRandomNums(5, totalNum - 5);
-	this->m_bulkMonsterNum = giantNum;
-	if (giantNum > totalNum - 4)
-	{
-		assert("too much giant monsters");
-	}
+	auto randVec = createRandomNums(4, totalNum - 4);
+	//this->m_bulkMonsterNum = giantNum;
 	Pig* pig = NULL;
 	Slime* slime = NULL;
 	Sprite* sprite = NULL;
@@ -147,10 +146,10 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 		pig->bindMonsMgr(this);
 		this->addChild(pig, 1);
 		m_monsterList.push_back(pig);
-		m_shortMonsterList.push_back(pig);
+
 	}
 
-	for (int i = 0; i < randVec[1] + 1; i++)
+	for (int i = 0; i < 1; i++)//可达鸭太多就变态了
 	{
 		duck = Duck::create();
 		duck->bindMap(m_map);
@@ -158,10 +157,10 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 		duck->bindMonsMgr(this);
 		this->addChild(duck, 1);
 		m_monsterList.push_back(duck);
-		m_shortMonsterList.push_back(duck);
+
 	}
 
-	for (int i = 0; i < randVec[2] + 1; i++)
+	for (int i = 0; i < randVec[1] + 1; i++)
 	{
 		slime = Slime::create();
 		this->addChild(slime, 1);
@@ -169,10 +168,9 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 		slime->getMonsterWeapon()->bindMap(m_map);
 		slime->bindMonsMgr(this);
 		m_monsterList.push_back(slime);
-		m_longMonsterList.push_back(slime);
 	}
 
-	for (int i = 0; i < randVec[3] + 1; i++)
+	for (int i = 0; i < randVec[2] + 1; i++)
 	{
 		chiefOfTribe = ChiefOfTribe::create();
 		this->addChild(chiefOfTribe, 1);
@@ -180,9 +178,9 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 		chiefOfTribe->getMonsterWeapon()->bindMap(m_map);
 		chiefOfTribe->bindMonsMgr(this);
 		m_monsterList.push_back(chiefOfTribe);
-		m_longMonsterList.push_back(chiefOfTribe);
+
 	}
-	for (int i = 0; i < randVec[4] + 1; i++)
+	for (int i = 0; i < randVec[3] + 1; i++)
 	{
 		traveller = Traveller::create();
 		this->addChild(traveller, 1);
@@ -190,7 +188,6 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 		traveller->getMonsterWeapon()->bindMap(m_map);
 		traveller->bindMonsMgr(this);
 		m_monsterList.push_back(traveller);
-		m_longMonsterList.push_back(traveller);
 	}
 }
 
@@ -288,7 +285,7 @@ bool MonsterManager::resetAllMons()
 	return true;
 }
 
-bool MonsterManager::isGameOver()
+bool MonsterManager::isGameOver()const
 {
 	if (!m_fIsInited)
 		return true;
@@ -299,14 +296,35 @@ bool MonsterManager::isGameOver()
 void MonsterManager::setInited()
 {
 	m_fIsInited = 1;
+	m_fGameOver = 0;
 }
 
 
-bool MonsterManager::getInited()
+bool MonsterManager::getInited()const
 {
 	return m_fIsInited;
 }
 
+void MonsterManager::createBoss()
+{
+	m_fGameOver = 0;
+	m_deathMonsNum = m_monsterList.size();
+	m_boss = Boss::create();
+	m_boss->setPosition(10 * 32, 10 * 32);
+	m_boss->bindMap(m_map);
+	m_boss->getMonsterWeapon()->bindMap(m_map);
+	m_boss->bindMonsMgr(this);
+	m_boss->getChildByName("preRect")->setVisible(false);
+	if (!m_flowWord)
+		m_flowWord = FlowWord::create();
+	m_flowWord->setPosition(m_boss->getPosition() + ccp(-150, -50));
+	//this->addChild(m_flowWord, 5);
+	CCDictionary* pDictionary = (CCDictionary*)CCDictionary::createWithContentsOfFile("ChineseCharacters.plist");
+	auto str = pDictionary->valueForKey("BossAppearence")->getCString();
+	m_flowWord->showShopWord(str);
+	m_monsterList.push_back(m_boss);
+	this->addChild(m_boss, 1);
+}
 
 void MonsterManager::update(float dt)
 {
@@ -314,13 +332,6 @@ void MonsterManager::update(float dt)
 		return;
 	Point playerPosition = m_player->getPosition() - getPosition();
 	//相对坐标的转化
-	//playerPosition = convertToNodeSpace(playerPosition);
-	if (m_deathMonsNum == m_monsterList.size())
-	{
-
-		resetAllMons();
-	}
-
 	for (auto woodWall : m_woodWallList)
 	{
 		auto curPos = woodWall->getPosition();
@@ -338,10 +349,79 @@ void MonsterManager::update(float dt)
 		}
 	}
 
+	if (m_boss)
+	{
+		if (m_boss->isAlive())
+		{
+			if (m_boss->getHp() <= 0)
+			{
+				m_boss->die();
+				m_deathMonsNum++;
+				m_fGameOver = 1;
+				for (int i = 0; i < 100; i++)
+				{
+					auto ranF1 = CCRANDOM_0_1();
+					if (ranF1 < 0.6f)
+					{
+						auto coin = Coin::create();
+						coin->setPosition(m_boss->getPosition() + getPosition());
+						m_map->addChild(coin, 2);
+						coin->setRandomPosition();
+						m_map->addCoin(coin);
+					}
+				}
+				for (int i = 0; i < 20; i++)
+				{
+					auto ranF1 = CCRANDOM_0_1();
+					if (ranF1 < 0.6f)
+					{
+						auto blue = Blue::create();
+						blue->setPosition(m_boss->getPosition() + getPosition());
+						m_map->addChild(blue, 2);
+						blue->setRandomPosition();
+						m_map->addBlue(blue);
+					}
+				}
+				auto blueMedicine = BlueMedicine::create();
+				blueMedicine->setPosition(m_boss->getPosition() + getPosition());
+				blueMedicine->setRandomPosition();
+				m_map->addChild(blueMedicine, 2);
+				m_map->addBlueMedicine(blueMedicine);
+				auto redMedicine = Red::create();
+				redMedicine->setPosition(m_boss->getPosition() + getPosition());
+				redMedicine->setRandomPosition();
+				m_map->addChild(redMedicine, 2);
+				m_map->addRed(redMedicine);
+				CCDictionary* pDictionary = (CCDictionary*)CCDictionary::createWithContentsOfFile("ChineseCharacters.plist");
+				auto str = pDictionary->valueForKey("BossDeath")->getCString();
+				m_flowWord->showShopWord(str);
+				m_monsterList.pop_back();
+				return;
+			}
+			m_boss->wander();
+			auto gun = m_boss->getMonsterWeapon();
+			gun->attack(m_map->convertToWorldSpace(m_player->getPosition()));
+			return;
+		}
+
+	}
 	if (m_fGameOver)//游戏结束了
 	{
 		return;
 	}
+
+
+
+	if (m_deathMonsNum == m_monsterList.size())
+	{
+		resetAllMons();
+	}
+	if (m_fGameOver)//游戏结束了
+	{
+		return;
+	}
+
+
 	for (auto monster : m_monsterList)
 	{
 		auto curPos = monster->getPosition();
@@ -415,6 +495,35 @@ void MonsterManager::update(float dt)
 
 }
 
+void MonsterManager::killMonsters()
+{
+	for (auto monster : m_monsterList)
+	{
+		monster->die();
+	}
+	if (m_boss)
+	{
+		if (m_boss->isAlive())
+		{
+			m_boss->die();
+		}
+	}
+	m_fGameOver = 1;
+}
+
+void MonsterManager::killWoodWall()
+{
+	for (auto woodWall : m_woodWallList)
+	{
+		woodWall->die();
+		auto curPos = woodWall->getPosition();
+		Vec2 blockOccupied = ccp(static_cast<int>(curPos.x) / 21, static_cast<int>(curPos.y) / 21);
+		m_monsPosMap[blockOccupied] = 0;//清除位置信息
+		m_map->getCollidable()->setTileGID(2, Vec2(0, -1) +
+			m_map->tileCoordFromPosition(woodWall->getPosition()));
+	}
+}
+
 
 
 
@@ -455,19 +564,38 @@ void MonsterManager::setCurRoom(Vec2 curRoom)
 	m_curRoom = curRoom;
 }
 
-Vec2 MonsterManager::getCurRoom()
+Vec2 MonsterManager::getCurRoom()const
 {
 	return m_curRoom;
 }
 
-void MonsterManager::markRoomVisited(Vec2 room)
+float MonsterManager::getMonsterHpRate() const
+{
+	if (!m_boss)
+		return 0.0f;
+	return m_boss->getHp() / 5.0f;
+}
+
+void MonsterManager::setRoomVisited(Vec2 room)
 {
 	m_visitedRoom[room] = true;
 }
 
+
+
 bool MonsterManager::isRoomVisited(Vec2 room)
 {
 	return m_visitedRoom[room];
+}
+bool MonsterManager::isBossAlive() const
+{
+	if (!m_boss)
+		return false;
+	if (m_boss->getHp() <= 0)
+	{
+		return false;
+	}
+	return true;
 }
 void MonsterManager::setBulkMonsterNum(int giantNum)
 {

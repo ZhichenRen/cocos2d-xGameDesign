@@ -1,5 +1,6 @@
 #include "Entity/Item/Player/Player.h"
 #include "Scene/TollgateScene.h"
+#include "FlowWord/FlowWord.h"
 #include "Entity/Weapons/CloseWeapon.h"
 #include "Entity\Weapons\Shotgun.h"
 #include "Entity\Weapons\RPG.h"
@@ -225,6 +226,10 @@ void Player::setWeapon(std::string& str,const bool isUpgrate)
 		{
 			m_isUpgrate[i] = true;
 			m_numWeapon = i + 1;
+			auto* flowWord = FlowWord::create();
+			this->addChild(flowWord);
+			std::string msg = "Upgrate!";
+			flowWord->showCritDmg(msg.c_str(), this->getContentSize().height / 2, 1.0);
 			return;
 		}
 	}
@@ -337,7 +342,7 @@ void Player::determineWhichWeapon()
 	chooseWeapon();
 	if (m_longRange != NULL && m_close == NULL)
 	{
-		m_longRange->setPosition(0, -5);
+		m_longRange->setPosition(15, -5);
 		m_longRange->bindMap(m_map);
 		this->addChild(m_longRange);
 	    _eventDispatcher->addEventListenerWithSceneGraphPriority(m_listener, this);
@@ -345,7 +350,7 @@ void Player::determineWhichWeapon()
 	}
 	else
 	{
-		m_close->setPosition(0, -9);
+		m_close->setPosition(15, -9);
 		m_close->bindMap(m_map);
 		this->addChild(m_close);
 		_eventDispatcher->addEventListenerWithSceneGraphPriority(m_listener, this);
@@ -621,4 +626,48 @@ void Player::getBuff(int i)
 		setiTotalCD(getiTotalCD() / 2);
 		setiNowCD(getiNowCD() / 2);
 	}
+}
+
+void Player::setInvincible(float duration_time)
+{
+	if (m_is_invincible)
+	{
+		return;
+	}
+	m_is_invincible = true;
+	m_shield->setVisible(true);
+	auto duration = DelayTime::create(duration_time);
+	auto callback = CallFunc::create(
+		[this]()
+	{
+		this->m_is_invincible = false;
+		this->m_shield->setVisible(false);
+	}
+	);
+	auto action = Sequence::create(duration, callback, NULL);
+	this->runAction(action);
+}
+
+bool Player::isInvincible()const
+{
+	return m_is_invincible;
+}
+
+void Player::setDamageBonus(int bonus_time, float duration_time)
+{
+	m_damage_bonus = bonus_time;
+	auto duration = DelayTime::create(duration_time);
+	auto callback = CallFunc::create(
+		[this]()
+	{
+		this->m_damage_bonus = 1;
+	}
+	);
+	auto action = Sequence::create(duration, callback, NULL);
+	this->runAction(action);
+}
+
+int Player::getDamageBonus()const
+{
+	return m_damage_bonus;
 }

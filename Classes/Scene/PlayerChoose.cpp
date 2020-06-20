@@ -41,7 +41,7 @@ void PlayerChoose::setPlayer(Ref*, TouchEventType type)
 	switch (type)
 	{
 	case TOUCH_EVENT_ENDED:
-		m_safeMap->setPlayer(1);
+		m_safeMap->setPlayer(SafeMapLayer::whichPlayer());
 		this->removeFromParentAndCleanup(true);
 		break;
 	}

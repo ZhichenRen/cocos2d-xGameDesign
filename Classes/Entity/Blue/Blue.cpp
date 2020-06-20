@@ -1,5 +1,5 @@
 #include "Entity\Blue\Blue.h"
-#define RANDOMRANGE 10
+#define RANDOMRANGE 80
 
 
 bool Blue::init()

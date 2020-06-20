@@ -39,7 +39,7 @@ void ExplosiveBullet::explode()
 	}
 	);
 
-	auto explode_action = Sequence::create(DelayTime::create(2.0f), callback, NULL);
+	auto explode_action = Sequence::create(DelayTime::create(0.5f), callback, NULL);
 	runAction(explode_action);
 }
 

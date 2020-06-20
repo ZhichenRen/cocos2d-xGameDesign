@@ -1,4 +1,5 @@
 #ifndef __SAFE_MAP_SCENE_H__
+
 #define __SAFE_MAP_SCENE_H__
 
 #include "cocos2d.h"
@@ -40,19 +41,20 @@ public:
 	virtual void onExitTransitionDidStart();
 	virtual void cleanup();
 
-	static int whichPlayer() { return 1; }
-
 	void setPlayer(int playerNum);
 
 	void menuItemSettingCallback(cocos2d::Ref* pSender);
 	void menuItemRangerCallback(cocos2d::Ref* pSender);
-	void menuItemMageCallback(cocos2d::Ref* pSender);
+	void menuItemPriestCallback(cocos2d::Ref* pSender);
 
 	void setPlayerPosition(cocos2d::Vec2 position, int dx, int dy);
 	cocos2d::Vec2 tileCoordFromPosition(cocos2d::Vec2 position);
 	void setViewpointCenter(cocos2d::Vec2 position);
+	static int whichPlayer() { return m_choose_player; }
 
 	CREATE_FUNC(SafeMapLayer);
+
+	static int m_choose_player;
 };
 
 

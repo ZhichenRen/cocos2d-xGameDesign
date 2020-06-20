@@ -45,12 +45,12 @@ void Monster::hide()
 }
 
 
-bool Monster::isAlive()
+bool Monster::isAlive()const
 {
 	return m_isAlive;
 }
 
-bool Monster::isTaunted()
+bool Monster::isTaunted()const
 {
 	return m_fIsTaunted;
 }
@@ -135,11 +135,14 @@ void Monster::bindMonsMgr(MonsterManager* monsMgr)
 
 void Monster::hit(int damage)
 {
+	if (!m_isAlive)
+		return;
 	setMonsTaunted();
 	this->m_Hp -= damage;
 	std::string msg = '-' + std::to_string(damage);
 	m_damageMsg->showMonsDmg(msg.c_str(), this->getContentSize().height / 2);
 }
+
 
 void Monster::hit(int damage, float flyingDegree, bool isCriticalStrike)
 {
@@ -239,4 +242,10 @@ void Monster::setMonsTaunted()
 		return;
 	m_fIsTaunted = 1;
 	m_damageMsg->showMonsTaunted();
+
+}
+
+FlowWord* Monster::getFlowWord() const
+{
+	return m_damageMsg;
 }

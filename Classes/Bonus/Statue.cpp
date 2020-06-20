@@ -5,7 +5,7 @@ Statue::Statue()
 	m_interaction = 1;
 	m_flowWord = FlowWord::create();
 	this->addChild(m_flowWord);
-	this->bindSprite(Sprite::create("duck.png"));
+	this->bindSprite(Sprite::create("statue.png"));
 }
 
 Statue::~Statue()

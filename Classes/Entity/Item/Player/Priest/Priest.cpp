@@ -36,6 +36,10 @@ bool Priest::init()
 	m_skillDirectionX = 0;
 	m_skillDirectionY = 0;
 	m_skillTime = 0;
+	m_shield = Sprite::create("shield1.png");
+	m_shield->setPosition(0, 0);
+	m_shield->setVisible(false);
+	this->addChild(m_shield, 5);
 	return true;
 }
 

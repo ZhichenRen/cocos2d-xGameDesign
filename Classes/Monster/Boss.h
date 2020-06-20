@@ -2,13 +2,16 @@
 #define __Boss_H__
 #include "cocos2d.h"
 #include "Monster\Monster.h"
-#include "Entity\Weapons\MonsterSword.h"
+
+
 class Boss : public Monster {
 public:
 	virtual bool init();
-	void resetPropoties();
+	//virtual void die();
+	virtual void hit(int damage, float flyingDegree, bool isCriticalStrike);
 	CREATE_FUNC(Boss);
+	//virtual void resetPropoties();
 private:
-	static const int m_initHp = 50;
+	static const int m_initHp = 500;
 };
-#endif // !__Slime_H__
+#endif

@@ -1,4 +1,4 @@
-#include "WoodWall.h"
+#include "Monster/WoodWall.h"
 
 bool WoodWall::init()
 {
