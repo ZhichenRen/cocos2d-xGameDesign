@@ -1,4 +1,4 @@
-#include "Scene/PlayerChoose.h"
+﻿#include "Scene/PlayerChoose.h"
 #include "Scene//SafeMapScene.h"
 #pragma execution_character_set("utf-8")
 
@@ -41,7 +41,6 @@ void PlayerChoose::setPlayer(Ref*, TouchEventType type)
 	switch (type)
 	{
 	case TOUCH_EVENT_ENDED:
-		m_safeMap->setPlayer(1);
 		this->removeFromParentAndCleanup(true);
 		break;
 	}

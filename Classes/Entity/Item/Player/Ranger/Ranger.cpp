@@ -1,4 +1,4 @@
-#include "Entity/Item/Player/Ranger/Ranger.h"
+﻿#include "Entity/Item/Player/Ranger/Ranger.h"
 #include "Entity/Weapons/CloseWeapon.h"
 #include "Entity/Weapons/LongRange.h"
 Ranger::Ranger()
@@ -31,6 +31,10 @@ bool Ranger::init()
 	m_numHasWeapon = 0;
 	m_numLongRange = 0;
 	m_isInSkill = false;
+	m_shield = Sprite::create("shield1.png");
+	m_shield->setPosition(0, 0);
+	m_shield->setVisible(false);
+	this->addChild(m_shield, 5);
 	return true;
 }
 

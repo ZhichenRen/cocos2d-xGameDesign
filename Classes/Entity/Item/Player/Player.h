@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <algorithm>
 #include <vector>
 #include <string>
@@ -87,6 +87,7 @@ public:
 	virtual void die() = 0;
 	virtual Animate* stand() = 0;
 	virtual Point getSkillDirection() = 0;
+	virtual int whichPlayer() = 0;
 
 	int isPositiveOrNegative(int num);
 	Point tileCoordForPosition(Point pos);
@@ -132,6 +133,8 @@ public:
 	CloseWeapon* getCloseWeapon()const;
 	LongRange* getLongrange()const;
 	bool isClose()const;
+	void setInvincible(float duration_time);
+	bool isInvincible()const;
 protected:
 	AdventureMapLayer* m_map;
 
@@ -171,6 +174,10 @@ protected:
 	bool m_is_attacking;
 	bool m_is_close_weapon_now;
 	bool m_isDeath = false;
+	bool m_is_invincible = false;
+
+	ParticleFlower* upgrade_effect;
+	Sprite* m_shield;
 private:
 	bool m_leftSide = false;
 	bool m_rightSide = true;

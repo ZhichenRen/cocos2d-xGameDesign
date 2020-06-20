@@ -1,5 +1,6 @@
-#include <string>
+ï»¿#include <string>
 #include "Scene/TollgateScene.h"
+#include "Scene/SafeMapScene.h"
 #include "Scene/PauseScene.h"
 #include "Scene/HomeScene.h"
 #include "Entity/Item/Player/Priest/Priest.h"
@@ -40,7 +41,10 @@ void TollgateScene::addPlayer()
 	ValueMap spawnPoint = group->getObject("hero");
 	float x = spawnPoint["x"].asFloat();
 	float y = spawnPoint["y"].asFloat();
-	m_player = Ranger::create();
+	if(SafeMapLayer::whichPlayer()==1)
+	    m_player = Ranger::create();
+	else if(SafeMapLayer::whichPlayer() == 2)
+		m_player = Priest::create();
 	m_player->setPosition(Vec2(x, y));
 
 	m_player->setTiledMap(m_map);
@@ -73,7 +77,7 @@ void TollgateScene::addWeapon()
 
 		return;
 	}
-	std::string str = "CandyGun!";
+	std::string str = "Pistol";
 	m_player->setWeapon(str);
 	m_player->determineWhichWeapon();
 	/*str = "Fist_of_Heaven";
@@ -127,7 +131,9 @@ bool TollgateScene::init()
 	addPlayer();
 	addWeapon();
 	loadController();
+	loadEditBox();
 	loadMonsters();
+	loadEditBox();
 	return true;
 }
 
@@ -194,7 +200,7 @@ void TollgateScene::pauseEvent(Ref*, TouchEventType type)
 		background->begin();
 		this->visit();
 		background->end();
-		Director::getInstance()->pushScene(PauseScene::createScene(background));
+		Director::getInstance()->pushScene(PauseScene::createScene(background, m_player->whichPlayer()));
 		break;
 	}
 }
@@ -237,15 +243,15 @@ void TollgateScene::loadMonsters()
 {
 	auto playerPos = m_player->getPosition();
 	auto roomCoord = m_map->roomCoordFromPosition(playerPos);
-	//°ó¶¨·¿¼ä
+	//ç»‘å®šæˆ¿é—´
 	m_monsterMgr = MonsterManager::create();
-	//ÉèÖÃÎ»ÖÃ
+	//è®¾ç½®ä½ç½®
 	auto midPoint = GameData::getCoord()[static_cast<int>(5 * roomCoord.x + roomCoord.y)];
 	midPoint.y = 186 - midPoint.y;
 	auto LUPoint = (midPoint + ccp(-10, -10)) * 32;
 	m_monsterMgr->setPosition(LUPoint);
 
-	//³õÊ¼»¯¹¤×÷
+	//åˆå§‹åŒ–å·¥ä½œ
 	m_monsterMgr->bindMap(m_map);
 	m_monsterMgr->bindPlayer(static_cast<Entity*>(this->m_player));
 	m_map->addChild(m_monsterMgr, 1);
@@ -274,7 +280,7 @@ void TollgateScene::loadListeners()
 			}
 			else if (ccpDistance(m_player->getPosition(), m_map->getStatue()->getPosition()) < 20.0f)
 			{
-				if (m_map->getStatue()->getInteractionNum() == 1)//µÚÒ»´Î»¥¶¯
+				if (m_map->getStatue()->getInteractionNum() == 1)//ç¬¬ä¸€æ¬¡äº’åŠ¨
 				{
 					m_map->getStatue()->setInteractionNum(2);
 					m_map->getStatue()->showFlowWordFirstMeet();
@@ -285,7 +291,7 @@ void TollgateScene::loadListeners()
 					{
 						GameData::setCoinNum(GameData::getCoinNum() - 15);
 						m_map->getStatue()->showFlowWordEnoughMoney();
-						//player»ñµÃbuff¼Ó³É
+						//playerè·å¾—buffåŠ æˆ
 						m_player->getBuff(rand() % 3);
 					}
 					else
@@ -297,7 +303,7 @@ void TollgateScene::loadListeners()
 			}
 			else if (ccpDistance(m_player->getPosition(), m_map->getShop()->getPosition()) < 20.0f)
 			{
-				if (m_map->getShop()->getInteractionNum() == 1)//µÚÒ»´Î»¥¶¯
+				if (m_map->getShop()->getInteractionNum() == 1)//ç¬¬ä¸€æ¬¡äº’åŠ¨
 				{
 					m_map->getShop()->setInteractionNum(2);
 					m_map->getShop()->showFlowWordFirstMeet();
@@ -323,7 +329,7 @@ void TollgateScene::loadListeners()
 			if (ccpDistance(m_player->getPosition(), m_map->getPortal()->getPosition()) < 20.0f)
 			{
 				this->unscheduleUpdate();
-				if (GameData::getLevel() != 2)//´«ËÍµ½ÏÂÒ»¹Ø
+				if (GameData::getLevel() != 2)//ä¼ é€åˆ°ä¸‹ä¸€å…³
 				{
 					GameData::setLastRoomCoord(Vec2(2, 2));
 					GameData::setLevel(GameData::getLevel() + 1);
@@ -350,7 +356,7 @@ void TollgateScene::loadListeners()
 					auto scene = TollgateScene::createScene();
 					Director::getInstance()->replaceScene(scene);
 				}
-				else//½áÊøÃ°ÏÕ
+				else//ç»“æŸå†’é™©
 				{
 					GameData::setLastRoomCoord(Vec2(2, 2));
 					auto scene = HomeMenuLayer::createScene();
@@ -439,7 +445,7 @@ void TollgateScene::loadListeners()
 			background->begin();
 			this->visit();
 			background->end();
-			Director::getInstance()->pushScene(PauseScene::createScene(background));
+			Director::getInstance()->pushScene(PauseScene::createScene(background, m_player->whichPlayer()));
 			break;
 		}
 	};
@@ -458,16 +464,16 @@ void TollgateScene::updateMiniMap(TMXTiledMap* miniMap)
 		return;
 	}
 
-	miniMapLayer->setTileGID(2, 2 * GameData::getLastRoomCoord());//Ç³»Ò
-	miniMapLayer->setTileGID(1, 2 * Vec2(roomCoord.y, roomCoord.x));//Éî»Ò
+	miniMapLayer->setTileGID(2, 2 * GameData::getLastRoomCoord());//æµ…ç°
+	miniMapLayer->setTileGID(1, 2 * Vec2(roomCoord.y, roomCoord.x));//æ·±ç°
 
 	if (GameData::getLastRoomCoord() != Vec2(roomCoord.y, roomCoord.x))
 	{
-		if (GameData::getLastRoomCoord().x == roomCoord.y)//ÉÏÏÂÏàÁ¬
+		if (GameData::getLastRoomCoord().x == roomCoord.y)//ä¸Šä¸‹ç›¸è¿
 		{
 			miniMapLayer->setTileGID(4, GameData::getLastRoomCoord() + Vec2(roomCoord.y, roomCoord.x));
 		}
-		else//×óÓÒÏàÁ¬
+		else//å·¦å³ç›¸è¿
 		{
 			miniMapLayer->setTileGID(3, GameData::getLastRoomCoord() + Vec2(roomCoord.y, roomCoord.x));
 		}
@@ -488,6 +494,12 @@ void TollgateScene::compare(float dt)
 	if (strcmp(m_editBox->getText(), "infinitypower") == 0)
 	{
 		m_player->setiNowMp(m_player->getiTotalMp());
+		this->unschedule(schedule_selector(TollgateScene::compare));
+	}
+	if (strcmp(m_editBox->getText(), "rcwtql") == 0)
+	{
+		m_player->setInvincible(15.0f);
+		this->unschedule(schedule_selector(TollgateScene::compare));
 	}
 }
 
@@ -519,8 +531,8 @@ void TollgateScene::update(float dt)
 	auto roomCoord = m_map->roomCoordFromPosition(playerPos);
 	auto roomNum = roomCoord.x * 5 + roomCoord.y;
 
-	if (m_map->isMonsterRoom(roomCoord)	//Ê×ÏÈËüµÃÊÇ¸ö¹ÖÎï·¿¼ä
-		&& !m_monsterMgr->isRoomVisited(roomCoord))//Æä´ÎËüÃ»ÓĞ±»µ½·Ã¹ı
+	if (m_map->isMonsterRoom(roomCoord)	//é¦–å…ˆå®ƒå¾—æ˜¯ä¸ªæ€ªç‰©æˆ¿é—´
+		&& !m_monsterMgr->isRoomVisited(roomCoord))//å…¶æ¬¡å®ƒæ²¡æœ‰è¢«åˆ°è®¿è¿‡
 	{
 		m_monsterMgr->setCurRoom(roomCoord);
 		loadMonstersInNewRoom(2);
@@ -556,7 +568,7 @@ void TollgateScene::update(float dt)
 		}
 	}
 
-	//Åö×²¼ì²â
+	//ç¢°æ’æ£€æµ‹
 	auto player_bullet = m_player->getBullet();
 	auto monsters_bullet = m_monsterMgr->getMonsterBullets();
 	auto monsters = m_monsterMgr->getMonster();
@@ -676,7 +688,10 @@ void TollgateScene::update(float dt)
 		}
 		if (bullet->isCollideWith(m_player))
 		{
-			m_player->hit(bullet->getDamage());
+			if (!m_player->isInvincible())
+			{
+				m_player->hit(bullet->getDamage());
+			}
 			bullet->setIsUsed(true);
 		}
 		for (auto woodwall : woodWalls)
@@ -700,7 +715,10 @@ void TollgateScene::update(float dt)
 				{
 					if (close_weapon->isCollideWith(m_player))
 					{
-						m_player->hit(close_weapon->getDamage());
+						if (!m_player->isInvincible())
+						{
+							m_player->hit(close_weapon->getDamage());
+						}
 					}
 				}
 				close_weapon->setIsHit(true);
@@ -708,7 +726,7 @@ void TollgateScene::update(float dt)
 		}
 	}
 
-	//Ğ¡½ğ±ÒºÍĞ¡À¶µÄ×Ô¶¯Ê°È¡
+	//å°é‡‘å¸å’Œå°è“çš„è‡ªåŠ¨æ‹¾å–
 	for (auto coin : m_map->getCoinList())
 	{
 		if (coin->isUsed())

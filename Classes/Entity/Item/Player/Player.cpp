@@ -1,4 +1,4 @@
-#include "Entity/Item/Player/Player.h"
+ï»¿#include "Entity/Item/Player/Player.h"
 #include "Scene/TollgateScene.h"
 #include "Entity/Weapons/CloseWeapon.h"
 #include "Entity\Weapons\Shotgun.h"
@@ -393,7 +393,7 @@ void Player::loadLongRangeListener()
 			//this->hit(2);
 			this->mpDepletion(longRange->getPowerCost());
 		}
-		if (pos.x < 1024 / 2)//ÆÁÄ»Ò»°ë´óÐ¡
+		if (pos.x < 1024 / 2)//å±å¹•ä¸€åŠå¤§å°
 		{
 			setRightToward();
 		}
@@ -415,7 +415,7 @@ void Player::loadLongRangeListener()
 		EventMouse* mouse = dynamic_cast<EventMouse*>(event);
 		auto pos = Point(mouse->getCursorX(), mouse->getCursorY());
 		longRange->setRotationByPos(pos);
-		if (pos.x < 1024 / 2)//ÆÁÄ»Ò»°ë´óÐ¡
+		if (pos.x < 1024 / 2)//å±å¹•ä¸€åŠå¤§å°
 		{
 			setRightToward();
 		}
@@ -456,7 +456,7 @@ void Player::loadCloseWeaponListener()
 			//this->hit(2);
 			this->mpDepletion(closeWeapon->getPowerCost());
 		}
-		if (pos.x < 1024 / 2)//ÆÁÄ»Ò»°ë´óÐ¡
+		if (pos.x < 1024 / 2)//å±å¹•ä¸€åŠå¤§å°
 		{
 			setRightToward();
 		}
@@ -621,4 +621,29 @@ void Player::getBuff(int i)
 		setiTotalCD(getiTotalCD() / 2);
 		setiNowCD(getiNowCD() / 2);
 	}
+}
+
+void Player::setInvincible(float duration_time)
+{
+	if (m_is_invincible)
+	{
+		return;
+	}
+	m_is_invincible = true;
+	m_shield->setVisible(true);
+	auto duration = DelayTime::create(duration_time);
+	auto callback = CallFunc::create(
+		[this]()
+	{
+		this->m_is_invincible = false;
+		this->m_shield->setVisible(false);
+	}
+	);
+	auto action = Sequence::create(duration, callback, NULL);
+	this->runAction(action);
+}
+
+bool Player::isInvincible()const
+{
+	return m_is_invincible;
 }
