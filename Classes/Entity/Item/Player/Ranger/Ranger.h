@@ -19,5 +19,6 @@ public:
 	virtual void die()override;
 	virtual Animate* stand()override;
 	virtual Point getSkillDirection()override;
+	virtual int whichPlayer()override { return 1; }
 protected:
 };

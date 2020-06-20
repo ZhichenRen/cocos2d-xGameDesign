@@ -19,7 +19,7 @@ public:
 	virtual void die()override;
 	virtual Animate* stand()override;
 	virtual Point getSkillDirection()override { return this->getPosition(); }
-	
+	virtual int whichPlayer()override { return 2; }
 protected:
 	Sprite* m_priestSkill = NULL;
 	int m_skillTime;

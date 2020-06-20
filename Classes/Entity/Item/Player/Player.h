@@ -87,6 +87,7 @@ public:
 	virtual void die() = 0;
 	virtual Animate* stand() = 0;
 	virtual Point getSkillDirection() = 0;
+	virtual int whichPlayer() = 0;
 
 	int isPositiveOrNegative(int num);
 	Point tileCoordForPosition(Point pos);
