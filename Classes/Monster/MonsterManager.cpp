@@ -126,15 +126,11 @@ void MonsterManager::bulkUpRandMons(int totalNum)
 	}
 }
 
-void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
+void MonsterManager::createMonsters(int totalNum)
 {
 	//随机生成巨大化敌人
-	auto randVec = createRandomNums(giantNum, totalNum - 5);
-	this->m_bulkMonsterNum = giantNum;
-	if (giantNum > totalNum - 5)
-	{
-		assert("too much giant monsters");
-	}
+	auto randVec = createRandomNums(4, totalNum - 4);
+	//this->m_bulkMonsterNum = giantNum;
 	Pig* pig = NULL;
 	Slime* slime = NULL;
 	Sprite* sprite = NULL;
@@ -153,7 +149,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 		
 	}
 
-	for (int i = 0; i < randVec[1] + 1; i++)
+	for (int i = 0; i <  1; i++)//可达鸭太多就变态了
 	{
 		duck = Duck::create();
 		duck->bindMap(m_map);
@@ -164,7 +160,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 		
 	}
 
-	for (int i = 0; i < randVec[2] + 1; i++)
+	for (int i = 0; i < randVec[1] + 1; i++)
 	{
 		slime = Slime::create();
 		this->addChild(slime, 1);
@@ -174,7 +170,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 		m_monsterList.push_back(slime);
 	}
 
-	for (int i = 0; i < randVec[3] + 1; i++)
+	for (int i = 0; i < randVec[2] + 1; i++)
 	{
 		chiefOfTribe = ChiefOfTribe::create();
 		this->addChild(chiefOfTribe, 1);
@@ -184,7 +180,7 @@ void MonsterManager::createMonstersWithGiantNum(int giantNum, int totalNum)
 		m_monsterList.push_back(chiefOfTribe);
 		
 	}
-	for (int i = 0; i < randVec[4] + 1; i++)
+	for (int i = 0; i < randVec[3] + 1; i++)
 	{
 		traveller = Traveller::create();
 		this->addChild(traveller, 1);
@@ -402,9 +398,12 @@ void MonsterManager::update(float dt)
 				m_monsterList.pop_back();
 				return;
 			}
-			//攻击主角
+			m_boss->wander();
+			auto gun = m_boss->getMonsterWeapon();
+			gun->attack(m_map->convertToWorldSpace(m_player->getPosition()));
 			return;
 		}
+		
 	}
 	if (m_fGameOver)//游戏结束了
 	{
@@ -574,7 +573,7 @@ float MonsterManager::getMonsterHpRate() const
 {
 	if (!m_boss)
 		return 0.0f;
-	return m_boss->getHp() / 500;
+	return m_boss->getHp() / 5.0f;
 }
 
 void MonsterManager::setRoomVisited(Vec2 room)
