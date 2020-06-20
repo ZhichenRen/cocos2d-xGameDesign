@@ -40,6 +40,8 @@ public:
 	virtual void onExitTransitionDidStart();
 	virtual void cleanup();
 
+	static int whichPlayer() { return 1; }
+
 	void setPlayer(int playerNum);
 
 	void menuItemSettingCallback(cocos2d::Ref* pSender);

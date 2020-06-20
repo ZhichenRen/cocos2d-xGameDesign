@@ -1,5 +1,6 @@
 ﻿#include <string>
 #include "Scene/TollgateScene.h"
+#include "Scene/SafeMapScene.h"
 #include "Scene/PauseScene.h"
 #include "Scene/HomeScene.h"
 #include "Entity/Item/Player/Priest/Priest.h"
@@ -40,7 +41,10 @@ void TollgateScene::addPlayer()
 	ValueMap spawnPoint = group->getObject("hero");
 	float x = spawnPoint["x"].asFloat();
 	float y = spawnPoint["y"].asFloat();
-	m_player = Ranger::create();
+	if(SafeMapLayer::whichPlayer()==1)
+	    m_player = Ranger::create();
+	else if(SafeMapLayer::whichPlayer() == 2)
+		m_player = Priest::create();
 	m_player->setPosition(Vec2(x, y));
 
 	m_player->setTiledMap(m_map);
@@ -127,6 +131,7 @@ bool TollgateScene::init()
 	addPlayer();
 	addWeapon();
 	loadController();
+	loadEditBox();
 	loadMonsters();
 	loadEditBox();
 	return true;

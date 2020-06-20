@@ -73,6 +73,11 @@ void DeathScene::respawn(Ref*, TouchEventType type)
 			m_player->getSprite()->setOpacity(255);
 			m_player->setiNowHp(m_player->getiTotalHp());
 			m_player->setiNowMp(m_player->getiTotalMp());
+			m_player->setiNowArmor(m_player->getiTotalArmor());
+			m_player->getController()->setiXSpeed(0);
+			m_player->getController()->setiYSpeed(0);
+			m_player->setSkillDirectionX(0);
+			m_player->setSkillDirectionY(0);
 			m_player->setInvincible(3.0f);
 			Director::getInstance()->popScene();
 		}
