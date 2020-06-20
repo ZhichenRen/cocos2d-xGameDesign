@@ -9,6 +9,8 @@ USING_NS_CC_EXT;
 USING_NS_CC;
 using namespace CocosDenshion;
 
+int SafeMapLayer::m_choose_player = 1;
+
 cocos2d::Scene* SafeMapLayer::createScene()
 {
     auto scene = Scene::create();
@@ -67,7 +69,7 @@ bool SafeMapLayer::init()
     MenuItemImage* rangerItem = MenuItemImage::create("ranger_image.png", "ranger_image.png", CC_CALLBACK_1(SafeMapLayer::menuItemRangerCallback, this));
     rangerItem->setPosition(Vec2(origin.x + visibleSize.width / 2 - 200, origin.y + visibleSize.height / 2 - 200));
 
-    MenuItemImage* mageItem = MenuItemImage::create("mage_image.png", "mage_image.png", CC_CALLBACK_1(SafeMapLayer::menuItemMageCallback, this));
+    MenuItemImage* mageItem = MenuItemImage::create("priest_image.jpg", "priest_image.jpg", CC_CALLBACK_1(SafeMapLayer::menuItemMageCallback, this));
     mageItem->setPosition(Vec2(origin.x + visibleSize.width / 2 + 200, origin.y + visibleSize.height / 2 - 200));
 
     Menu* menu2 = Menu::create(text, rangerItem, mageItem, nullptr);
@@ -175,9 +177,9 @@ void SafeMapLayer::setPlayer(int playerNum)
         this->removeChildByTag(10086);
         this->scheduleUpdate();
     }
-    auto animation = AnimationUtil::createWithFrameNameAndNumUsingPlist("Ranger/RangerWalk/", "RangerWalk", 4, 0.12, -1);
-    auto animate = Animate::create(animation);
-    m_player->runAction(animate);
+	auto animation = AnimationUtil::createWithFrameNameAndNumUsingPlist("Ranger/RangerWalk/", "RangerWalk", 4, 0.12, -1);
+	auto animate = Animate::create(animation);
+	m_player->runAction(animate);
 }
 
 void SafeMapLayer::menuItemSettingCallback(cocos2d::Ref* pSender)
@@ -195,24 +197,26 @@ void SafeMapLayer::menuItemRangerCallback(cocos2d::Ref* pSender)
     auto layer = PlayerChoose::create();
     layer->bindMap(this);
     this->addChild(layer, 10000);
+	SafeMapLayer::m_choose_player = 1;
 }
 
 void SafeMapLayer::menuItemMageCallback(cocos2d::Ref* pSender)
 {
     auto layer = PlayerChoose::create();
     layer->bindMap(this);
-    PlayerInfomation mage = {
+    PlayerInfomation priest = {
         3,
         5,
-        210,
-        "法师",
-        "奥术闪电",
-        "释放强大的闪电\n攻击敌人！！",
-        "mage_image.png",
-        "mage_ability.png"
+        200,
+        "牧师",
+        "恢复法阵",
+        "使用恢复法阵\n恢复生命值",
+        "priest_image.jpg",
+        "priest_ability.jpg"
     };
-    layer->setPlayerInformation(mage);
+    layer->setPlayerInformation(priest);
     this->addChild(layer, 10001);
+	SafeMapLayer::m_choose_player = 2;
 }
 
 void SafeMapLayer::update(float dt)
