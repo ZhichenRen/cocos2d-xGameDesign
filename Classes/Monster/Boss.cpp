@@ -1,6 +1,7 @@
 ﻿
 #include "Monster/Boss.h"
 #include "Monster/Monster.h"
+#include "Entity/Weapons/BossGun.h"
 bool Boss::init()
 {
 	m_fIsFacingRight = false;
@@ -10,10 +11,10 @@ bool Boss::init()
 	setMonsterSpeed(0.8f);
 	setHp(this->m_initHp);
 	setResTrack("Boss.png");
-	auto gun = MonsterGun::create();
+	auto gun = BossGun::create();
 	gun->setPosition(this->getPosition());
 	setMonsterWeapon(gun);
-	gun->setDamage(2);
+	//gun->setDamage(2);
 	gun->setAttackSpeed(1.5f);
 	this->bindSprite(Sprite::create(this->getResTrack()), 2.0f, 2.0f);
 	setContentSize(Size(getContentSize().width * 3, getContentSize().height * 3));
