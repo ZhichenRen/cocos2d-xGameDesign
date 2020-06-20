@@ -125,70 +125,18 @@ void MonsterManager::bulkUpRandMons(int totalNum)
 		}
 	}
 }
-
-void MonsterManager::createMonsters(int totalNum)
+void MonsterManager::createMonsters()
 {
-	//随机生成巨大化敌人
-	auto randVec = createRandomNums(4, totalNum - 4);
-	//this->m_bulkMonsterNum = giantNum;
-	Pig* pig = NULL;
-	Slime* slime = NULL;
-	Sprite* sprite = NULL;
-	ChiefOfTribe* chiefOfTribe = NULL;
-	Duck* duck = NULL;
-	Traveller* traveller = NULL;
-	//int k = 0;
-	for (int i = 0; i < randVec[0] + 1; i++)
+	for (int i = 0; i < 5; i++)
 	{
-		pig = Pig::create();
-		pig->bindMap(m_map);
-		pig->getMonsterWeapon()->bindMap(m_map);
-		pig->bindMonsMgr(this);
-		this->addChild(pig, 1);
-		m_monsterList.push_back(pig);
-		
+		createOneMoreMons();
 	}
-
-	for (int i = 0; i <  1; i++)//可达鸭太多就变态了
-	{
-		duck = Duck::create();
-		duck->bindMap(m_map);
-		duck->getMonsterWeapon()->bindMap(m_map);
-		duck->bindMonsMgr(this);
-		this->addChild(duck, 1);
-		m_monsterList.push_back(duck);
-		
-	}
-
-	for (int i = 0; i < randVec[1] + 1; i++)
-	{
-		slime = Slime::create();
-		this->addChild(slime, 1);
-		slime->bindMap(m_map);
-		slime->getMonsterWeapon()->bindMap(m_map);
-		slime->bindMonsMgr(this);
-		m_monsterList.push_back(slime);
-	}
-
-	for (int i = 0; i < randVec[2] + 1; i++)
-	{
-		chiefOfTribe = ChiefOfTribe::create();
-		this->addChild(chiefOfTribe, 1);
-		chiefOfTribe->bindMap(m_map);
-		chiefOfTribe->getMonsterWeapon()->bindMap(m_map);
-		chiefOfTribe->bindMonsMgr(this);
-		m_monsterList.push_back(chiefOfTribe);
-		
-	}
-	for (int i = 0; i < randVec[3] + 1; i++)
-	{
-		traveller = Traveller::create();
-		this->addChild(traveller, 1);
-		traveller->bindMap(m_map);
-		traveller->getMonsterWeapon()->bindMap(m_map);
-		traveller->bindMonsMgr(this);
-		m_monsterList.push_back(traveller);
-	}
+	auto oneMoreMons = Duck::create();
+	oneMoreMons->bindMap(m_map);
+	oneMoreMons->getMonsterWeapon()->bindMap(m_map);
+	oneMoreMons->bindMonsMgr(this);
+	this->addChild(oneMoreMons, 1);
+	m_monsterList.push_back(oneMoreMons);
 }
 
 void MonsterManager::createWoodWalls(int woodWallsNum)
@@ -227,6 +175,37 @@ void MonsterManager::createWoodWalls(int woodWallsNum)
 		m_woodWallList.push_back(woodWall);
 	}
 
+}
+
+void MonsterManager::createOneMoreMons()//+1怪
+{
+	int randNum = rand() % 4;
+	Monster* oneMoreMons = NULL;
+	if (randNum == 0)
+	{
+		oneMoreMons = Pig::create();
+	}
+
+	else if (randNum == 1)
+	{
+		oneMoreMons = Slime::create();
+	}
+
+	else if (randNum == 2)
+	{
+		oneMoreMons = ChiefOfTribe::create();
+
+	}
+	else if (randNum == 3)
+	{
+		oneMoreMons = Traveller::create();
+	}
+
+	oneMoreMons->bindMap(m_map);
+	oneMoreMons->getMonsterWeapon()->bindMap(m_map);
+	oneMoreMons->bindMonsMgr(this);
+	this->addChild(oneMoreMons, 1);
+	m_monsterList.push_back(oneMoreMons);
 }
 
 void MonsterManager::showPreRec()
@@ -398,6 +377,7 @@ void MonsterManager::update(float dt)
 				m_monsterList.pop_back();
 				return;
 			}
+			m_boss->setTaunted(false);
 			m_boss->wander();
 			auto gun = m_boss->getMonsterWeapon();
 			gun->attack(m_map->convertToWorldSpace(m_player->getPosition()));

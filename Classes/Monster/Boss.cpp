@@ -16,8 +16,8 @@ bool Boss::init()
 	setMonsterWeapon(gun);
 	//gun->setDamage(2);
 	gun->setAttackSpeed(1.5f);
-	this->bindSprite(Sprite::create(this->getResTrack()), 2.0f, 2.0f);
-	setContentSize(Size(getContentSize().width * 3, getContentSize().height * 3));
+	this->bindSprite(Sprite::create(this->getResTrack()), 1.5f, 1.5f);
+	//setContentSize(Size(getContentSize().width * 1.5, getContentSize().height * 1.5));
 	this->addChild(gun, 1);
 	m_isAlive = true;
 	return true;

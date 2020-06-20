@@ -239,6 +239,7 @@ void TollgateScene::loadMonstersInNewRoom()
 		m_monsterMgr->setInited();
 		return;
 	}
+	m_monsterMgr->createOneMoreMons();//梯度
 	m_monsterMgr->reviveAllMonsters();
 }
 
@@ -594,6 +595,7 @@ void TollgateScene::update(float dt)
 		&& !m_monsterMgr->isRoomVisited(roomCoord))//其次它没有被到访过
 	{
 		m_monsterMgr->setCurRoom(roomCoord);
+		/*if (1)*/
 		if (m_map->isBossRoom(roomCoord))//如果是boss房
 		{
 			m_map->getPortal()->setVisible(false);
