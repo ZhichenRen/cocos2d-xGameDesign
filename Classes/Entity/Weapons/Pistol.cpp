@@ -1,4 +1,4 @@
-
+﻿
 #include "Entity/Weapons/Pistol.h"
 
 bool Pistol::init()
@@ -10,7 +10,7 @@ bool Pistol::init()
 	m_power_cost = 1;
 	m_bullet_num = 100;
 	m_range = 100;
-	m_bullet_damage = 4;
+	m_bullet_damage = 5;
 	m_bullet_speed = 400;
 	m_attack_speed = 0.15f;
 	m_crit_rate = 0.1f;
