@@ -34,7 +34,7 @@ void FlowWord::showWord(const char* text, Point pos)
 void FlowWord::showShopWord(const char* text)
 {
 	m_message->setString(text);
-
+	m_message->setColor(Color3B(255, 255, 255));
 	m_message->setPosition(getPosition() + Vec2(0, 50));
 
 	m_message->setVisible(true);

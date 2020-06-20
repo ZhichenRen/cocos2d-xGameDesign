@@ -1,4 +1,7 @@
-﻿#ifndef __SAFE_MAP_SCENE_H__
+
+#pragma once
+#ifndef __SAFE_MAP_SCENE_H__
+
 #define __SAFE_MAP_SCENE_H__
 
 #include "cocos2d.h"

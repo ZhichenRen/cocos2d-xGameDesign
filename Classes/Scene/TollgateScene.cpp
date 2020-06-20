@@ -1,4 +1,4 @@
-﻿#include <string>
+#include <string>
 #include "Scene/TollgateScene.h"
 #include "Scene/SafeMapScene.h"
 #include "Scene/PauseScene.h"
@@ -216,18 +216,17 @@ void TollgateScene::switchWeapon(Ref*, TouchEventType type)
 
 }
 
-void TollgateScene::loadMonstersInNewRoom(int giantNum = -1)
+void TollgateScene::loadMonstersInNewRoom()
 {
 	auto roomCoord = m_monsterMgr->getCurRoom();
-	m_monsterMgr->markRoomVisited(roomCoord);
+	m_monsterMgr->setRoomVisited(roomCoord);
 	auto midPoint = GameData::getCoord()[static_cast<int>(5 * roomCoord.x + roomCoord.y)];
 	midPoint.y = 186 - midPoint.y;
 	auto LUPoint = (midPoint + ccp(-10, -10)) * 32;
 	m_monsterMgr->setPosition(LUPoint);
 
-	if (giantNum != -1)
-		m_monsterMgr->setBulkMonsterNum(giantNum);
-	if (!m_monsterMgr->getInited())
+	
+	if (!m_monsterMgr->getInited() || !m_monsterMgr->getMonster().size())
 	{
 		m_monsterMgr->createMonstersWithGiantNum();
 		m_monsterMgr->createMonsterPos();
@@ -238,7 +237,7 @@ void TollgateScene::loadMonstersInNewRoom(int giantNum = -1)
 	m_monsterMgr->reviveAllMonsters();
 }
 
-
+ 
 void TollgateScene::loadMonsters()
 {
 	auto playerPos = m_player->getPosition();
@@ -255,6 +254,29 @@ void TollgateScene::loadMonsters()
 	m_monsterMgr->bindMap(m_map);
 	m_monsterMgr->bindPlayer(static_cast<Entity*>(this->m_player));
 	m_map->addChild(m_monsterMgr, 1);
+}
+
+void TollgateScene::loadBoss()
+{
+	auto roomCoord = m_monsterMgr->getCurRoom();
+	m_monsterMgr->setRoomVisited(roomCoord);
+	auto midPoint = GameData::getCoord()[static_cast<int>(5 * roomCoord.x + roomCoord.y)];
+	midPoint.y = 186 - midPoint.y;
+	auto LUPoint = (midPoint + ccp(-10, -10)) * 32;
+	m_monsterMgr->setPosition(LUPoint);
+
+
+	if (!m_monsterMgr->getInited())
+	{
+		m_monsterMgr->createBoss();
+		m_monsterMgr->createWoodWalls();
+		m_monsterMgr->setInited();
+		return;
+	}
+	m_monsterMgr->createBoss();
+	m_monsterMgr->createWoodWalls();
+	//m_monsterMgr->reviveAllMonsters();
+	
 }
 
 void TollgateScene::loadListeners()
@@ -491,6 +513,22 @@ void TollgateScene::compare(float dt)
 		m_flowWord->showShopWord(str);
 		this->unschedule(schedule_selector(TollgateScene::compare));
 	}
+
+	if (strcmp(m_editBox->getText(), "slaughter") == 0)
+	{
+		m_monsterMgr->killMonsters();
+		CCDictionary* pDictionary = (CCDictionary*)CCDictionary::createWithContentsOfFile("ChineseCharacters.plist");
+		auto str = pDictionary->valueForKey("SlaughterCheat")->getCString();
+		m_flowWord->showShopWord(str);
+		this->unschedule(schedule_selector(TollgateScene::compare));
+	}
+	if (strcmp(m_editBox->getText(), "hatewood") == 0)
+	{
+		m_monsterMgr->killWoodWall();
+		CCDictionary* pDictionary = (CCDictionary*)CCDictionary::createWithContentsOfFile("ChineseCharacters.plist");
+		auto str = pDictionary->valueForKey("WoodWallCheat")->getCString();
+		m_flowWord->showShopWord(str);
+
 	if (strcmp(m_editBox->getText(), "infinitypower") == 0)
 	{
 		m_player->setiNowMp(m_player->getiTotalMp());
@@ -499,10 +537,11 @@ void TollgateScene::compare(float dt)
 	if (strcmp(m_editBox->getText(), "rcwtql") == 0)
 	{
 		m_player->setInvincible(15.0f);
+
 		this->unschedule(schedule_selector(TollgateScene::compare));
 	}
 }
-
+int i = 0;
 void TollgateScene::update(float dt)
 {
 	(m_cdBar)->setPercent(m_player->getiNowCD() /
@@ -535,7 +574,14 @@ void TollgateScene::update(float dt)
 		&& !m_monsterMgr->isRoomVisited(roomCoord))//其次它没有被到访过
 	{
 		m_monsterMgr->setCurRoom(roomCoord);
-		loadMonstersInNewRoom(2);
+		if (!i++)//如果是boss房
+		{
+			loadBoss();
+		}
+		else
+		{
+			loadMonstersInNewRoom();
+		}
 	}
 	Vec2 dir[4] = { {0,1},{0,-1},{1,0},{-1,0} };
 

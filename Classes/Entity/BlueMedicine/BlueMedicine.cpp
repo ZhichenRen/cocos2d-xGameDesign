@@ -1,5 +1,5 @@
 #include "Entity\BlueMedicine\BlueMedicine.h"
-#define RANDOMRANGE 10
+#define RANDOMRANGE 100
 
 
 bool BlueMedicine::init()

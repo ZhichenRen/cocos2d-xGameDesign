@@ -45,12 +45,12 @@ void Monster::hide()
 }
 
 
-bool Monster::isAlive()
+bool Monster::isAlive()const
 {
 	return m_isAlive;
 }
 
-bool Monster::isTaunted()
+bool Monster::isTaunted()const
 {
 	return m_fIsTaunted;
 }
@@ -61,9 +61,9 @@ bool Monster::setTaunted(bool flag)
 }
 
 bool Monster::mySetPosition(Vec2 target)
-{//ÖØ¹¹£¬ËùÓĞµÄ·½Î»¶¼Òª½øÕâ¸öº¯Êı
+{//é‡æ„ï¼Œæ‰€æœ‰çš„æ–¹ä½éƒ½è¦è¿›è¿™ä¸ªå‡½æ•°
 	auto curPos = getPosition();
-	auto worldTar = target + m_monsMgr->getPosition();//ÊÇÒ»ÖÖºÜºÃµÄĞ´·¨Å¶
+	auto worldTar = target + m_monsMgr->getPosition();//æ˜¯ä¸€ç§å¾ˆå¥½çš„å†™æ³•å“¦
 	Vec2 tarBlock = ccp(static_cast<int>(target.x) / 21, static_cast<int>(target.y) / 21);
 	auto curBlock = ccp(static_cast<int>(curPos.x) / 21, static_cast<int>(curPos.y) / 21);
 	m_monsMgr->setPosMap(curBlock, 0);
@@ -82,12 +82,12 @@ bool Monster::mySetPosition(Vec2 target)
 		return false;
 
 	auto dif = target - curPos;
-	if (dif.x > 0 && !m_fIsFacingRight)	//Ãæ³¯×óµ«ÊÇÅÜÏòÓÒ		
+	if (dif.x > 0 && !m_fIsFacingRight)	//é¢æœå·¦ä½†æ˜¯è·‘å‘å³		
 	{
 		m_fIsFacingRight = true;
 		m_sprite->setFlipX(true);
 	}
-	else if (dif.x < 0 && m_fIsFacingRight)//Ãæ³¯ÓÒµ«ÊÇÅÜÏò×ó
+	else if (dif.x < 0 && m_fIsFacingRight)//é¢æœå³ä½†æ˜¯è·‘å‘å·¦
 	{
 		m_fIsFacingRight = false;
 		m_sprite->setFlipX(false);
@@ -176,7 +176,7 @@ void Monster::die()
 {
 
 	m_isAlive = false;
-	auto fade = FadeTo::create(1.0f, 0);//ÏûÊ§ÖÁÄ³Ò»Í¸Ã÷¶È
+	auto fade = FadeTo::create(1.0f, 0);//æ¶ˆå¤±è‡³æŸä¸€é€æ˜åº¦
 	/*auto disappear_delay = DelayTime::create(2.0f);
 	auto disappear = FadeTo::create(0.5f, 0);
 	auto disappear_action = Sequence::create(fade, disappear_delay, disappear, NULL);*/
@@ -186,7 +186,7 @@ void Monster::die()
 		m_weapon->getSprite()->setVisible(false);
 	}
 	auto coin = Coin::create();
-	//this->getSprite()->setVisible(false);//¹ÖÎïÏûÊ§
+	//this->getSprite()->setVisible(false);//æ€ªç‰©æ¶ˆå¤±
 	auto ranF1 = CCRANDOM_0_1();
 	if (ranF1 < BLUERATE)
 	{
@@ -239,4 +239,11 @@ void Monster::setMonsTaunted()
 		return;
 	m_fIsTaunted = 1;
 	m_damageMsg->showMonsTaunted();
+
 }
+
+FlowWord* Monster::getFlowWord() const
+{
+	return m_damageMsg;
+}
+
