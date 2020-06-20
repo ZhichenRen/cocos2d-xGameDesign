@@ -541,13 +541,12 @@ void TollgateScene::compare(float dt)
 	if (strcmp(m_editBox->getText(), "rcwtql") == 0)
 	{
 		m_player->setInvincible(15.0f);
-		m_flowWord->showShopWord("rcwtql!");
 		this->unschedule(schedule_selector(TollgateScene::compare));
 	}
 	if (strcmp(m_editBox->getText(), "sildenafil") == 0)
 	{
 		m_player->setDamageBonus(10, 15.0f);
-
+		m_flowWord->showShopWord("力量！！");
 		this->unschedule(schedule_selector(TollgateScene::compare));
 	}
 }
