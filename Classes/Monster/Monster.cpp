@@ -241,3 +241,8 @@ void Monster::setMonsTaunted()
 	m_fIsTaunted = 1;
 	m_damageMsg->showMonsTaunted();
 }
+
+FlowWord* Monster::getFlowWord() const
+{
+	return m_damageMsg;
+}

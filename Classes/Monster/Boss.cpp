@@ -4,7 +4,8 @@ bool Boss::init()
 {
 	m_fIsFacingRight = false;
 	m_damageMsg = FlowWord::create();
-	this->addChild(m_damageMsg);
+	this->addChild(m_damageMsg,2);
+
 	setMonsterSpeed(0.8f);
 	setHp(this->m_initHp);
 	setResTrack("Boss.png");
@@ -13,12 +14,14 @@ bool Boss::init()
 	setMonsterWeapon(gun);
 	gun->setDamage(2);
 	gun->setAttackSpeed(1.5f);
-	this->bindSprite(Sprite::create(this->getResTrack()), 4.0f, 4.0f);
-	setContentSize(Size(getContentSize().width * 4, getContentSize().height * 4));
+	this->bindSprite(Sprite::create(this->getResTrack()), 3.0f, 3.0f);
+	setContentSize(Size(getContentSize().width * 3, getContentSize().height * 3));
 	this->addChild(gun, 1);
 	m_isAlive = true;
 	return true;
 }
+
+
 
 
 void Boss::hit(int damage, float flyingDegree, bool isCriticalStrike)

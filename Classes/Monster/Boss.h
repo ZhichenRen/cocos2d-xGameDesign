@@ -7,11 +7,11 @@
 class Boss : public Monster {
 public:
 	virtual bool init();
-
+	//virtual void die();
 	virtual void hit(int damage, float flyingDegree, bool isCriticalStrike);
 	CREATE_FUNC(Boss);
 	//virtual void resetPropoties();
 private:
-	static const int m_initHp = 500;
+	static const int m_initHp = 100;
 };
 #endif

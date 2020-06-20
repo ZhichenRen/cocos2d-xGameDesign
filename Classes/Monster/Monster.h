@@ -35,6 +35,7 @@ public:
 	//void showWords();
 	//void dieWithNothing();
 	void setMonsTaunted();
+	FlowWord* getFlowWord() const;
 	bool isAlive()const;
 	bool isTaunted()const;
 	bool setTaunted(bool flag);

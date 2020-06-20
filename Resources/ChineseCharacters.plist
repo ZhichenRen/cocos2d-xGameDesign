@@ -20,5 +20,9 @@
 	<string>颤抖着滚开吧杂鱼们！</string>
 	<key>WoodWallCheat</key>
 	<string>我最讨厌的就是木墙了！</string>
+	<key>BossAppearence</key>
+	<string>是我的晚餐来了吗？</string>
+	<key>BossDeath</key>
+	<string>地狱之门正在徐徐打开……</string>
 </dict>
 </plist>

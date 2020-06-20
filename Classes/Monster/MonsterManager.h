@@ -13,7 +13,7 @@
 #include "Monster/Traveller.h"
 #include "Monster/WoodWall.h"
 #include "Monster/Boss.h"
-
+#include "FlowWord/FlowWord.h"
 
 USING_NS_CC;
 class Player;
@@ -29,6 +29,7 @@ public:
 	void bindMapForWeapon();
 	void createRandomPos();
 	void createWoodWalls(int woodWallsNum = 15);
+	void createBoss();
 	void reviveAllMonsters();
 	bool resetAllMons();
 
@@ -42,8 +43,11 @@ public:
 	bool isGameOver()const;
 	bool isPosOccupied(Vec2 pos);
 	bool isRoomVisited(Vec2 room);
+	bool isBossAlive() const;
+
 	bool getInited()const;
 	Vec2 getCurRoom()const;
+	float getMonsterHpRate() const;
 	std::vector<Bullet*> getMonsterBullets()const;
 	std::vector<Monster*> getMonster()const;
 	std::vector<Monster*> getWoodWall()const;
@@ -54,7 +58,7 @@ public:
 	void setBulkMonsterNum(int giantNum);
 	void setInited();
 	void setRoomVisited(Vec2 room);
-	void createBoss();
+	
 private:
 
 	void showPreRec();
@@ -69,7 +73,7 @@ private:
 	std::map<Vec2, bool> m_monsPosMap;
 	std::map<Vec2, bool> m_visitedRoom;
 	Boss* m_boss = NULL;
-
+	FlowWord* m_flowWord = NULL;
 	Entity* m_player = NULL;
 	AdventureMapLayer* m_map = NULL;
 	

@@ -42,6 +42,9 @@ bool MonsterManager::init()
 	m_deathMonsNum = 0;
 	m_fGameOver = 0;
 	m_curRoom = ccp(-1, -1);
+	m_flowWord = FlowWord::create();
+	addChild(m_flowWord, 5);
+
 	return true;
 }
 
@@ -315,6 +318,13 @@ void MonsterManager::createBoss()
 	m_boss->getMonsterWeapon()->bindMap(m_map);
 	m_boss->bindMonsMgr(this);
 	m_boss->getChildByName("preRect")->setVisible(false);
+	if (!m_flowWord)
+		m_flowWord = FlowWord::create();
+	m_flowWord->setPosition(m_boss->getPosition() + ccp(-150, -50));
+	//this->addChild(m_flowWord, 5);
+	CCDictionary* pDictionary = (CCDictionary*)CCDictionary::createWithContentsOfFile("ChineseCharacters.plist");
+	auto str = pDictionary->valueForKey("BossAppearence")->getCString();
+	m_flowWord->showShopWord(str);
 	m_monsterList.push_back(m_boss);
 	this->addChild(m_boss, 1);
 }
@@ -375,6 +385,9 @@ void MonsterManager::update(float dt)
 						m_map->addBlue(blue);
 					}
 				}
+				CCDictionary* pDictionary = (CCDictionary*)CCDictionary::createWithContentsOfFile("ChineseCharacters.plist");
+				auto str = pDictionary->valueForKey("BossDeath")->getCString();
+				m_flowWord->showShopWord(str);
 				return;
 			}
 			//¹¥»÷Ö÷½Ç
@@ -545,6 +558,13 @@ Vec2 MonsterManager::getCurRoom()const
 	return m_curRoom;
 }
 
+float MonsterManager::getMonsterHpRate() const
+{
+	if (!m_boss)
+		return 0.0f;
+	return m_boss->getHp() / 500;
+}
+
 void MonsterManager::setRoomVisited(Vec2 room)
 {
 	m_visitedRoom[room] = true;
@@ -555,6 +575,16 @@ void MonsterManager::setRoomVisited(Vec2 room)
 bool MonsterManager::isRoomVisited(Vec2 room)
 {
 	return m_visitedRoom[room];
+}
+bool MonsterManager::isBossAlive() const
+{
+	if (!m_boss)
+		return false;
+	if (m_boss->getHp() <= 0)
+	{
+		return false;
+	}
+	return true;
 }
 void MonsterManager::setBulkMonsterNum(int giantNum)
 {

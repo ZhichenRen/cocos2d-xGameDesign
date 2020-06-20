@@ -453,7 +453,7 @@ void TollgateScene::compare(float dt)
 		this->unschedule(schedule_selector(TollgateScene::compare));
 	}
 }
-
+int i = 0;
 void TollgateScene::update(float dt)
 {
 	(m_cdBar)->setPercent(m_player->getiNowCD() /
@@ -486,7 +486,7 @@ void TollgateScene::update(float dt)
 		&& !m_monsterMgr->isRoomVisited(roomCoord))//其次它没有被到访过
 	{
 		m_monsterMgr->setCurRoom(roomCoord);
-		if (1)//如果是boss房
+		if (!i++)//如果是boss房
 		{
 			loadBoss();
 		}
