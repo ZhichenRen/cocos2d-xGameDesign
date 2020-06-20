@@ -135,6 +135,8 @@ public:
 	bool isClose()const;
 	void setInvincible(float duration_time);
 	bool isInvincible()const;
+	int getDamageBonus()const;
+	void setDamageBonus(int bonus_time, float duration);
 protected:
 	AdventureMapLayer* m_map;
 
@@ -181,4 +183,5 @@ protected:
 private:
 	bool m_leftSide = false;
 	bool m_rightSide = true;
+	int m_damage_bonus = 1;
 };

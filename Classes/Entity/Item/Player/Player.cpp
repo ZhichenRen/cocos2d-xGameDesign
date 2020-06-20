@@ -647,3 +647,22 @@ bool Player::isInvincible()const
 {
 	return m_is_invincible;
 }
+
+void Player::setDamageBonus(int bonus_time, float duration_time)
+{
+	m_damage_bonus = bonus_time;
+	auto duration = DelayTime::create(duration_time);
+	auto callback = CallFunc::create(
+		[this]()
+	{
+		this->m_damage_bonus = 1;
+	}
+	);
+	auto action = Sequence::create(duration, callback, NULL);
+	this->runAction(action);
+}
+
+int Player::getDamageBonus()const
+{
+	return m_damage_bonus;
+}
