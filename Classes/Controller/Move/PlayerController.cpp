@@ -166,11 +166,16 @@ void PlayerController::onKeyPressed(EventKeyboard::KeyCode keycode, Event* event
 		{
 			rangerOpearte();
 		}
+		
 		return;
 	}
 	else if (keycode == EventKeyboard::KeyCode::KEY_Q)
 	{
 		m_player->changeWeapon();
+		if (m_isKnight)
+		{
+			m_player->skillEnd();
+		}
 	}
 
 	animateOperate();

@@ -16,8 +16,7 @@ bool Boss::init()
 	setMonsterWeapon(gun);
 	//gun->setDamage(2);
 	gun->setAttackSpeed(1.5f);
-	this->bindSprite(Sprite::create(this->getResTrack()), 2.0f, 2.0f);
-	setContentSize(Size(getContentSize().width * 3, getContentSize().height * 3));
+	this->bindSprite(Sprite::create(this->getResTrack()));
 	this->addChild(gun, 1);
 	m_isAlive = true;
 	return true;
@@ -43,8 +42,10 @@ void Boss::hit(int damage, float flyingDegree, bool isCriticalStrike)
 	{
 		std::string msg = std::to_string(damage) + '!';
 		m_damageMsg->showCritDmg(msg.c_str(), 200);
+
 		return;
 	}
+
 	std::string msg = std::to_string(damage);
 	m_damageMsg->showMonsDmg(msg.c_str(), 200);
 }

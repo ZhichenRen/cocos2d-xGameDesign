@@ -15,6 +15,6 @@ public:
 	CREATE_FUNC(Boss);
 	//virtual void resetPropoties();
 private:
-	static const int m_initHp = 500;
+	static const int m_initHp = 800;
 };
 #endif

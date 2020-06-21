@@ -4,6 +4,7 @@
 #include "Scene/PauseScene.h"
 #include "Scene/HomeScene.h"
 #include "Entity/Item/Player/Priest/Priest.h"
+#include "Entity/Item/Player/Knight/Knight.h"
 #include "Entity/Weapons/Bullets/ExplosiveBullet.h"
 #include "Entity/Weapons/RPG.h"
 #include "Entity\Weapons\GoldenSword.h"
@@ -43,10 +44,11 @@ void TollgateScene::addPlayer()
 	ValueMap spawnPoint = group->getObject("hero");
 	float x = spawnPoint["x"].asFloat();
 	float y = spawnPoint["y"].asFloat();
-	if(SafeMapLayer::whichPlayer()==1)
+	/*if(SafeMapLayer::whichPlayer()==1)
 	    m_player = Ranger::create();
 	else if(SafeMapLayer::whichPlayer() == 2)
-		m_player = Priest::create();
+		m_player = Priest::create();*/
+	m_player = Knight::create();
 	m_player->setPosition(Vec2(x, y));
 
 	m_player->setTiledMap(m_map);
@@ -243,6 +245,8 @@ void TollgateScene::loadMonstersInNewRoom()
 		m_monsterMgr->setInited();
 		return;
 	}
+	m_monsterMgr->createOneMoreMons();//梯度
+	m_monsterMgr->createOneMoreMons();
 	m_monsterMgr->reviveAllMonsters();
 }
 
@@ -545,6 +549,7 @@ void TollgateScene::compare(float dt)
 		CCDictionary* pDictionary = (CCDictionary*)CCDictionary::createWithContentsOfFile("ChineseCharacters.plist");
 		auto str = pDictionary->valueForKey("WoodWallCheat")->getCString();
 		m_flowWord->showShopWord(str);
+		this->unschedule(schedule_selector(TollgateScene::compare));
 	}
 	if (strcmp(m_editBox->getText(), "magic") == 0)
 	{
@@ -591,6 +596,7 @@ void TollgateScene::update(float dt)
 	m_weapon_image->loadTexture(m_player->getWeaponFileName());
 	m_mp_cost->setText(std::to_string(m_player->getWeaponPowerCost()));
 	if (!m_map->isBossRoom(roomCoord))
+	
 	{
 		m_boss_name->setVisible(false);
 		m_boss_hp_bg->setVisible(false);
@@ -696,6 +702,7 @@ void TollgateScene::update(float dt)
 		}
 		for (auto monster : monsters)
 		{
+			
 			if (monster->isAlive())
 			{
 				if (bullet->isCollideWith(monster))
@@ -810,7 +817,6 @@ void TollgateScene::update(float dt)
 			}
 		}
 	}
-
 	//小金币和小蓝的自动拾取
 	for (auto coin : m_map->getCoinList())
 	{
