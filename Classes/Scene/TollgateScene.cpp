@@ -151,7 +151,11 @@ void TollgateScene::onEnter()
 void TollgateScene::onEnterTransitionDidFinish()
 {
 	Layer::onEnterTransitionDidFinish();
-	SimpleAudioEngine::getInstance()->playBackgroundMusic("bgm/advBgm.mp3", true);
+	if (GameData::getBgmNum() == 1)
+	{
+		SimpleAudioEngine::getInstance()->playBackgroundMusic("bgm/advBgm.mp3", true);
+		GameData::setBgmNum(ADVMAP);
+	}
 }
 
 void TollgateScene::onExit()

@@ -67,12 +67,15 @@ bool SafeMapLayer::init()
     text->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height - 200));
 
     MenuItemImage* rangerItem = MenuItemImage::create("ranger_image.png", "ranger_image.png", CC_CALLBACK_1(SafeMapLayer::menuItemRangerCallback, this));
-    rangerItem->setPosition(Vec2(origin.x + visibleSize.width / 2 - 200, origin.y + visibleSize.height / 2 - 200));
+    rangerItem->setPosition(Vec2(origin.x + visibleSize.width / 2 - 300, origin.y + visibleSize.height / 2 - 200));
 
-    MenuItemImage* mageItem = MenuItemImage::create("priest_image.jpg", "priest_image.jpg", CC_CALLBACK_1(SafeMapLayer::menuItemPriestCallback, this));
-    mageItem->setPosition(Vec2(origin.x + visibleSize.width / 2 + 200, origin.y + visibleSize.height / 2 - 200));
+    MenuItemImage* priestItem = MenuItemImage::create("priest_image.jpg", "priest_image.jpg", CC_CALLBACK_1(SafeMapLayer::menuItemPriestCallback, this));
+    priestItem->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2 - 200));
 
-    Menu* menu2 = Menu::create(text, rangerItem, mageItem, nullptr);
+    MenuItemImage* knightItem = MenuItemImage::create("knight_image.png", "knight_image.png", CC_CALLBACK_1(SafeMapLayer::menuItemKnightCallback, this));
+    knightItem->setPosition(Vec2(origin.x + visibleSize.width / 2 + 300, origin.y + visibleSize.height / 2 - 200));
+
+    Menu* menu2 = Menu::create(text, rangerItem, priestItem, knightItem, nullptr);
 
     menu2->setPosition(Vec2::ZERO);
     this->addChild(menu2, 0, 10086);//选人菜单
@@ -179,6 +182,14 @@ void SafeMapLayer::setPlayer(int playerNum)
         m_tileMap->addChild(m_player);//游戏人物
         this->removeChildByTag(10086);
         this->scheduleUpdate();
+        break;
+    case 3:
+        m_player = Sprite::create("knight_image.png");
+        m_player->setScale(0.5);
+        m_player->setPosition(Vec2(x, y));
+        m_tileMap->addChild(m_player);//游戏人物
+        this->removeChildByTag(10086);
+        this->scheduleUpdate();
     }
 }
 
@@ -217,6 +228,25 @@ void SafeMapLayer::menuItemPriestCallback(cocos2d::Ref* pSender)
     };
     layer->setPlayerInformation(priest);
     this->addChild(layer, 10001);
+}
+
+void SafeMapLayer::menuItemKnightCallback(cocos2d::Ref* pSender)
+{
+    SafeMapLayer::m_choose_player = 3;
+    auto layer = PlayerChoose::create();
+    layer->bindMap(this);
+    PlayerInfomation knight = {
+        6,
+        5,
+        180,
+        "骑士",
+        "火力全开",
+        "短时间内使用两把枪",
+        "knight_image.png",
+        "knight_ability.png"
+    };
+    layer->setPlayerInformation(knight);
+    this->addChild(layer, 10002);
 }
 
 void SafeMapLayer::update(float dt)
