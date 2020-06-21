@@ -158,6 +158,7 @@ void TollgateScene::onExit()
 {
 	Layer::onExit();
 	Director::getInstance()->getEventDispatcher()->removeEventListener(m_keyboard_listener);
+	this->unscheduleUpdate();
 	this->removeChildByTag(0);
 }
 
@@ -199,6 +200,7 @@ void TollgateScene::pauseEvent(Ref*, TouchEventType type)
 	switch (type)
 	{
 	case TOUCH_EVENT_ENDED:
+		this->unscheduleUpdate();
 		Size visible_size = Director::getInstance()->getVisibleSize();
 		CCRenderTexture* background = CCRenderTexture::create(visible_size.width, visible_size.height);
 		background->begin();
@@ -388,6 +390,7 @@ void TollgateScene::loadListeners()
 				else//结束冒险
 				{
 					GameData::setLastRoomCoord(Vec2(2, 2));
+					this->unscheduleUpdate();
 					Size visible_size = Director::getInstance()->getVisibleSize();
 					CCRenderTexture* background = CCRenderTexture::create(visible_size.width, visible_size.height);
 					background->begin();
@@ -473,6 +476,7 @@ void TollgateScene::loadListeners()
 			}
 			break;
 		case EventKeyboard::KeyCode::KEY_ESCAPE:
+			this->unscheduleUpdate();
 			Size visible_size = Director::getInstance()->getVisibleSize();
 			CCRenderTexture* background = CCRenderTexture::create(visible_size.width, visible_size.height);
 			background->begin();
@@ -539,7 +543,7 @@ void TollgateScene::compare(float dt)
 		auto str = pDictionary->valueForKey("WoodWallCheat")->getCString();
 		m_flowWord->showShopWord(str);
 	}
-	if (strcmp(m_editBox->getText(), "infinitypower") == 0)
+	if (strcmp(m_editBox->getText(), "magic") == 0)
 	{
 		m_player->setiNowMp(m_player->getiTotalMp());
 		m_flowWord->showShopWord("无尽的魔力！");
@@ -547,10 +551,10 @@ void TollgateScene::compare(float dt)
 	}
 	if (strcmp(m_editBox->getText(), "rcwtql") == 0)
 	{
-		m_player->setInvincible(45.0f);
+		m_player->setInvincible(30.0f);
 		this->unschedule(schedule_selector(TollgateScene::compare));
 	}
-	if (strcmp(m_editBox->getText(), "risinguppercut") == 0)
+	if (strcmp(m_editBox->getText(), "power") == 0)
 	{
 		m_player->setDamageBonus(10, 15.0f);
 		m_flowWord->showShopWord("力量！！");
@@ -843,6 +847,7 @@ void TollgateScene::update(float dt)
 
 	if (m_player->getIsDeath())
 	{
+		this->unscheduleUpdate();
 		Size visible_size = Director::getInstance()->getVisibleSize();
 		CCRenderTexture* background = CCRenderTexture::create(visible_size.width, visible_size.height);
 		background->begin();

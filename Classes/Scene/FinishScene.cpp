@@ -4,6 +4,9 @@
 #include "GameData.h"
 
 #pragma execution_character_set("utf-8")
+#define RANGER 1
+#define PRIEST 2
+#define KNIGHT 3
 
 bool FinishScene::init()
 {
@@ -45,9 +48,14 @@ void FinishScene::loadUI()
 	auto player_image = (ImageView*)Helper::seekWidgetByName(UI, "player_image");
 	switch (m_player)
 	{
-	case 2:
+	case RANGER:
+		player_image->loadTexture("ranger_image.png");
+		break;
+	case PRIEST:
 		player_image->loadTexture("priest_image.jpg");
 		break;
+	case KNIGHT:
+		player_image->loadTexture("knight_image.png");
 	}
 }
 
