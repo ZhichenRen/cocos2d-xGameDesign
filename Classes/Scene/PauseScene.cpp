@@ -3,6 +3,10 @@
 #include "Scene\SettingScene.h"
 #include "GameData.h"
 
+#define RANGER 1
+#define PRIEST 2
+#define KNIGHT 3
+
 bool PauseScene::init()
 {
 	if (!Layer::init())
@@ -78,9 +82,17 @@ void PauseScene::loadUI()
 	setting_button->addTouchEventListener(this, toucheventselector(PauseScene::goToSettingMenu));
 	auto player_image = (ImageView*)Helper::seekWidgetByName(UI, "player_image");
 
-	if (m_player == 2)
+	switch (m_player)
 	{
-		player_image->loadTexture("priest_image.jpg");
+	case RANGER:
+		player_image->loadTexture("ranger_image.png");
+		break;
+	case PRIEST:
+		player_image->loadTexture("priest_iamge.jpg");
+		break;
+	case KNIGHT:
+		player_image->loadTexture("knight_image.png");
+		break;
 	}
 }
 
