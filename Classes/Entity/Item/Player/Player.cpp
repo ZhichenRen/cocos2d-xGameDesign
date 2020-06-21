@@ -1,4 +1,4 @@
-#include "Entity/Item/Player/Player.h"
+ï»¿#include "Entity/Item/Player/Player.h"
 #include "Scene/TollgateScene.h"
 #include "FlowWord/FlowWord.h"
 #include "Entity/Weapons/CloseWeapon.h"
@@ -228,7 +228,7 @@ void Player::setWeapon(std::string& str,const bool isUpgrate)
 			m_numWeapon = i + 1;
 			auto* flowWord = FlowWord::create();
 			this->addChild(flowWord);
-			std::string msg = "Upgrate!";
+			std::string msg = "Upgrade!";
 			flowWord->showCritDmg(msg.c_str(), this->getContentSize().height / 2, 1.0);
 			return;
 		}
@@ -404,7 +404,7 @@ void Player::loadLongRangeListener()
 			//this->hit(2);
 			this->mpDepletion(longRange->getPowerCost());
 		}
-		if (pos.x < 1024 / 2)//ÆÁÄ»Ò»°ë´óÐ¡
+		if (pos.x < 1024 / 2)//å±å¹•ä¸€åŠå¤§å°
 		{
 			setRightToward();
 		}
@@ -426,7 +426,7 @@ void Player::loadLongRangeListener()
 		EventMouse* mouse = dynamic_cast<EventMouse*>(event);
 		auto pos = Point(mouse->getCursorX(), mouse->getCursorY());
 		longRange->setRotationByPos(pos);
-		if (pos.x < 1024 / 2)//ÆÁÄ»Ò»°ë´óÐ¡
+		if (pos.x < 1024 / 2)//å±å¹•ä¸€åŠå¤§å°
 		{
 			setRightToward();
 		}
@@ -467,7 +467,7 @@ void Player::loadCloseWeaponListener()
 			//this->hit(2);
 			this->mpDepletion(closeWeapon->getPowerCost());
 		}
-		if (pos.x < 1024 / 2)//ÆÁÄ»Ò»°ë´óÐ¡
+		if (pos.x < 1024 / 2)//å±å¹•ä¸€åŠå¤§å°
 		{
 			setRightToward();
 		}
