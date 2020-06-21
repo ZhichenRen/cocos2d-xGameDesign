@@ -20,9 +20,20 @@
 
 #### Bullet类
 
+<<<<<<< Updated upstream
 ##### 在LongRange的attack函数中获取子弹的信息（伤害，暴击率，子弹速度，子弹射出的方向等），使用MoveBy完成发射子弹的动作，提供碰撞检测函数，在TollgateScene中进行碰撞检测。
+=======
+##### 在LongRange的attack函数中获取子弹的信息（伤害，暴击率，子弹速度，子弹射出的方向等），使用MoveBy完成发射子弹的动作，提供碰撞检测函数，作为map的子节点，在TollgateScene中进行碰撞检测，子弹使用过后（击中怪物或障碍物），则设置成已使用，在LongRange的update函数中利用cocos内存管理机制进行回收
+>>>>>>> Stashed changes
 
 #### Bullet派生类
 
 ##### ExplosiveBullet类使用粒子特效作为爆炸效果，利用成员变量与回调函数实现在一定时间内的范围伤害。TrackBullet通过update函数实现子弹跟踪。
 
+<<<<<<< Updated upstream
+=======
+#### 碰撞检测
+
+##### 在TollgateScene中的update函数中实现，遍历所有主角射出的子弹与怪物，调用子弹的碰撞检测函数进行判断，反之同理。子弹打到怪物或墙则会被标记已使用（ExplosiveBullet则是爆炸）。近战武器则在玩家攻击时（通过isAttackWithCloseWeapon函数获取是否正在攻击）遍历怪物/玩家进行碰撞检测。
+
+>>>>>>> Stashed changes
