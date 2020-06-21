@@ -758,9 +758,19 @@ void TollgateScene::update(float dt)
 					{
 						damage *= 2;
 						monster->hit(damage * m_player->getDamageBonus(), 0.0f, 1);
+						if (typeid(*m_player) == typeid(Knight) && dynamic_cast<Knight*>(m_player)->getIsInSkill())
+						{
+							monster->hit(damage * m_player->getDamageBonus(), 0.0f, 1);
+						}
 					}
 					else
+					{
 						monster->hit(damage * m_player->getDamageBonus(), 0.0f, 0);
+						if (typeid(*m_player) == typeid(Knight) && dynamic_cast<Knight*>(m_player)->getIsInSkill())
+						{
+							monster->hit(damage * m_player->getDamageBonus(), 0.0f, 0);
+						}
+					}
 				}
 			}
 			weapon->setIsHit(true);
