@@ -2,6 +2,7 @@
 #include "AuxiliaryClass/AnimationUtil/AnimationUtil.h"
 #include "Entity/Item/Player/Player.h"
 #include "cocos2d.h"
+#include "Scene/DeathScene.h"
 using namespace cocos2d;
 class Ranger :public Player
 {
@@ -18,5 +19,6 @@ public:
 	virtual void die()override;
 	virtual Animate* stand()override;
 	virtual Point getSkillDirection()override;
+	virtual int whichPlayer()override { return 1; }
 protected:
 };

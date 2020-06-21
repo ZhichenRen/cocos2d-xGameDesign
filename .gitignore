@@ -41,3 +41,6 @@ win32-build
 proj.win32
 cocos2d
 SoulKnight
+
+#Resource file
+bgm

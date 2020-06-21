@@ -9,6 +9,6 @@ public:
 	CREATE_FUNC(ChiefOfTribe);
 	virtual void resetPropoties();
 private:
-	static const int m_initHp = 40;
+	static const int m_initHp = 30;
 };
 #endif // !__Slime_H__

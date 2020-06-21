@@ -1,4 +1,5 @@
-﻿#include "Entity\Weapons\GoldenSword.h"
+
+#include "Entity\Weapons\GoldenSword.h"
 
 bool GoldenSword::init()
 {
@@ -14,11 +15,12 @@ bool GoldenSword::init()
 
 void GoldenSword::upgrade()
 {
+	isUpgrate = true;
 	m_damage = 25;
 	m_range = 30;
 	m_attack_speed = 0.18f;
 	m_crit_rate = 0.3f;
-	bindSprite(Sprite::create("GoldenSword!.png"), 0.18f, 0.18f);
+	//bindSprite(Sprite::create("GoldenSword!.png"), 0.18f, 0.18f);
 	auto upgrade_effect = ParticleFlower::create();
 	upgrade_effect->setEmitterMode(ParticleSystem::Mode::RADIUS);
 	upgrade_effect->setPositionType(ParticleSystem::PositionType::RELATIVE);

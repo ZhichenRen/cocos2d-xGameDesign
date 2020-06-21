@@ -1,4 +1,4 @@
-#include "AppDelegate.h"
+﻿#include "AppDelegate.h"
 #include "Scene/TollgateScene.h"
 #include "Scene/AdventureMapScene.h"
 #include "Scene/HomeScene.h"

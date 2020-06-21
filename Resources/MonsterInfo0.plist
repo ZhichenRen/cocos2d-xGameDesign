@@ -137,6 +137,25 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
+			<key>Boss.png</key>
+			<dict>
+				<key>width</key>
+				<integer>77</integer>
+				<key>height</key>
+				<integer>99</integer>
+				<key>originalWidth</key>
+				<integer>77</integer>
+				<key>originalHeight</key>
+				<integer>100</integer>
+				<key>x</key>
+				<integer>279</integer>
+				<key>y</key>
+				<integer>542</integer>
+				<key>offsetX</key>
+				<real>0</real>
+				<key>offsetY</key>
+				<real>-0.5</real>
+			</dict>
 			<key>Back.png</key>
 			<dict>
 				<key>width</key>
@@ -148,7 +167,7 @@
 				<key>originalHeight</key>
 				<integer>114</integer>
 				<key>x</key>
-				<integer>279</integer>
+				<integer>358</integer>
 				<key>y</key>
 				<integer>542</integer>
 				<key>offsetX</key>

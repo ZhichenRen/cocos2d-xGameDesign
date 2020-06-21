@@ -14,7 +14,7 @@ public:
 	float getBulletDegree()const;
 	void setBulletDegree(float new_degree);
 	virtual void upgrade();
-private:
+protected:
 	int m_bullet_num_at_once;
 	float m_degree;//degree beween two bullets
 };

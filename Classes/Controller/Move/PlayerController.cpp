@@ -1,4 +1,4 @@
-ï»¿#include "Controller/Move/PlayerController.h"
+#include "Controller/Move/PlayerController.h"
 #include "Entity/Weapons/CloseWeapon.h"
 
 bool PlayerController::init()
@@ -13,6 +13,12 @@ void PlayerController::onEnter()
 {
 	Node::onEnter();
 	registeControllerEvent();
+}
+
+void PlayerController::onExit()
+{
+	Node::onExit();
+	_eventDispatcher->removeEventListener(m_listener);
 }
 
 void PlayerController::update(float dt)
@@ -40,13 +46,13 @@ void PlayerController::registeControllerEvent()
 {
 	auto* dispatcher = Director::getInstance()->getEventDispatcher();
 	auto* keyListener = EventListenerKeyboard::create();
-	//åˆ›å»ºä¸€ä¸ªäº‹ä»¶ç›‘å¬å™¨ç›‘å¬é”®ç›˜äº‹ä»¶
+	//´´½¨Ò»¸öÊÂ¼ş¼àÌıÆ÷¼àÌı¼üÅÌÊÂ¼ş
 	keyListener->onKeyPressed = CC_CALLBACK_2(PlayerController::onKeyPressed, this);
-	//é”®ç›˜è¢«æŒ‰ä¸‹æ—¶å“åº”
+	//¼üÅÌ±»°´ÏÂÊ±ÏìÓ¦
 	keyListener->onKeyReleased = CC_CALLBACK_2(PlayerController::onKeyReleased, this);
-	//é”®ç›˜æŒ‰é”®è¢«å¼¹å›æ—¶å“åº”
+	//¼üÅÌ°´¼ü±»µ¯»ØÊ±ÏìÓ¦
 	dispatcher->addEventListenerWithSceneGraphPriority(keyListener, this);
-
+	m_listener = keyListener;
 }
 
 void PlayerController::animateOperate()
@@ -86,19 +92,19 @@ void PlayerController::isEncounterBarriers(const int x, const int y)
 		m_player->getSkillDirectionX() * 5, y + m_player->isPositiveOrNegative(m_player->
 			getController()->getiYSpeed()) * 20 + m_player->getSkillDirectionY() * 5);
 
-	/* è·å¾—å½“å‰ä¸»è§’å‰æ–¹åæ ‡åœ¨åœ°å›¾ä¸­çš„æ ¼å­ä½ç½® */
+	/* »ñµÃµ±Ç°Ö÷½ÇÇ°·½×ø±êÔÚµØÍ¼ÖĞµÄ¸ñ×ÓÎ»ÖÃ */
 	Point tiledPos = m_player->tileCoordForPosition(Point(dstPos.x, dstPos.y));
 
-	// è·å–åœ°å›¾æ ¼å­çš„å”¯ä¸€æ ‡è¯† 
+	// »ñÈ¡µØÍ¼¸ñ×ÓµÄÎ¨Ò»±êÊ¶ 
 	int tiledGid = (m_player->getMap()->getCollidable())->getTileGIDAt(tiledPos);
 
-	// ä¸ä¸º0ï¼Œä»£è¡¨å­˜åœ¨è¿™ä¸ªæ ¼å­ 
+	// ²»Îª0£¬´ú±í´æÔÚÕâ¸ö¸ñ×Ó 
 	if (tiledGid != 0)
 	{
 		/*
-		è·å–è¯¥åœ°å›¾æ ¼å­çš„æ‰€æœ‰å±æ€§ï¼Œç›®å‰æˆ‘ä»¬åªæœ‰ä¸€ä¸ªCollidableå±æ€§
-		æ ¼å­æ˜¯å±äºmetaå±‚çš„ï¼Œä½†åŒæ—¶ä¹Ÿæ˜¯å±äºæ•´ä¸ªåœ°å›¾çš„ï¼Œæ‰€ä»¥åœ¨è·å–æ ¼å­çš„æ‰€æœ‰å±æ€§
-		æ—¶ï¼Œé€šè¿‡æ ¼å­å”¯ä¸€æ ‡è¯†åœ¨åœ°å›¾ä¸­å–å¾—
+		»ñÈ¡¸ÃµØÍ¼¸ñ×ÓµÄËùÓĞÊôĞÔ£¬Ä¿Ç°ÎÒÃÇÖ»ÓĞÒ»¸öCollidableÊôĞÔ
+		¸ñ×ÓÊÇÊôÓÚmeta²ãµÄ£¬µ«Í¬Ê±Ò²ÊÇÊôÓÚÕû¸öµØÍ¼µÄ£¬ËùÒÔÔÚ»ñÈ¡¸ñ×ÓµÄËùÓĞÊôĞÔ
+		Ê±£¬Í¨¹ı¸ñ×ÓÎ¨Ò»±êÊ¶ÔÚµØÍ¼ÖĞÈ¡µÃ
 		*/
 		Value properties = (m_player->getMap()->getMap())->getPropertiesForGID(tiledGid);
 
@@ -106,9 +112,9 @@ void PlayerController::isEncounterBarriers(const int x, const int y)
 
 		if (propertiesMap.find("Collidable") != propertiesMap.end())
 		{
-			/* å–å¾—æ ¼å­çš„Collidableå±æ€§å€¼ */
+			/* È¡µÃ¸ñ×ÓµÄCollidableÊôĞÔÖµ */
 			Value prop = propertiesMap.at("Collidable");
-			/* åˆ¤æ–­Collidableå±æ€§æ˜¯å¦ä¸ºtrueï¼Œå¦‚æœæ˜¯ï¼Œåˆ™ä¸è®©ç©å®¶ç§»åŠ¨ */
+			/* ÅĞ¶ÏCollidableÊôĞÔÊÇ·ñÎªtrue£¬Èç¹ûÊÇ£¬Ôò²»ÈÃÍæ¼ÒÒÆ¶¯ */
 			if (prop.asString().compare("true") == 0)
 			{
 				auto moveBy = MoveBy::create(0.01f, Point(-(m_player->isPositiveOrNegative
@@ -116,7 +122,7 @@ void PlayerController::isEncounterBarriers(const int x, const int y)
 					-(m_player->isPositiveOrNegative(m_player->getController()->
 						getiYSpeed()) + m_player->getSkillDirectionY()) * 5));
 
-				/* æ‰§è¡ŒåŠ¨ä½œï¼Œç¢°æ’åˆ°éšœç¢ç‰©æ—¶çš„åå¼¹æ•ˆæœ */
+				/* Ö´ĞĞ¶¯×÷£¬Åö×²µ½ÕÏ°­ÎïÊ±µÄ·´µ¯Ğ§¹û */
 				if (m_rangerSkill != NULL)
 				{
 					m_player->stopAction(m_rangerSkill);
@@ -132,39 +138,44 @@ void PlayerController::onKeyPressed(EventKeyboard::KeyCode keycode, Event* event
 {
 	if (keycode == EventKeyboard::KeyCode::KEY_W)
 	{
-		//CCLOG("æŒ‰Wï¼šä¸Šæ–¹å‘é”®");
+		//CCLOG("°´W£ºÉÏ·½Ïò¼ü");
 		this->setiYSpeed(4);
 	}
 	else if (keycode == EventKeyboard::KeyCode::KEY_A)
 	{
-		//CCLOG("æŒ‰Aï¼šå·¦æ–¹å‘é”®");
+		//CCLOG("°´A£º×ó·½Ïò¼ü");
 		this->setiXSpeed(-4);
 		m_player->setRightToward();
 	}
 	else if (keycode == EventKeyboard::KeyCode::KEY_D)
 	{
-		//CCLOG("æŒ‰Dï¼šå³æ–¹å‘é”®");
+		//CCLOG("°´D£ºÓÒ·½Ïò¼ü");
 		this->setiXSpeed(4);
 		m_player->setLeftToward();
 	}
 	else if (keycode == EventKeyboard::KeyCode::KEY_S)
 	{
-		//CCLOG("æŒ‰Sï¼šä¸‹æ–¹å‘é”®");
+		//CCLOG("°´S£ºÏÂ·½Ïò¼ü");
 		this->setiYSpeed(-4);
 	}
 	else if (keycode == EventKeyboard::KeyCode::KEY_SPACE)
 	{
-		//CCLOG("æŒ‰ç©ºæ ¼ï¼šæ”¾æŠ€èƒ½");
+		//CCLOG("°´¿Õ¸ñ£º·Å¼¼ÄÜ");
 		m_player->skill();
 		if (m_isRanger && (m_player->getiNowCD() == 0))
 		{
 			rangerOpearte();
 		}
+		
 		return;
 	}
 	else if (keycode == EventKeyboard::KeyCode::KEY_Q)
 	{
 		m_player->changeWeapon();
+		if (m_isKnight)
+		{
+			m_player->skillEnd();
+		}
 	}
 
 	animateOperate();
@@ -198,9 +209,12 @@ void PlayerController::playerOperate()const
 {
 	m_player->setiNowCD((m_player->getiNowCD() + 1));
     m_player->setArmorCd();
+	if (m_player->getiNowHp() == 0)
+		m_player->die();
 	if (m_player->getIsInSkill())
 	{
 		m_player->setiNowSkillDuration(m_player->getiNowSkillDuration() + 1);
+		m_player->skillDuration();
 		if (m_player->getiNowSkillDuration() == m_player->getiTotalSkillDuration())
 			m_player->skillEnd();
 	}

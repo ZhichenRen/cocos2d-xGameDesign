@@ -1,4 +1,4 @@
-﻿#include "Entity\Weapons\CandyGun.h"
+#include "Entity\Weapons\CandyGun.h"
 
 CandyGun::CandyGun()
 {
@@ -38,8 +38,10 @@ bool CandyGun::init()
 	return true;
 }
 
+
 void CandyGun::upgrade()
 {
+	isUpgrate = true;
 	m_power_cost = 3;
 	m_bullet_num = 100;
 	m_range = 100;

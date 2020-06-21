@@ -1,4 +1,4 @@
-﻿#ifndef __GoldenSword_H__
+#ifndef __GoldenSword_H__
 #define __GoldenSword_H__
 
 #include "Entity\Weapons\CloseWeapon.h"

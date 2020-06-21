@@ -1,4 +1,4 @@
-﻿#include "ChiefOfTribe.h"
+#include "ChiefOfTribe.h"
 
 bool ChiefOfTribe::init()
 {

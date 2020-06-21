@@ -9,6 +9,8 @@ USING_NS_CC_EXT;
 USING_NS_CC;
 using namespace CocosDenshion;
 
+int SafeMapLayer::m_choose_player = 1;
+
 cocos2d::Scene* SafeMapLayer::createScene()
 {
     auto scene = Scene::create();
@@ -65,12 +67,15 @@ bool SafeMapLayer::init()
     text->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height - 200));
 
     MenuItemImage* rangerItem = MenuItemImage::create("ranger_image.png", "ranger_image.png", CC_CALLBACK_1(SafeMapLayer::menuItemRangerCallback, this));
-    rangerItem->setPosition(Vec2(origin.x + visibleSize.width / 2 - 200, origin.y + visibleSize.height / 2 - 200));
+    rangerItem->setPosition(Vec2(origin.x + visibleSize.width / 2 - 300, origin.y + visibleSize.height / 2 - 200));
 
-    MenuItemImage* mageItem = MenuItemImage::create("mage_image.png", "mage_image.png", CC_CALLBACK_1(SafeMapLayer::menuItemMageCallback, this));
-    mageItem->setPosition(Vec2(origin.x + visibleSize.width / 2 + 200, origin.y + visibleSize.height / 2 - 200));
+    MenuItemImage* priestItem = MenuItemImage::create("priest_image.jpg", "priest_image.jpg", CC_CALLBACK_1(SafeMapLayer::menuItemPriestCallback, this));
+    priestItem->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2 - 200));
 
-    Menu* menu2 = Menu::create(text, rangerItem, mageItem, nullptr);
+    MenuItemImage* knightItem = MenuItemImage::create("knight_image.png", "knight_image.png", CC_CALLBACK_1(SafeMapLayer::menuItemKnightCallback, this));
+    knightItem->setPosition(Vec2(origin.x + visibleSize.width / 2 + 300, origin.y + visibleSize.height / 2 - 200));
+
+    Menu* menu2 = Menu::create(text, rangerItem, priestItem, knightItem, nullptr);
 
     menu2->setPosition(Vec2::ZERO);
     this->addChild(menu2, 0, 10086);//选人菜单
@@ -130,7 +135,10 @@ void SafeMapLayer::onEnter()
 void SafeMapLayer::onEnterTransitionDidFinish()
 {
     Layer::onEnterTransitionDidFinish();
-    SimpleAudioEngine::getInstance()->playBackgroundMusic("bgm/safeBgm.mp3",true);
+    if (GameData::getBgmNum() == ADVMAP)
+    {
+        SimpleAudioEngine::getInstance()->playBackgroundMusic("bgm/safeBgm.mp3", true);
+    }
 }
 
 void SafeMapLayer::onExit()
@@ -148,7 +156,6 @@ void SafeMapLayer::onExitTransitionDidStart()
 void SafeMapLayer::cleanup()
 {
     Layer::cleanup();
-    SimpleAudioEngine::getInstance()->stopBackgroundMusic("bgm/safeBgm.mp3");
 }
 
 void SafeMapLayer::setPlayer(int playerNum)
@@ -158,7 +165,8 @@ void SafeMapLayer::setPlayer(int playerNum)
 
     float x = spawnPoint["x"].asFloat();
     float y = spawnPoint["y"].asFloat();
-
+	auto animation = AnimationUtil::createWithFrameNameAndNumUsingPlist("Ranger/RangerWalk/", "RangerWalk", 4, 0.12, -1);
+	auto animate = Animate::create(animation);
     switch (playerNum)
     {
     case 1:
@@ -166,18 +174,24 @@ void SafeMapLayer::setPlayer(int playerNum)
         m_player->setPosition(Vec2(x, y));
         m_tileMap->addChild(m_player);//游戏人物
         this->removeChildByTag(10086);
+		m_player->runAction(animate);
         this->scheduleUpdate();
         break;
     case 2:
         m_player = Sprite::create("Priest/PriestIni.PNG");
+		m_player->setScale(0.5);
+        m_player->setPosition(Vec2(x, y));
+        m_tileMap->addChild(m_player);//游戏人物
+        this->removeChildByTag(10086);
+        this->scheduleUpdate();
+        break;
+    case 3:
+        m_player = Sprite::create("Knight/KnightIni.png");
         m_player->setPosition(Vec2(x, y));
         m_tileMap->addChild(m_player);//游戏人物
         this->removeChildByTag(10086);
         this->scheduleUpdate();
     }
-    auto animation = AnimationUtil::createWithFrameNameAndNumUsingPlist("Ranger/RangerWalk/", "RangerWalk", 4, 0.12, -1);
-    auto animate = Animate::create(animation);
-    m_player->runAction(animate);
 }
 
 void SafeMapLayer::menuItemSettingCallback(cocos2d::Ref* pSender)
@@ -187,32 +201,53 @@ void SafeMapLayer::menuItemSettingCallback(cocos2d::Ref* pSender)
     background->begin();
     this->visit();
     background->end();
-    Director::getInstance()->pushScene(PauseScene::createScene(background));
+    Director::getInstance()->pushScene(PauseScene::createScene(background, m_choose_player));
 }
 
 void SafeMapLayer::menuItemRangerCallback(cocos2d::Ref* pSender)
 {
+    SafeMapLayer::m_choose_player = 1;
     auto layer = PlayerChoose::create();
     layer->bindMap(this);
     this->addChild(layer, 10000);
 }
 
-void SafeMapLayer::menuItemMageCallback(cocos2d::Ref* pSender)
+void SafeMapLayer::menuItemPriestCallback(cocos2d::Ref* pSender)
 {
+    SafeMapLayer::m_choose_player = 2;
     auto layer = PlayerChoose::create();
     layer->bindMap(this);
-    PlayerInfomation mage = {
+    PlayerInfomation priest = {
         3,
         5,
-        210,
-        "法师",
-        "奥术闪电",
-        "释放强大的闪电\n攻击敌人！！",
-        "mage_image.png",
-        "mage_ability.png"
+        200,
+        "牧师",
+        "恢复法阵",
+        "使用恢复法阵\n恢复生命值",
+        "priest_image.jpg",
+        "priest_ability.jpg"
     };
-    layer->setPlayerInformation(mage);
+    layer->setPlayerInformation(priest);
     this->addChild(layer, 10001);
+}
+
+void SafeMapLayer::menuItemKnightCallback(cocos2d::Ref* pSender)
+{
+    SafeMapLayer::m_choose_player = 3;
+    auto layer = PlayerChoose::create();
+    layer->bindMap(this);
+    PlayerInfomation knight = {
+        6,
+        5,
+        180,
+        "骑士",
+        "火力全开",
+        "短时间内使用两把枪",
+        "knight_image.png",
+        "knight_ability.png"
+    };
+    layer->setPlayerInformation(knight);
+    this->addChild(layer, 10002);
 }
 
 void SafeMapLayer::update(float dt)

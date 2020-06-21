@@ -2,6 +2,13 @@
 #include "Scene\HomeScene.h"
 #include "Scene\SettingScene.h"
 #include "GameData.h"
+#include "Scene/TollgateScene.h"
+
+#define RANGER 1
+#define PRIEST 2
+#define KNIGHT 3
+
+extern restrorePlayer restore;
 
 bool PauseScene::init()
 {
@@ -9,14 +16,15 @@ bool PauseScene::init()
 	{
 		return false;
 	}
-	loadUI();
 	return true;
 }
 
-Scene* PauseScene::createScene(CCRenderTexture* background)
+Scene* PauseScene::createScene(CCRenderTexture* background, int player)
 {
 	Scene* scene = Scene::create();
-	Layer* layer = PauseScene::create();
+	PauseScene* layer = PauseScene::create();
+	layer->setPlayer(player);
+	layer->loadUI();
 	scene->addChild(layer, 1);
 
 	Size visible_size = Director::getInstance()->getVisibleSize();
@@ -34,9 +42,9 @@ void PauseScene::backToHomeMenu(Ref*, TouchEventType type)
 	{
 	case TOUCH_EVENT_ENDED:
 		Director::getInstance()->popScene();
-		GameData::setCoinNum(0);
 		GameData::setLastRoomCoord(Vec2(2, 2));
 		GameData::setLevel(1);
+		restore.num = 1;
 		Director::getInstance()->replaceScene(HomeMenuLayer::createScene());
 		break;
 	}
@@ -77,6 +85,21 @@ void PauseScene::loadUI()
 	setting_button->addTouchEventListener(this, toucheventselector(PauseScene::goToSettingMenu));
 	auto player_image = (ImageView*)Helper::seekWidgetByName(UI, "player_image");
 
-	player_image->loadTexture("mage_image.png");
+	switch (m_player)
+	{
+	case RANGER:
+		player_image->loadTexture("ranger_image.png");
+		break;
+	case PRIEST:
+		player_image->loadTexture("priest_iamge.jpg");
+		break;
+	case KNIGHT:
+		player_image->loadTexture("knight_image.png");
+		break;
+	}
+}
 
+void PauseScene::setPlayer(int player)
+{
+	m_player = player;
 }

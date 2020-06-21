@@ -1,4 +1,4 @@
-﻿#include "Entity/Weapons/TrackWeapon.h"
+#include "Entity/Weapons/TrackWeapon.h"
 #include "Entity/Weapons/Bullets/TrackBullet.h"
 #include "Entity/Item/Player/Player.h"
 bool TrackWeapon::init()
@@ -12,7 +12,7 @@ bool TrackWeapon::init()
 	m_range = 100;
 	m_bullet_damage = 3;
 	m_bullet_speed = 150;
-	m_attack_speed = 1.0f;
+	m_attack_speed = 3.0f;
 	m_crit_rate = 0.2f;
 	m_bullet_picture = std::string("purple.png");
 	bindSprite(Sprite::create("CandyGun!.png"), 0.25f, 0.25f);

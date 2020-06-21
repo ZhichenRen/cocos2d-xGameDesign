@@ -77,6 +77,11 @@ bool AdventureMapLayer::isMonsterRoom(Vec2 roomCoord)
 	return m_rooms[roomCoord] == ENEMY;
 }
 
+bool AdventureMapLayer::isBossRoom(Vec2 roomCoord)
+{
+	return m_rooms[roomCoord] == END && GameData::getLevel() == 2;
+}
+
 void AdventureMapLayer::update(float dt)
 {
 	for (auto it = m_blueList.begin(); it != m_blueList.end();)

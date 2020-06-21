@@ -9,6 +9,6 @@ public:
 	void resetPropoties();
 	CREATE_FUNC(Traveller);
 private:
-	static const int m_initHp = 35;
+	static const int m_initHp = 25;
 };
 #endif // !__Slime_H__
