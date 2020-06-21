@@ -187,7 +187,6 @@ void SafeMapLayer::setPlayer(int playerNum)
         break;
     case 3:
         m_player = Sprite::create("Knight/KnightIni.png");
-        m_player->setScale(0.5);
         m_player->setPosition(Vec2(x, y));
         m_tileMap->addChild(m_player);//游戏人物
         this->removeChildByTag(10086);
