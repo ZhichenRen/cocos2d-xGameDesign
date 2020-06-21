@@ -231,7 +231,6 @@ void Monster::wander()
 		curPos : -ccp(this->getMonsterSpeed(), 0) + curPos;
 
 	mySetPosition(tarPos);
-
 }
 
 

@@ -241,6 +241,8 @@ void TollgateScene::loadMonstersInNewRoom()
 		m_monsterMgr->setInited();
 		return;
 	}
+	m_monsterMgr->createOneMoreMons();//梯度
+	m_monsterMgr->createOneMoreMons();
 	m_monsterMgr->reviveAllMonsters();
 }
 
@@ -543,6 +545,7 @@ void TollgateScene::compare(float dt)
 		CCDictionary* pDictionary = (CCDictionary*)CCDictionary::createWithContentsOfFile("ChineseCharacters.plist");
 		auto str = pDictionary->valueForKey("WoodWallCheat")->getCString();
 		m_flowWord->showShopWord(str);
+		this->unschedule(schedule_selector(TollgateScene::compare));
 	}
 	if (strcmp(m_editBox->getText(), "magic") == 0)
 	{
@@ -589,6 +592,7 @@ void TollgateScene::update(float dt)
 	m_weapon_image->loadTexture(m_player->getWeaponFileName());
 	m_mp_cost->setText(std::to_string(m_player->getWeaponPowerCost()));
 	if (!m_map->isBossRoom(roomCoord))
+	
 	{
 		m_boss_name->setVisible(false);
 		m_boss_hp_bg->setVisible(false);
@@ -694,6 +698,7 @@ void TollgateScene::update(float dt)
 		}
 		for (auto monster : monsters)
 		{
+			
 			if (monster->isAlive())
 			{
 				if (bullet->isCollideWith(monster))
@@ -808,7 +813,6 @@ void TollgateScene::update(float dt)
 			}
 		}
 	}
-
 	//小金币和小蓝的自动拾取
 	for (auto coin : m_map->getCoinList())
 	{
