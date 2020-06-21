@@ -25,4 +25,3 @@ private:
 };
 
 #endif // !__STATUE_H__
-

@@ -1,4 +1,4 @@
-﻿#include "Traveller.h"
+#include "Traveller.h"
 
 bool Traveller::init()
 {

@@ -7,6 +7,7 @@ class Coin :public Entity
 {
 public:
 	virtual bool init();
+	void setRandomPosition();
 	CREATE_FUNC(Coin);
 public:
 	int getPrice()const;

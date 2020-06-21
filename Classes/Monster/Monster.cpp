@@ -1,4 +1,4 @@
-﻿#include "Monster\Monster.h"
+#include "Monster\Monster.h"
 #include "Monster/MonsterManager.h"
 #include <string>
 Monster::Monster()
@@ -45,12 +45,12 @@ void Monster::hide()
 }
 
 
-bool Monster::isAlive()
+bool Monster::isAlive()const
 {
 	return m_isAlive;
 }
 
-bool Monster::isTaunted()
+bool Monster::isTaunted()const
 {
 	return m_fIsTaunted;
 }
@@ -77,7 +77,7 @@ bool Monster::mySetPosition(Vec2 target)
 		}
 		return false;
 	}
-	
+
 	if (m_monsMgr->isPosOccupied(tarBlock))
 		return false;
 
@@ -105,7 +105,7 @@ void Monster::bulkUp()
 	getSprite()->setContentSize(Size(getSprite()->getContentSize().width * 2, getSprite()->getContentSize().height * 2));
 	m_Hp *= 2.0;
 	auto weapon = getMonsterWeapon();
-	weapon->setAttackSpeed(weapon->getAttackSpeed()*1.5f);
+	weapon->setAttackSpeed(weapon->getAttackSpeed() * 1.5f);
 	weapon->setDamage(weapon->getDamage() * 1.5);
 	m_isBulkUp = true;
 }
@@ -135,11 +135,14 @@ void Monster::bindMonsMgr(MonsterManager* monsMgr)
 
 void Monster::hit(int damage)
 {
+	if (!m_isAlive)
+		return;
 	setMonsTaunted();
 	this->m_Hp -= damage;
 	std::string msg = '-' + std::to_string(damage);
 	m_damageMsg->showMonsDmg(msg.c_str(), this->getContentSize().height / 2);
 }
+
 
 void Monster::hit(int damage, float flyingDegree, bool isCriticalStrike)
 {
@@ -158,7 +161,6 @@ void Monster::hit(int damage, float flyingDegree, bool isCriticalStrike)
 	/*if (!m_map->isBarrier(m_map->convertToMapSpace(convertToWorldSpace(targetPos))))
 	{
 		auto move_action = MoveBy::create(0.1f, vecToMove);
-
 		this->runAction(move_action);
 	}*/
 	if (isCriticalStrike)
@@ -229,7 +231,6 @@ void Monster::wander()
 		curPos : -ccp(this->getMonsterSpeed(), 0) + curPos;
 
 	mySetPosition(tarPos);
-	
 }
 
 
@@ -240,4 +241,11 @@ void Monster::setMonsTaunted()
 		return;
 	m_fIsTaunted = 1;
 	m_damageMsg->showMonsTaunted();
+
 }
+
+FlowWord* Monster::getFlowWord() const
+{
+	return m_damageMsg;
+}
+

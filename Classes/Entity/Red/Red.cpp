@@ -1,5 +1,5 @@
 #include "Entity\Red\Red.h"
-#define RANDOMRANGE 10
+#define RANDOMRANGE 50
 
 
 bool Red::init()

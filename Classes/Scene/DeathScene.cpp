@@ -3,6 +3,10 @@
 #include "Entity/Item/Player/Player.h"
 #include "Scene/AboutAuthor.h"
 #include "GameData.h"
+#include "Scene/TollgateScene.h"
+
+#pragma execution_character_set("utf-8")
+extern restrorePlayer restore;
 
 bool DeathScene::init()
 {
@@ -51,22 +55,40 @@ void DeathScene::backToHomeMenu(Ref*, TouchEventType type)
 	{
 	case TOUCH_EVENT_ENDED:
 		Director::getInstance()->popScene();
-		GameData::setCoinNum(0);
 		GameData::setLastRoomCoord(Vec2(2, 2));
 		GameData::setLevel(1);
+		restore.num = 1;
 		Director::getInstance()->replaceScene(SafeMapLayer::createScene());
 		break;
 	}
 }
+
 
 void DeathScene::respawn(Ref*, TouchEventType type)
 {
 	switch (type)
 	{
 	case TOUCH_EVENT_ENDED:
-		//player do sth
-		Director::getInstance()->popScene();
-		break;
+		if (GameData::getCoinNum() >= 100)
+		{
+			m_player->setIsDeath(false);
+			m_player->getSprite()->setOpacity(255);
+			m_player->setiNowHp(m_player->getiTotalHp());
+			m_player->setiNowMp(m_player->getiTotalMp());
+			m_player->setiNowArmor(m_player->getiTotalArmor());
+			m_player->getController()->setiXSpeed(0);
+			m_player->getController()->setiYSpeed(0);
+			m_player->setSkillDirectionX(0);
+			m_player->setSkillDirectionY(0);
+			m_player->setInvincible(3.0f);
+			Director::getInstance()->popScene();
+		}
+		else
+		{
+			auto hint = FlowWord::create();
+			this->addChild(hint, 1);
+			hint->showWord("您的金币不足！", Vec2(504, 375));
+		}
 	}
 }
 

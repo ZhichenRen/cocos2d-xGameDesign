@@ -11,8 +11,8 @@ public:
 	virtual bool init();
 	void showWord(const char* text, Point pos);
 	void showShopWord(const char* text);
-	void showMonsDmg(const char* text, float ySize);
-	void showCritDmg(const char* text, float ySize);
+	void showMonsDmg(const char* text, float ySize, float time = 0.2f);
+	void showCritDmg(const char* text, float ySize, float time = 0.2f);
 	void showMonsTaunted();
 private:
 	Label* m_message;

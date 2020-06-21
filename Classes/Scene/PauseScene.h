@@ -11,13 +11,15 @@ class PauseScene :public Layer
 {
 public:
 	virtual bool init();
-	static Scene* createScene(CCRenderTexture* background);
+	static Scene* createScene(CCRenderTexture* background, int player);
 	CREATE_FUNC(PauseScene);
+	void setPlayer(int player);
 private:
 	void loadUI();
 	void backToHomeMenu(Ref*, TouchEventType type);
 	void resume(Ref*, TouchEventType type);
 	void goToSettingMenu(Ref*, TouchEventType type);
+	int m_player;
 };
 
 #endif

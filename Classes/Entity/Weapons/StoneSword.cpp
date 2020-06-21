@@ -2,7 +2,7 @@
 
 bool StoneSword::init()
 {
-	m_damage = 8;
+	m_damage = 10;
 	m_range = 25;
 	m_attack_speed = 0.18f;
 	m_crit_rate = 0.05f;
@@ -14,11 +14,12 @@ bool StoneSword::init()
 
 void StoneSword::upgrade()
 {
-	m_damage = 15;
+	isUpgrate = true;
+	m_damage = 18;
 	m_range = 30;
 	m_attack_speed = 0.15f;
 	m_crit_rate = 0.1f;
-	bindSprite(Sprite::create("GoldenSword!.png"), 0.18f, 0.18f);
+	//bindSprite(Sprite::create("StoneSword.png"), 0.18f, 0.18f);
 	auto upgrade_effect = ParticleFlower::create();
 	upgrade_effect->setEmitterMode(ParticleSystem::Mode::RADIUS);
 	upgrade_effect->setPositionType(ParticleSystem::PositionType::RELATIVE);

@@ -292,6 +292,10 @@ void AdventureMapLayer::buildBonus()
 				m_portal = Sprite::create("portal.png");
 				m_portal->setPosition(m_ground->getPositionAt(GameData::getCoord()[5 * i + j]));
 				this->addChild(m_portal);
+				if (GameData::getLevel() == 2)
+				{
+					m_portal->setVisible(false);
+				}
 			}
 		}
 	}
@@ -413,4 +417,14 @@ void AdventureMapLayer::addRed(Red* red)
 void AdventureMapLayer::addBlueMedicine(BlueMedicine* blueMedicine)
 {
 	m_blueMedicineList.push_back(blueMedicine);
+}
+
+void AdventureMapLayer::addLongRange(LongRange* longRange)
+{
+	m_longRangeList.push_back(longRange);
+}
+
+void AdventureMapLayer::addCloseWeapon(CloseWeapon* closeWeapon)
+{
+	m_closeWeaponList.push_back(closeWeapon);
 }

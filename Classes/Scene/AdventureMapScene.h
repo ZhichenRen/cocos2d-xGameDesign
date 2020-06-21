@@ -18,10 +18,10 @@
 #include "Entity/Red/Red.h"
 #include "Entity/BlueMedicine/BlueMedicine.h"
 #include "Bonus/Statue.h"
-
 class Shop;
 class Chest;
-#include "Entity/BlueMedicine/BlueMedicine.h"
+class LongRange;
+class CloseWeapon;
 
 class AdventureMapLayer : public cocos2d::Layer
 {
@@ -46,6 +46,8 @@ private:
 	std::vector<Blue*> m_blueList;
 	std::vector<Red*> m_redList;
 	std::vector<BlueMedicine*> m_blueMedicineList;
+	std::vector<LongRange*> m_longRangeList;
+	std::vector<CloseWeapon*> m_closeWeaponList;
 
 public:
 	inline cocos2d::TMXTiledMap* getMap() { return m_tileMap; }
@@ -62,6 +64,8 @@ public:
 	inline std::vector<Blue*> getBlueList() { return m_blueList; }
 	inline std::vector<Red*> getRedMedicineList() { return m_redList; }
 	inline std::vector<BlueMedicine*> getBlueMedicineList() { return m_blueMedicineList; }
+	inline std::vector<LongRange*> getLongRangeList() { return m_longRangeList; }
+	inline std::vector<CloseWeapon*> getCloseWeaponList() { return m_closeWeaponList; }
 	static cocos2d::Scene* createScene();
 	virtual bool init();
 
@@ -74,6 +78,8 @@ public:
 	void addBlue(Blue* blue);
 	void addRed(Red* red);
 	void addBlueMedicine(BlueMedicine* blueMedicine);
+	void addLongRange(LongRange* longRange);
+	void addCloseWeapon(CloseWeapon* closeWeapon);
 	cocos2d::Vec2 tileCoordFromPosition(cocos2d::Vec2 position);
 	cocos2d::Vec2 roomCoordFromPosition(cocos2d::Vec2 position);
 
@@ -82,6 +88,7 @@ public:
 	std::vector<std::pair<cocos2d::Vec2, cocos2d::Vec2>> getRoadPairs() { return m_roadPairs; }
 	bool isBarrier(cocos2d::Vec2 position);
 	bool isMonsterRoom(cocos2d::Vec2 roomCoord);
+	bool isBossRoom(cocos2d::Vec2 roomCoord);
 
 	virtual void update(float dt);
 

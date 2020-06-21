@@ -9,6 +9,6 @@ public:
 	void resetPropoties();
 	CREATE_FUNC(Pig);
 private:
-	static const int m_initHp = 15;
+	static const int m_initHp = 30;
 };
 #endif // !__Slime_H__

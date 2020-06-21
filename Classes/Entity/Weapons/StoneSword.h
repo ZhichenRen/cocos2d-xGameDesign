@@ -1,4 +1,4 @@
-﻿#ifndef __StoneSword_H__
+#ifndef __StoneSword_H__
 #define __StoneSword_H__
 
 #include "Entity/Weapons/CloseWeapon.h"

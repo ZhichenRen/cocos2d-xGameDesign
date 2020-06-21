@@ -3,6 +3,7 @@
 
 int GameData::m_coinNum = 0;
 int GameData::m_level = 1;
+int GameData::m_bgmNum = 0;
 Vec2 GameData::m_lastRoomCoord = Vec2(2, 2);
 GameData* GameData::m_pData = nullptr;
 GameData::Garbo GameData::m_garbo;
@@ -21,6 +22,16 @@ int GameData::getCoinNum()
 void GameData::setCoinNum(int coinNum)
 {
 	m_coinNum = coinNum;
+}
+
+int GameData::getBgmNum()
+{
+	return m_bgmNum;
+}
+
+void GameData::setBgmNum(int bgmNum)
+{
+	m_bgmNum = bgmNum;
 }
 
 int GameData::getLevel()

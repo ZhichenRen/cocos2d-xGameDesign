@@ -1,4 +1,4 @@
-﻿#include "duck.h"
+#include "duck.h"
 #include "Entity/Weapons/TrackWeapon.h"
 
 bool Duck::init()

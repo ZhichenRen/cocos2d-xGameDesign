@@ -1,4 +1,6 @@
 ﻿#include "Entity/Item/Player/Player.h"
+#include "Scene/TollgateScene.h"
+#include "FlowWord/FlowWord.h"
 #include "Entity/Weapons/CloseWeapon.h"
 #include "Entity\Weapons\Shotgun.h"
 #include "Entity\Weapons\RPG.h"
@@ -6,6 +8,7 @@
 #include "Entity\Weapons\CandyGun.h"
 #include "Entity/Weapons/TrackWeapon.h"
 #include "Entity/Weapons/Pistol.h"
+#include "Entity/Weapons/StoneSword.h"
 
 bool Player::init()
 {
@@ -46,6 +49,7 @@ void Player::setViewPointByPlayer()
 	Point viewPos = centerPos - destPos;
 	parent->setPosition(viewPos);
 }
+
 
 void Player::setTagPosition(const int x, const int y)
 {
@@ -136,19 +140,112 @@ void Player::changeWeapon()
 {
 	m_numWeapon--;
 	if (m_numWeapon == 0)
-		m_numWeapon = m_numTotalWeapon;
+		m_numWeapon = m_numHasWeapon;
 	int numLongRange = 0, numCloseWeapon = 0;
 	determineWhichWeapon();
 }
 
 
-void Player::setWeapon(std::string& str)
+void Player::chooseAbondonWeapon()
 {
-	if (m_numWeapon < m_numTotalWeapon)
+	m_longRangeAbondon = NULL;
+	m_closeAbondon = NULL;
+	if (m_weapons[m_numWeapon - 1] == "CandyGun!")
 	{
-		m_numWeapon++;
+		m_closeAbondon = NULL;
+		m_longRangeAbondon = CandyGun::create();
+		if (m_isUpgrate[m_numWeapon - 1] == true)
+			m_longRangeAbondon->upgrade();
 	}
-	m_weapons[m_numWeapon - 1] = str;
+	else if (m_weapons[m_numWeapon - 1] == "GoldenSword!")
+	{
+		m_longRangeAbondon = NULL;
+		m_closeAbondon = GoldenSword::create();
+		if (m_isUpgrate[m_numWeapon - 1] == true)
+			m_closeAbondon->upgrade();
+	}
+	else if (m_weapons[m_numWeapon - 1] == "Fist_of_Heaven")
+	{
+		m_closeAbondon = NULL;
+		m_longRangeAbondon = RPG::create();
+		if (m_isUpgrate[m_numWeapon - 1] == true)
+			m_longRangeAbondon->upgrade();
+	}
+	else if (m_weapons[m_numWeapon - 1] == "Rifle&Shotgun")
+	{
+		m_closeAbondon = NULL;
+		m_longRangeAbondon = Shotgun::create();
+		if (m_isUpgrate[m_numWeapon - 1] == true)
+			m_longRangeAbondon->upgrade();
+	}
+	else if (m_weapons[m_numWeapon - 1] == "Pistol")
+	{
+		m_closeAbondon = NULL;
+		m_longRangeAbondon = Pistol::create();
+		if (m_isUpgrate[m_numWeapon - 1] == true)
+			m_longRangeAbondon->upgrade();
+	}
+	else if (m_weapons[m_numWeapon - 1] == "StoneSword")
+	{
+		m_longRangeAbondon = NULL;
+		m_closeAbondon = StoneSword::create();
+		if (m_isUpgrate[m_numWeapon - 1] == true)
+			m_closeAbondon->upgrade();
+	}
+}
+
+void Player::abandonWeapon()
+{
+	chooseAbondonWeapon();
+	if (m_closeAbondon == NULL && m_longRangeAbondon != NULL)
+	{
+		if (m_rightSide)
+			m_longRangeAbondon->setPosition(getTagPosition());
+		else
+			m_longRangeAbondon->setPosition(getTagPosition());
+		m_map->addChild(m_longRangeAbondon,3,200);
+		m_map->addLongRange(m_longRangeAbondon);
+	}
+	else if (m_longRangeAbondon == NULL && m_closeAbondon != NULL)
+	{
+		if (m_rightSide)
+			m_closeAbondon->setPosition(getTagPosition());
+		else
+			m_closeAbondon->setPosition(getTagPosition());
+		m_closeAbondon->bindMap(m_map);
+		m_map->addChild(m_closeAbondon,3,200);
+		m_map->addCloseWeapon(m_closeAbondon);
+	}
+}
+
+void Player::setWeapon(std::string& str,const bool isUpgrate)
+{
+	for (int i = 0; i < m_numHasWeapon; i++)
+	{
+		if (str == m_weapons[i] && m_isUpgrate[i] == false)
+		{
+			m_isUpgrate[i] = true;
+			m_numWeapon = i + 1;
+			auto* flowWord = FlowWord::create();
+			this->addChild(flowWord);
+			std::string msg = "Upgrade!";
+			flowWord->showCritDmg(msg.c_str(), this->getContentSize().height / 2, 1.0);
+			return;
+		}
+	}
+	if (m_numHasWeapon < m_numTotalWeapon)
+	{
+		m_numHasWeapon++;
+		m_numWeapon = m_numHasWeapon;
+		m_weapons[m_numWeapon - 1] = str;
+		m_isUpgrate[m_numWeapon - 1] = isUpgrate;
+	}
+	else
+	{
+		abandonWeapon();
+		m_weapons[m_numWeapon - 1] = str;
+		m_isUpgrate[m_numWeapon - 1] = isUpgrate;
+	}
 }
 
 void Player::resetWeapon()
@@ -175,6 +272,8 @@ void Player::chooseWeapon()
 	{
 		m_close = NULL;
 		m_longRange = CandyGun::create();
+		if (m_isUpgrate[m_numWeapon - 1] == true)
+			m_longRange->upgrade();
 		m_is_close_weapon_now = false;
 		m_weaponFileName = "CandyGun!.png";
 		m_weaponPowerCost = m_longRange->getPowerCost();
@@ -184,6 +283,8 @@ void Player::chooseWeapon()
 	{
 		m_longRange = NULL;
 		m_close = GoldenSword::create();
+		if (m_isUpgrate[m_numWeapon - 1] == true)
+			m_close->upgrade();
 		m_is_close_weapon_now = true;
 		m_weaponFileName = "GoldenSword!.png";
 		m_weaponPowerCost = m_close->getPowerCost();
@@ -193,6 +294,8 @@ void Player::chooseWeapon()
 	{
 		m_close = NULL;
 		m_longRange =RPG::create();
+		if (m_isUpgrate[m_numWeapon - 1] == true)
+			m_longRange->upgrade();
 		m_is_close_weapon_now = false;
 		m_weaponFileName = "Fist_of_Heaven.png";
 		m_weaponPowerCost = m_longRange->getPowerCost();
@@ -202,6 +305,8 @@ void Player::chooseWeapon()
 	{
 		m_close = NULL;
 		m_longRange = Shotgun::create();
+		if (m_isUpgrate[m_numWeapon - 1] == true)
+			m_longRange->upgrade();
 		m_is_close_weapon_now = false;
 		m_weaponFileName = "Rifle&Shotgun.png";
 		m_weaponPowerCost = m_longRange->getPowerCost();
@@ -211,10 +316,23 @@ void Player::chooseWeapon()
 	{
 		m_close = NULL;
 		m_longRange = Pistol::create();
+		if (m_isUpgrate[m_numWeapon - 1] == true)
+			m_longRange->upgrade();
 		m_is_close_weapon_now = false;
 		m_weaponFileName = "pistol.png";
 		m_weaponPowerCost = m_longRange->getPowerCost();
 		loadLongRangeListener();
+	}
+	else if (m_weapons[m_numWeapon - 1] == "StoneSword")
+	{
+		m_longRange = NULL;
+		m_close = StoneSword::create();
+		if (m_isUpgrate[m_numWeapon - 1] == true)
+			m_close->upgrade();
+		m_is_close_weapon_now = true;
+		m_weaponFileName = "StoneSword.png";
+		m_weaponPowerCost = m_close->getPowerCost();
+		loadCloseWeaponListener();
 	}
 }
 
@@ -224,7 +342,10 @@ void Player::determineWhichWeapon()
 	chooseWeapon();
 	if (m_longRange != NULL && m_close == NULL)
 	{
-		m_longRange->setPosition(0, -15);
+		if(m_leftSide)
+			m_longRange->setPosition(-15, -5);
+		else
+		    m_longRange->setPosition(15, -5);
 		m_longRange->bindMap(m_map);
 		this->addChild(m_longRange);
 	    _eventDispatcher->addEventListenerWithSceneGraphPriority(m_listener, this);
@@ -232,7 +353,10 @@ void Player::determineWhichWeapon()
 	}
 	else
 	{
-		m_close->setPosition(0, -15);
+		if (m_rightSide)
+			m_close->setPosition(15, -9);
+		else
+			m_close->setPosition(-15, -9);
 		m_close->bindMap(m_map);
 		this->addChild(m_close);
 		_eventDispatcher->addEventListenerWithSceneGraphPriority(m_listener, this);
@@ -261,18 +385,14 @@ void Player::loadLongRangeListener()
 	};
 	listener->onTouchEnded = [longRange,this](Touch* touch, Event* event)
 	{
-		if (m_is_attacking)
-		{
-			return;
-		}
 		Point pos = Director::getInstance()->convertToGL(touch->getLocationInView());
 
 		if (m_iNowMp >= longRange->getPowerCost())
 		{
 			m_is_attacking = true;
-			longRange->attack(pos);
+
 			//call back to change attack status
-			auto attack_delay = DelayTime::create(longRange->getAttackSpeed());
+			auto attack_delay = DelayTime::create(m_longRange->getAttackSpeed());
 			auto callback = CallFunc::create(
 				[this]() {
 				m_is_attacking = false;
@@ -280,6 +400,7 @@ void Player::loadLongRangeListener()
 			);
 			auto attack = Sequence::create(attack_delay, callback, NULL);
 			this->runAction(attack);
+			longRange->attack(pos);
 			//this->hit(2);
 			this->mpDepletion(longRange->getPowerCost());
 		}
@@ -305,7 +426,7 @@ void Player::loadLongRangeListener()
 		EventMouse* mouse = dynamic_cast<EventMouse*>(event);
 		auto pos = Point(mouse->getCursorX(), mouse->getCursorY());
 		longRange->setRotationByPos(pos);
-		if (pos.x < 1024 / 2)//��Ļһ���С
+		if (pos.x < 1024 / 2)//屏幕一半大小
 		{
 			setRightToward();
 		}
@@ -366,6 +487,17 @@ void Player::setRightToward()
 		this->setLeftSide(true);
 		this->setRightSide(false);
 		m_sprite->setFlipX(true);
+		if (m_isKightSkill == false)
+		{
+			if (m_longRange == NULL && m_close != NULL)
+			{
+				m_close->setPosition(m_close->getPosition().x * (-1), -9);
+			}
+			else if (m_longRange != NULL && m_close == NULL)
+			{
+				m_longRange->setPosition(m_longRange->getPosition().x * (-1), -5);
+			}
+		}
 	}
 }
 
@@ -376,6 +508,17 @@ void Player::setLeftToward()
 		this->setLeftSide(false);
 		this->setRightSide(true);
 		m_sprite->setFlipX(false);
+		if (m_isKightSkill == false)
+		{
+			if (m_longRange == NULL && m_close != NULL)
+			{
+				m_close->setPosition(m_close->getPosition().x*(-1), -9);
+			}
+			else if (m_longRange != NULL && m_close == NULL)
+			{
+				m_longRange->setPosition(m_longRange->getPosition().x * (-1), -5);
+			}
+		}
 	}
 }
 
@@ -397,6 +540,8 @@ std::vector<Bullet*> Player::getBullet()
 		for (int i = 0; i < n; i++)
 		{
 			auto longRange = m_longRanges[i];
+			if (longRange == NULL)
+				continue;
 			for (auto bullet : longRange->getBullet())
 			{
 				bullets.push_back(bullet);
@@ -446,7 +591,7 @@ void Player::setArmorCd()
 	{
 		return;
 	}
-	else if (m_iArmorCd == 50)
+	else if (m_iArmorCd == 100)
 	{
 		setiNowArmor(getiNowArmor() + 1);
 		m_iArmorCd = 0;
@@ -478,4 +623,79 @@ LongRange* Player::getLongrange()const
 bool Player::isClose()const
 {
 	return m_is_close_weapon_now;
+}
+
+void Player::getBuff(int i)
+{
+	if (i == 0)
+	{
+		auto m_addBloodMsg = FlowWord::create();
+		this->addChild(m_addBloodMsg);
+		std::string msg = "Hp up!";
+		m_addBloodMsg->showCritDmg(msg.c_str(), this->getContentSize().height / 2, 1.0);
+		setiTotalHp(getiTotalHp() + 2);
+		setiNowHp(getiNowHp() + 2);
+	}
+	else if (i == 1)
+	{
+		auto m_addBloodMsg = FlowWord::create();
+		this->addChild(m_addBloodMsg);
+		std::string msg = "Mp up!";
+		m_addBloodMsg->showCritDmg(msg.c_str(), this->getContentSize().height / 2, 1.0);
+		setiTotalMp(getiTotalMp() + 50);
+		setiNowMp(getiNowMp() + 50);
+	}
+	else if (i == 2)
+	{
+		auto m_addBloodMsg = FlowWord::create();
+		this->addChild(m_addBloodMsg);
+		std::string msg = "Faster cooling!";
+		m_addBloodMsg->showCritDmg(msg.c_str(), this->getContentSize().height / 2, 1.0);
+		setiTotalCD(getiTotalCD() / 2);
+		setiNowCD(getiNowCD() / 2);
+	}
+}
+
+void Player::setInvincible(float duration_time)
+{
+	if (m_is_invincible)
+	{
+		return;
+	}
+	m_is_invincible = true;
+	m_shield->setVisible(true);
+	auto duration = DelayTime::create(duration_time);
+	auto callback = CallFunc::create(
+		[this]()
+	{
+		this->m_is_invincible = false;
+		this->m_shield->setVisible(false);
+	}
+	);
+	auto action = Sequence::create(duration, callback, NULL);
+	this->runAction(action);
+}
+
+bool Player::isInvincible()const
+{
+	return m_is_invincible;
+}
+
+void Player::setDamageBonus(int bonus_time, float duration_time)
+{
+	m_damage_bonus = bonus_time;
+	auto duration = DelayTime::create(duration_time);
+	auto callback = CallFunc::create(
+		[this]()
+	{
+		this->m_damage_bonus = 1;
+	}
+	);
+	auto action = Sequence::create(duration, callback, NULL);
+	this->runAction(action);
+}
+
+int Player::getDamageBonus()const
+{
+	return m_damage_bonus;
 }

@@ -1,7 +1,7 @@
 #pragma once
 #ifndef __Monster_H__
 #define __Monster_H__
-#define BLUERATE 0.35f
+#define BLUERATE 0.75f
 #define REDRATE 0.0025f
 #define BLUEMEDICINERATE 0.005f
 #include "Entity/Entity.h"
@@ -30,13 +30,14 @@ public:
 	void bindMap(AdventureMapLayer* map);
 	void bindMonsMgr(MonsterManager* monsMgr);
 	virtual void hit(int damage, float flyingDegree, bool isCriticalStrike);
-	void die();
+	virtual void die();
 	void wander();
 	//void showWords();
 	//void dieWithNothing();
 	void setMonsTaunted();
-	bool isAlive();
-	bool isTaunted();
+	FlowWord* getFlowWord() const;
+	bool isAlive()const;
+	bool isTaunted()const;
 	bool setTaunted(bool flag);
 	bool mySetPosition(Vec2 target);
 	void bulkUp();
