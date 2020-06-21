@@ -1,4 +1,4 @@
-#include "Entity\Entity.h"
+﻿#include "Entity\Entity.h"
 
 Entity::Entity()
 {
@@ -27,7 +27,7 @@ void Entity::bindSprite(Sprite* sprite, float x_scale, float y_scale)
 
 Rect Entity::getBoundingBox()
 {
-	Rect rect = Rect(0, 0, Node::getBoundingBox().size.width, Node::getBoundingBox().size.height);
+	Rect rect = Rect(-Node::getBoundingBox().size.width / 2, -Node::getBoundingBox().size.height / 2, Node::getBoundingBox().size.width, Node::getBoundingBox().size.height);
 	return RectApplyAffineTransform(rect, m_sprite->getNodeToWorldAffineTransform());
 }
 

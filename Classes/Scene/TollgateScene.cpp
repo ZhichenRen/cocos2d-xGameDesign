@@ -44,10 +44,10 @@ void TollgateScene::addPlayer()
 	ValueMap spawnPoint = group->getObject("hero");
 	float x = spawnPoint["x"].asFloat();
 	float y = spawnPoint["y"].asFloat();
-	/*if(SafeMapLayer::whichPlayer()==1)
-	    m_player = Ranger::create();
-	else if(SafeMapLayer::whichPlayer() == 2)
-		m_player = Priest::create();*/
+	//if(SafeMapLayer::whichPlayer()==1)
+	//    m_player = Ranger::create();
+	//else if(SafeMapLayer::whichPlayer() == 2)
+	//	m_player = Priest::create();
 	m_player = Knight::create();
 	m_player->setPosition(Vec2(x, y));
 
@@ -802,9 +802,9 @@ void TollgateScene::update(float dt)
 						{
 							m_player->hit(close_weapon->getDamage());
 						}
+						close_weapon->setIsHit(true);
 					}
 				}
-				close_weapon->setIsHit(true);
 			}
 		}
 	}

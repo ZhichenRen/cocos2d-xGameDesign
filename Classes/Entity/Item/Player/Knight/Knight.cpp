@@ -1,4 +1,4 @@
-#include "Entity/Item/Player/Knight/Knight.h"
+ï»¿#include "Entity/Item/Player/Knight/Knight.h"
 #include "Scene/DeathScene.h"
 #include "Entity/Weapons/CloseWeapon.h"
 #include "Entity/Weapons/LongRange.h"
@@ -25,7 +25,7 @@ Knight::~Knight()
 bool Knight::init()
 {
 	auto sprite = Sprite::create("Knight/KnightIni.png");
-	bindSprite(sprite, 0.12, 0.12);
+	bindSprite(sprite, 1.0f, 1.0f);
 	m_iNowHp = 6;
 	m_iTotalHp = 6;
 	m_iNowMp = 180;
@@ -200,7 +200,7 @@ void Knight::loadSkillLongRangeListener()
 			//this->hit(2);
 			this->mpDepletion(longRange->getPowerCost());
 		}
-		if (pos.x < 1024 / 2)//ÆÁÄ»Ò»°ë´óÐ¡
+		if (pos.x < 1024 / 2)//å±å¹•ä¸€åŠå¤§å°
 		{
 			setRightToward();
 		}
@@ -222,7 +222,7 @@ void Knight::loadSkillLongRangeListener()
 		EventMouse* mouse = dynamic_cast<EventMouse*>(event);
 		auto pos = Point(mouse->getCursorX(), mouse->getCursorY());
 		longRange->setRotationByPos(pos);
-		if (pos.x < 1024 / 2)//ÆÁÄ»Ò»°ë´óÐ¡
+		if (pos.x < 1024 / 2)//å±å¹•ä¸€åŠå¤§å°
 		{
 			setRightToward();
 		}
@@ -263,7 +263,7 @@ void Knight::loadSkillCloseWeaponListener()
 			//this->hit(2);
 			this->mpDepletion(closeWeapon->getPowerCost());
 		}
-		if (pos.x < 1024 / 2)//ÆÁÄ»Ò»°ë´óÐ¡
+		if (pos.x < 1024 / 2)//å±å¹•ä¸€åŠå¤§å°
 		{
 			setRightToward();
 		}
