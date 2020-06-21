@@ -135,7 +135,10 @@ void SafeMapLayer::onEnter()
 void SafeMapLayer::onEnterTransitionDidFinish()
 {
     Layer::onEnterTransitionDidFinish();
-    SimpleAudioEngine::getInstance()->playBackgroundMusic("bgm/safeBgm.mp3", true);
+    if (GameData::getBgmNum() == ADVMAP)
+    {
+        SimpleAudioEngine::getInstance()->playBackgroundMusic("bgm/safeBgm.mp3", true);
+    }
 }
 
 void SafeMapLayer::onExit()
@@ -153,7 +156,6 @@ void SafeMapLayer::onExitTransitionDidStart()
 void SafeMapLayer::cleanup()
 {
     Layer::cleanup();
-    SimpleAudioEngine::getInstance()->stopBackgroundMusic("bgm/safeBgm.mp3");
 }
 
 void SafeMapLayer::setPlayer(int playerNum)
@@ -184,7 +186,7 @@ void SafeMapLayer::setPlayer(int playerNum)
         this->scheduleUpdate();
         break;
     case 3:
-        m_player = Sprite::create("knight_image.png");
+        m_player = Sprite::create("Knight/KnightIni.png");
         m_player->setScale(0.5);
         m_player->setPosition(Vec2(x, y));
         m_tileMap->addChild(m_player);//游戏人物

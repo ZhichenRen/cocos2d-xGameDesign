@@ -44,11 +44,12 @@ void TollgateScene::addPlayer()
 	ValueMap spawnPoint = group->getObject("hero");
 	float x = spawnPoint["x"].asFloat();
 	float y = spawnPoint["y"].asFloat();
-	/*if(SafeMapLayer::whichPlayer()==1)
+	if(SafeMapLayer::whichPlayer()==1)
 	    m_player = Ranger::create();
 	else if(SafeMapLayer::whichPlayer() == 2)
-		m_player = Priest::create();*/
-	m_player = Knight::create();
+		m_player = Priest::create();
+	else
+		m_player = Knight::create();
 	m_player->setPosition(Vec2(x, y));
 
 	m_player->setTiledMap(m_map);
@@ -175,7 +176,6 @@ void TollgateScene::onExitTransitionDidStart()
 void TollgateScene::cleanup()
 {
 	Layer::cleanup();
-	SimpleAudioEngine::getInstance()->stopBackgroundMusic("bgm/advBgm.mp3");
 }
 
 void TollgateScene::loadUI()
