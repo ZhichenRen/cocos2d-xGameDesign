@@ -553,7 +553,7 @@ float MonsterManager::getMonsterHpRate() const
 {
 	if (!m_boss)
 		return 0.0f;
-	return m_boss->getHp() / 5.0f;
+	return m_boss->getHp() / 8.0f;
 }
 
 void MonsterManager::setRoomVisited(Vec2 room)
