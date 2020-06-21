@@ -9,6 +9,6 @@ public:
 	void resetPropoties();
 	CREATE_FUNC(Duck);
 private:
-	static const int m_initHp = 30;
+	static const int m_initHp = 20;
 };
 #endif // !__Slime_H__

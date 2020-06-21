@@ -20,9 +20,11 @@ public:
 	virtual bool getIsChangeWeapon() const override { return m_isChangWeapon; }
 	inline void setStandAnimate(Animate* animate) { m_standAnimate = animate; }
 	inline void setIsRanger(bool isRanger) { m_isRanger = isRanger; }
+	inline void setIsKnight(bool isKnight) { m_isKnight = isKnight; }
 private:
 	bool m_isChangWeapon = false;
 	bool m_isRanger = false;
+	bool m_isKnight = false;
 	Player* m_player = NULL;
 	EventListenerKeyboard* m_listener = NULL;
 	void isEncounterBarriers(const int x, const int y);

@@ -1,5 +1,6 @@
-ï»¿#include "Entity/Item/Player/Player.h"
+#include "Entity/Item/Player/Player.h"
 #include "Scene/TollgateScene.h"
+#include "FlowWord/FlowWord.h"
 #include "Entity/Weapons/CloseWeapon.h"
 #include "Entity\Weapons\Shotgun.h"
 #include "Entity\Weapons\RPG.h"
@@ -225,6 +226,10 @@ void Player::setWeapon(std::string& str,const bool isUpgrate)
 		{
 			m_isUpgrate[i] = true;
 			m_numWeapon = i + 1;
+			auto* flowWord = FlowWord::create();
+			this->addChild(flowWord);
+			std::string msg = "Upgrate!";
+			flowWord->showCritDmg(msg.c_str(), this->getContentSize().height / 2, 1.0);
 			return;
 		}
 	}
@@ -337,7 +342,10 @@ void Player::determineWhichWeapon()
 	chooseWeapon();
 	if (m_longRange != NULL && m_close == NULL)
 	{
-		m_longRange->setPosition(0, -5);
+		if(m_leftSide)
+			m_longRange->setPosition(-15, -5);
+		else
+		    m_longRange->setPosition(15, -5);
 		m_longRange->bindMap(m_map);
 		this->addChild(m_longRange);
 	    _eventDispatcher->addEventListenerWithSceneGraphPriority(m_listener, this);
@@ -345,7 +353,10 @@ void Player::determineWhichWeapon()
 	}
 	else
 	{
-		m_close->setPosition(0, -9);
+		if (m_rightSide)
+			m_close->setPosition(15, -9);
+		else
+			m_close->setPosition(-15, -9);
 		m_close->bindMap(m_map);
 		this->addChild(m_close);
 		_eventDispatcher->addEventListenerWithSceneGraphPriority(m_listener, this);
@@ -393,7 +404,7 @@ void Player::loadLongRangeListener()
 			//this->hit(2);
 			this->mpDepletion(longRange->getPowerCost());
 		}
-		if (pos.x < 1024 / 2)//å±å¹•ä¸€åŠå¤§å°
+		if (pos.x < 1024 / 2)//ÆÁÄ»Ò»°ë´óÐ¡
 		{
 			setRightToward();
 		}
@@ -415,7 +426,7 @@ void Player::loadLongRangeListener()
 		EventMouse* mouse = dynamic_cast<EventMouse*>(event);
 		auto pos = Point(mouse->getCursorX(), mouse->getCursorY());
 		longRange->setRotationByPos(pos);
-		if (pos.x < 1024 / 2)//å±å¹•ä¸€åŠå¤§å°
+		if (pos.x < 1024 / 2)//ÆÁÄ»Ò»°ë´óÐ¡
 		{
 			setRightToward();
 		}
@@ -456,7 +467,7 @@ void Player::loadCloseWeaponListener()
 			//this->hit(2);
 			this->mpDepletion(closeWeapon->getPowerCost());
 		}
-		if (pos.x < 1024 / 2)//å±å¹•ä¸€åŠå¤§å°
+		if (pos.x < 1024 / 2)//ÆÁÄ»Ò»°ë´óÐ¡
 		{
 			setRightToward();
 		}
@@ -476,6 +487,17 @@ void Player::setRightToward()
 		this->setLeftSide(true);
 		this->setRightSide(false);
 		m_sprite->setFlipX(true);
+		if (m_isKightSkill == false)
+		{
+			if (m_longRange == NULL && m_close != NULL)
+			{
+				m_close->setPosition(m_close->getPosition().x * (-1), -9);
+			}
+			else if (m_longRange != NULL && m_close == NULL)
+			{
+				m_longRange->setPosition(m_longRange->getPosition().x * (-1), -5);
+			}
+		}
 	}
 }
 
@@ -486,6 +508,17 @@ void Player::setLeftToward()
 		this->setLeftSide(false);
 		this->setRightSide(true);
 		m_sprite->setFlipX(false);
+		if (m_isKightSkill == false)
+		{
+			if (m_longRange == NULL && m_close != NULL)
+			{
+				m_close->setPosition(m_close->getPosition().x*(-1), -9);
+			}
+			else if (m_longRange != NULL && m_close == NULL)
+			{
+				m_longRange->setPosition(m_longRange->getPosition().x * (-1), -5);
+			}
+		}
 	}
 }
 

@@ -60,7 +60,11 @@ void HomeMenuLayer::onEnter()
 void HomeMenuLayer::onEnterTransitionDidFinish()
 {
 	Layer::onEnterTransitionDidFinish();
-	SimpleAudioEngine::getInstance()->playBackgroundMusic("bgm/safeBgm.mp3", true);
+	if (!SimpleAudioEngine::getInstance()->isBackgroundMusicPlaying() || GameData::getBgmNum() == ADVMAP)
+	{
+		SimpleAudioEngine::getInstance()->playBackgroundMusic("bgm/safeBgm.mp3", true);
+		GameData::setBgmNum(SAFEMAP);
+	}
 }
 
 void HomeMenuLayer::onExit()
@@ -76,7 +80,7 @@ void HomeMenuLayer::onExitTransitionDidStart()
 void HomeMenuLayer::cleanup()
 {
 	Layer::cleanup();
-	SimpleAudioEngine::getInstance()->stopBackgroundMusic("bgm/safeBgm.mp3");
+	//SimpleAudioEngine::getInstance()->stopBackgroundMusic("bgm/safeBgm.mp3");
 }
 
 void HomeMenuLayer::menuItemStartCallback(cocos2d::Ref* pSender)
