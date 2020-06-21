@@ -1,6 +1,6 @@
 #include "Monster\MonsterManager.h"
 #include "Entity\Weapons\TrackWeapon.h"
-
+#include "Entity\Weapons\BossGun.h"
 
 
 void MonsterManager::bindMap(AdventureMapLayer* map)
@@ -381,6 +381,15 @@ void MonsterManager::update(float dt)
 			m_boss->wander();
 			auto gun = m_boss->getMonsterWeapon();
 			gun->attack(m_map->convertToWorldSpace(m_player->getPosition()));
+			auto ranF1 = CCRANDOM_0_1();
+			if (ranF1 < 0.001f)
+			{
+				auto blue = Blue::create();
+				blue->setPosition(m_boss->getPosition() + getPosition());
+				m_map->addChild(blue, 2);
+				blue->setRandomPosition();
+				m_map->addBlue(blue);
+			}
 			return;
 		}
 		

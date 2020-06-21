@@ -616,7 +616,6 @@ void TollgateScene::update(float dt)
 		&& !m_monsterMgr->isRoomVisited(roomCoord))//其次它没有被到访过
 	{
 		m_monsterMgr->setCurRoom(roomCoord);
-		
 		if (m_map->isBossRoom(roomCoord))//如果是boss房
 		{
 			m_map->getPortal()->setVisible(false);
@@ -766,13 +765,10 @@ void TollgateScene::update(float dt)
 	//monster bullet
 	for (auto bullet : monsters_bullet)
 	{
-		if (m_monsterMgr->isGameOver())
-			break;
 		if (bullet->isUsed())
 		{
 			continue;
 		}
-
 		cocos2d::Point bullet_pos = bullet->getPosition();
 		if (m_map->isBarrier(bullet_pos))
 		{
@@ -817,7 +813,6 @@ void TollgateScene::update(float dt)
 			}
 		}
 	}
-
 	//小金币和小蓝的自动拾取
 	for (auto coin : m_map->getCoinList())
 	{
