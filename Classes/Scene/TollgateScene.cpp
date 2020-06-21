@@ -404,6 +404,7 @@ void TollgateScene::loadListeners()
 					background->begin();
 					this->visit();
 					background->end();
+					restore.num = 1;
 					Director::getInstance()->pushScene(FinishScene::createScene(background, m_player->whichPlayer()));
 				}
 			}

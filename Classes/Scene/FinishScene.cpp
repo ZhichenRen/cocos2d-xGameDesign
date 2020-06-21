@@ -2,11 +2,14 @@
 #include "Scene/SafeMapScene.h"
 #include "Scene/AboutAuthor.h"
 #include "GameData.h"
+#include "Scene/TollgateScene.h"
 
 #pragma execution_character_set("utf-8")
 #define RANGER 1
 #define PRIEST 2
 #define KNIGHT 3
+
+extern restrorePlayer restore;
 
 bool FinishScene::init()
 {
@@ -67,6 +70,7 @@ void FinishScene::backToHomeMenu(Ref*, TouchEventType type)
 		Director::getInstance()->popScene();
 		GameData::setLastRoomCoord(Vec2(2, 2));
 		GameData::setLevel(1);
+		restore.num = 1;
 		Director::getInstance()->replaceScene(HomeMenuLayer::createScene());
 		break;
 	}

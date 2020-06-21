@@ -3,8 +3,10 @@
 #include "Entity/Item/Player/Player.h"
 #include "Scene/AboutAuthor.h"
 #include "GameData.h"
+#include "Scene/TollgateScene.h"
 
 #pragma execution_character_set("utf-8")
+extern restrorePlayer restore;
 
 bool DeathScene::init()
 {
@@ -55,6 +57,7 @@ void DeathScene::backToHomeMenu(Ref*, TouchEventType type)
 		Director::getInstance()->popScene();
 		GameData::setLastRoomCoord(Vec2(2, 2));
 		GameData::setLevel(1);
+		restore.num = 1;
 		Director::getInstance()->replaceScene(SafeMapLayer::createScene());
 		break;
 	}

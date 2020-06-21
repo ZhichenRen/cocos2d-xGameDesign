@@ -2,10 +2,13 @@
 #include "Scene\HomeScene.h"
 #include "Scene\SettingScene.h"
 #include "GameData.h"
+#include "Scene/TollgateScene.h"
 
 #define RANGER 1
 #define PRIEST 2
 #define KNIGHT 3
+
+extern restrorePlayer restore;
 
 bool PauseScene::init()
 {
@@ -39,9 +42,9 @@ void PauseScene::backToHomeMenu(Ref*, TouchEventType type)
 	{
 	case TOUCH_EVENT_ENDED:
 		Director::getInstance()->popScene();
-		GameData::setCoinNum(0);
 		GameData::setLastRoomCoord(Vec2(2, 2));
 		GameData::setLevel(1);
+		restore.num = 1;
 		Director::getInstance()->replaceScene(HomeMenuLayer::createScene());
 		break;
 	}
