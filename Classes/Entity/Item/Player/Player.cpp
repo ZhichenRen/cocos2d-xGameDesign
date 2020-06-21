@@ -342,7 +342,10 @@ void Player::determineWhichWeapon()
 	chooseWeapon();
 	if (m_longRange != NULL && m_close == NULL)
 	{
-		m_longRange->setPosition(15, -5);
+		if(m_leftSide)
+			m_longRange->setPosition(-15, -5);
+		else
+		    m_longRange->setPosition(15, -5);
 		m_longRange->bindMap(m_map);
 		this->addChild(m_longRange);
 	    _eventDispatcher->addEventListenerWithSceneGraphPriority(m_listener, this);
@@ -350,7 +353,10 @@ void Player::determineWhichWeapon()
 	}
 	else
 	{
-		m_close->setPosition(15, -9);
+		if (m_rightSide)
+			m_close->setPosition(15, -9);
+		else
+			m_close->setPosition(-15, -9);
 		m_close->bindMap(m_map);
 		this->addChild(m_close);
 		_eventDispatcher->addEventListenerWithSceneGraphPriority(m_listener, this);
@@ -481,6 +487,17 @@ void Player::setRightToward()
 		this->setLeftSide(true);
 		this->setRightSide(false);
 		m_sprite->setFlipX(true);
+		if (m_isKightSkill == false)
+		{
+			if (m_longRange == NULL && m_close != NULL)
+			{
+				m_close->setPosition(m_close->getPosition().x * (-1), -9);
+			}
+			else if (m_longRange != NULL && m_close == NULL)
+			{
+				m_longRange->setPosition(m_longRange->getPosition().x * (-1), -5);
+			}
+		}
 	}
 }
 
@@ -491,6 +508,17 @@ void Player::setLeftToward()
 		this->setLeftSide(false);
 		this->setRightSide(true);
 		m_sprite->setFlipX(false);
+		if (m_isKightSkill == false)
+		{
+			if (m_longRange == NULL && m_close != NULL)
+			{
+				m_close->setPosition(m_close->getPosition().x*(-1), -9);
+			}
+			else if (m_longRange != NULL && m_close == NULL)
+			{
+				m_longRange->setPosition(m_longRange->getPosition().x * (-1), -5);
+			}
+		}
 	}
 }
 

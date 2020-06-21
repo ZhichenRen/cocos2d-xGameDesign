@@ -177,6 +177,7 @@ protected:
 	bool m_is_close_weapon_now;
 	bool m_isDeath = false;
 	bool m_is_invincible = false;
+	bool m_isKightSkill = false;
 
 	ParticleFlower* upgrade_effect;
 	Sprite* m_shield;

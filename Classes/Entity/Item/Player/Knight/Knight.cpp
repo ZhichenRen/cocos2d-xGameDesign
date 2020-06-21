@@ -73,6 +73,7 @@ void Knight::skill()
 	}
 	setiNowSkillDuration(0);
 	m_isInSkill = true;
+	m_isKightSkill = true;
 	setiNowCD(0);
 	skillChooseWeapon();
 	determineSkillWeapon();
@@ -138,6 +139,7 @@ void Knight::skillDuration()
 void Knight::skillEnd()
 {
 	m_isInSkill = false;
+	m_isKightSkill = false;
 	removeSkill();
 	m_skillDirectionX = 0;
 	m_skillDirectionY = 0;
@@ -271,14 +273,16 @@ void Knight::loadSkillCloseWeaponListener()
 		}
 	};
 	m_skillListener = listener;
-
 }
 
 void Knight::determineSkillWeapon()
 {
 	if (m_longRange != NULL && m_close == NULL)
 	{
-		m_skillLongRange->setPosition(-15, -5);
+		if(m_longRange->getPosition().x==15)
+		    m_skillLongRange->setPosition(-15, -5);
+		else
+			m_skillLongRange->setPosition(15, -5);
 		m_skillLongRange->bindMap(m_map);
 		this->addChild(m_skillLongRange);
 		_eventDispatcher->addEventListenerWithSceneGraphPriority(m_skillListener, this);
@@ -286,7 +290,10 @@ void Knight::determineSkillWeapon()
 	}
 	else
 	{
-		m_skillClose->setPosition(-15, -9);
+		if (m_close->getPosition().x == 15)
+		    m_skillClose->setPosition(-15, -9);
+		else
+			m_skillClose->setPosition(15, -9);
 		m_skillClose->bindMap(m_map);
 		this->addChild(m_skillClose);
 		_eventDispatcher->addEventListenerWithSceneGraphPriority(m_skillListener, this);
@@ -310,4 +317,6 @@ void Knight::removeSkill()
 		m_skillClose->removeAllChildren();
 	}
 	_eventDispatcher->removeEventListener(m_skillListener);
+	m_skillLongRange = NULL;
+	m_skillClose = NULL;
 }
