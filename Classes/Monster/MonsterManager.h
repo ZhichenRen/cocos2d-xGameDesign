@@ -23,7 +23,7 @@ class MonsterManager : public Node {
 public:
 	//void createMonsters();
 	void createMonsterPos();
-	void createMonsters(int totalNum = 10);
+	void createMonsters();
 	
 	CREATE_FUNC(MonsterManager);
 	void bindMap(AdventureMapLayer* map);
@@ -31,6 +31,7 @@ public:
 	void bindMapForWeapon();
 	void createRandomPos();
 	void createWoodWalls(int woodWallsNum = 15);
+	void createOneMoreMons();
 	void createBoss();
 	void reviveAllMonsters();
 	bool resetAllMons();
@@ -81,7 +82,7 @@ private:
 	AdventureMapLayer* m_map = NULL;
 	
 
-	const int m_allCheckPoint = 3;
+	const int m_allCheckPoint = 4;
 	int m_curCheckPoint;
 
 	int m_dirs[4][2] = { {1,0}, {0,1}, {0,-1} ,{-1,0}};
