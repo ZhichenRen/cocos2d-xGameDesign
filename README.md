@@ -96,8 +96,35 @@
 
   1. PLIST文件的使用
 
-  ```xml
+  ```plist
   <?xml version="1.0" encoding="UTF-8"?>
+  <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+  <plist version="1.0">
+  <dict>
+  	<key>ShopFirstMeet</key>
+  	<string>这位勇士，您要花费20金币购买一把神秘武器吗？</string>
+  	<key>ShopLackMoney</key>
+  	<string>您的金币不足，请下次再来！</string>
+  	<key>ShopEnoughMoney</key>
+  	<string>谢谢惠顾，您会更加强大！</string>
+  	<key>StatueFirstMeet</key>
+  	<string>供奉此雕像 15</string>
+  	<key>StatueLackMoney</key>
+  	<string>金币不足！</string>
+  	<key>StatueEnoughMoney</key>
+  	<string>属性提升了！</string>
+  	<key>GreedyCheat</key>
+  	<string>作弊成功！金币+100</string>
+  	<key>SlaughterCheat</key>
+  	<string>颤抖着滚开吧杂鱼们！</string>
+  	<key>WoodWallCheat</key>
+  	<string>我最讨厌的就是木墙了！</string>
+  	<key>BossAppearence</key>
+  	<string>是我的晚餐来了吗？</string>
+  	<key>BossDeath</key>
+  	<string>地狱之门正在徐徐打开……</string>
+  </dict>
+  </plist>
   ```
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -268,6 +295,7 @@ SoulKnight是一款单机地牢冒险rouguelike游戏。
 
 |            操作             |              效果              |
 | :-------------------------: | :----------------------------: |
+|          按下`Q`键          |            切换武器            |
 |        按下`WSAD`键         |   控制玩家上、下、左、右移动   |
 |        点击鼠标左键         |     玩家向鼠标位置进行攻击     |
 |         按下`ESC`键         |              暂停              |
